@@ -139,7 +139,6 @@ with col1:
 
 with col2:
     st.markdown("#### Grafik Pie")
-    st.pyplot(
         rekap_chart.set_index("jenis_disabilitas")
 import plotly.express as px
 
@@ -239,6 +238,7 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
 
 
