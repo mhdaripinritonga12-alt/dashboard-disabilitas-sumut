@@ -1,3 +1,4 @@
-git add requirements.txt
-git commit -m "Add requirements"
-git push
+streamlit==1.31.0
+pandas==2.1.4
+openpyxl==3.1.2
+plotly==5.18.0
