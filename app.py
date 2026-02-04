@@ -129,27 +129,38 @@ rekap_chart = (
     .reset_index(name="Jumlah")
 )
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("#### Grafik Batang")
-    st.bar_chart(
-        rekap_chart.set_index("jenis_disabilitas")
-    )
-
-with col2:
-    st.markdown("#### Grafik Pie")
-        rekap_chart.set_index("jenis_disabilitas")
 import plotly.express as px
+
+st.subheader("📊 Grafik Penyandang Disabilitas")
+
+rekap_jenis = (
+    df.groupby("jenis_disabilitas")
+    .size()
+    .reset_index(name="Jumlah")
+)
+
+fig_bar = px.bar(
+    rekap_jenis,
+    x="jenis_disabilitas",
+    y="Jumlah",
+    title="Jumlah Penyandang Disabilitas per Jenis",
+    labels={
+        "jenis_disabilitas": "Jenis Disabilitas",
+        "Jumlah": "Jumlah"
+    }
+)
+
+st.plotly_chart(fig_bar, use_container_width=True)
 
 fig_pie = px.pie(
     rekap_jenis,
     values="Jumlah",
-    names="Jenis Disabilitas",
+    names="jenis_disabilitas",
     title="Distribusi Jenis Disabilitas"
 )
 
 st.plotly_chart(fig_pie, use_container_width=True)
+
 
 st.divider()
 st.subheader("🗺️ Peta Sebaran Penyandang Disabilitas (Kab/Kota)")
@@ -238,6 +249,7 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
 
 
