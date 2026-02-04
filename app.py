@@ -143,14 +143,14 @@ with col2:
         rekap_chart.set_index("jenis_disabilitas")
 import plotly.express as px
 
-fig = px.pie(
-    df,
+fig_pie = px.pie(
+    rekap_jenis,
     values="Jumlah",
     names="Jenis Disabilitas",
     title="Distribusi Jenis Disabilitas"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_pie, use_container_width=True)
 
 st.divider()
 st.subheader("🗺️ Peta Sebaran Penyandang Disabilitas (Kab/Kota)")
@@ -239,5 +239,6 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
 
