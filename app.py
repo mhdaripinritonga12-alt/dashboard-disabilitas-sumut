@@ -141,13 +141,16 @@ with col2:
     st.markdown("#### Grafik Pie")
     st.pyplot(
         rekap_chart.set_index("jenis_disabilitas")
-        .plot.pie(
-            y="Jumlah",
-            autopct="%1.0f%%",
-            legend=False
-        )
-        .get_figure()
-    )
+        import plotly.express as px
+
+fig = px.pie(
+    df,
+    values="Jumlah",
+    names="Jenis Disabilitas",
+    title="Distribusi Jenis Disabilitas"
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 st.subheader("🗺️ Peta Sebaran Penyandang Disabilitas (Kab/Kota)")
@@ -236,3 +239,4 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
