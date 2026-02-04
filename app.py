@@ -131,7 +131,6 @@ rekap_chart = (
 
 import plotly.express as px
 
-st.subheader("📊 Grafik Penyandang Disabilitas")
 
 rekap_jenis = (
     df.groupby("jenis_disabilitas")
@@ -249,6 +248,7 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
 
 
