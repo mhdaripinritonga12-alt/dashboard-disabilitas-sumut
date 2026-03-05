@@ -36,24 +36,38 @@ if "login" not in st.session_state:
     st.session_state.role = ""
 
 if not st.session_state.login:
-    st.title("🔐 Login Dashboard Disabilitas")
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    st.markdown('<div class="center-box">', unsafe_allow_html=True)
 
-    if st.button("Login"):
-        user = users[
-            (users["username"] == username) &
-            (users["password"] == password)
-        ]
+    col1, col2, col3 = st.columns([1,2,1])
 
-        if not user.empty:
-            st.session_state.login = True
-            st.session_state.role = user.iloc[0]["role"]
-            st.success("Login berhasil")
-            st.rerun()
-        else:
-            st.error("Username atau password salah")
+    with col2:
+
+        st.markdown('<div class="login-box">', unsafe_allow_html=True)
+
+        st.markdown("## 🔐 Login Dashboard Disabilitas")
+
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        if st.button("Login", use_container_width=True):
+
+            user = users[
+                (users["username"] == username) &
+                (users["password"] == password)
+            ]
+
+            if not user.empty:
+                st.session_state.login = True
+                st.session_state.role = user.iloc[0]["role"]
+                st.success("Login berhasil")
+                st.rerun()
+            else:
+                st.error("Username atau password salah")
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.stop()
 
@@ -248,6 +262,7 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
 
 
