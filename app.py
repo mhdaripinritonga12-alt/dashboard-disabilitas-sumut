@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ==================================
-# Bagian 1: CSS CUSTOM (GLASSMORPHISM PREMIUM)
+# Bagian 1: CSS CUSTOM (MODERN DESIGN WITH BACKGROUND IMAGE)
 # ==================================
 st.markdown("""
 <style>
@@ -23,85 +23,73 @@ st.markdown("""
         font-family: 'Inter', sans-serif !important;
     }
 
-    /* BACKGROUND HALAMAN */
+    /* BACKGROUND HALAMAN DENGAN GAMBAR & OVERLAY */
     [data-testid="stAppViewContainer"] {
-        background-image: linear-gradient(rgba(10, 25, 30, 0.7), rgba(20, 45, 55, 0.7)), 
-                          url("https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop");
+        background-image: linear-gradient(rgba(15, 32, 39, 0.8), rgba(32, 58, 67, 0.8)), 
+                          url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
     }
 
+    /* Hapus header default agar bersih */
     header {visibility: hidden;}
 
-    /* KOTAK LOGIN UTAMA (PUTIH SEMI-TRANSPARAN) */
+    /* KOTAK LOGIN: GLASSMORPHISM EFFECT */
+    /* Membuat kotak terlihat semi-transparan seperti kaca */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
-        background: rgba(255, 255, 255, 0.15) !important; /* Putih Transparan */
-        backdrop-filter: blur(15px); /* Efek Kaca Blur */
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 20px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        padding: 30px !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(10px); /* Efek blur di belakang kotak */
+        border-radius: 24px !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        padding: 35px !important;
+        box-shadow: 0px 20px 40px rgba(0,0,0,0.3) !important;
     }
 
-    /* CONTAINER LOGO SI-PANDAI (PUTIH SEMI-TRANSPARAN DI DALAM) */
-    .logo-sipandai-box {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 20px;
-        border-radius: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin-bottom: 10px;
-    }
-
-    /* Teks Judul & Subtitle */
+    /* Judul & Teks */
     .login-title {
-        color: #ffffff !important;
+        color: #073642 !important;
         font-size: 26px !important;
         font-weight: 800 !important;
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        margin-bottom: 2px !important;
     }
     
     .login-subtitle {
-        color: #00d2ff !important; /* Biru Cerah agar kontras di kaca */
+        color: #1D976C !important;
         font-size: 13px !important;
         font-weight: 600;
         margin-bottom: 25px !important;
     }
 
-    /* Input Field Custom (Transparan dengan border putih) */
+    /* Input Field Custom */
     div[data-testid="stTextInput"] input {
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border-radius: 10px !important;
-        border: none !important;
+        border-radius: 12px !important;
+        border: 1.5px solid #d1d9e0 !important;
         height: 45px !important;
-        color: #333 !important;
     }
 
     /* Tombol Login Vibrant */
     div.stButton > button {
-        background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%) !important;
+        background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%) !important;
         color: white !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         font-weight: 700 !important;
-        height: 48px;
+        height: 50px;
         border: none !important;
         width: 100%;
-        margin-top: 15px;
+        margin-top: 20px;
+        box-shadow: 0px 4px 15px rgba(30, 60, 114, 0.4);
     }
     
     div.stButton > button:hover {
-        transform: scale(1.02);
-        box-shadow: 0px 5px 20px rgba(0,210,255,0.4);
+        transform: translateY(-2px);
+        box-shadow: 0px 8px 25px rgba(30, 60, 114, 0.5);
     }
 
-    .logo-sumut-header {
+    .logo-header {
         display: flex;
         justify-content: center;
-        padding: 40px 0 20px 0;
+        padding: 30px 0 10px 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -114,50 +102,48 @@ if "login" not in st.session_state:
 
 if not st.session_state.login:
     
-    # 1. LOGO SUMUT (DI TENGAH ATAS)
-    st.markdown('<div class="logo-sumut-header">', unsafe_allow_html=True)
-    col_t1, col_t2, col_t3 = st.columns([2, 0.4, 2])
-    with col_t2:
+    # 1. LOGO SUMUT (DIPERBESAR & DI TENGAH)
+    st.markdown('<div class="logo-header">', unsafe_allow_html=True)
+    col_l1, col_l2, col_l3 = st.columns([2, 0.6, 2])
+    with col_l2:
         if os.path.exists("logo_sumut.png"):
-            st.image(Image.open("logo_sumut.png"), width=80)
+            st.image(Image.open("logo_sumut.png"), width=110)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # 2. KARTU LOGIN GLASSMORPHISM
-    _, col_card, _ = st.columns([1.5, 2.5, 1.5]) 
+    # 2. KARTU LOGIN (COMPACT HORIZONTAL)
+    _, col_card, _ = st.columns([1.4, 2.6, 1.4]) 
 
     with col_card:
         with st.container(border=True):
-            col_l, col_r = st.columns([1, 1.4])
+            col_left, col_right = st.columns([1, 1.5])
 
-            with col_l:
-                # Bungkus Logo SI-PANDAI dalam kotak transparan
-                st.markdown('<div class="logo-sipandai-box">', unsafe_allow_html=True)
+            with col_left:
+                st.write("") 
                 if os.path.exists("logo_sipandai.png"):
                     st.image(Image.open("logo_sipandai.png"), use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
 
-            with col_r:
+            with col_right:
                 st.markdown('<div class="login-title">LOGIN USER</div>', unsafe_allow_html=True)
                 st.markdown('<div class="login-subtitle">SI-PANDAI SUMUT</div>', unsafe_allow_html=True)
                 
-                # Ikon Row
-                user = st.text_input("Username", placeholder="👤  Masukkan Username", label_visibility="collapsed")
-                pwd = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", label_visibility="collapsed")
+                username = st.text_input("Username", placeholder="👤  Username", label_visibility="collapsed")
+                password = st.text_input("Password", type="password", placeholder="🔑  Password", label_visibility="collapsed")
                 
-                if st.button("MASUK SISTEM"):
-                    if user == "admin" and pwd == "admin":
+                if st.button("MASUK KE DASHBOARD"):
+                    # Logika Dummy (Ganti dengan pengecekan Excel Anda)
+                    if username == "admin" and password == "admin":
                         st.session_state.login = True
                         st.rerun()
                     else:
-                        st.error("Gagal Masuk")
+                        st.error("Username/Password Salah")
 
-    st.markdown('<p style="text-align:center; color:rgba(255,255,255,0.5); font-size:11px; margin-top:25px;">Dinas Pendidikan Provinsi Sumatera Utara © 2026</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align:center; color:rgba(255,255,255,0.6); font-size:12px; margin-top:30px; font-weight:bold;">© 2026 Dinas Pendidikan Provinsi Sumatera Utara</p>', unsafe_allow_html=True)
     st.stop()
 
 # ==================================
-# DASHBOARD SETELAH LOGIN
+# DASHBOARD AREA
 # ==================================
-st.title("Dashboard SI-PANDAI SUMUT")
+st.title("Selamat Datang, Anda Berhasil Masuk!")
 if st.button("Keluar"):
     st.session_state.login = False
     st.rerun()
