@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+import plotly.express as px
 
 st.set_page_config(
     page_title="Dashboard Disabilitas Sumut",
@@ -12,7 +13,7 @@ st.set_page_config(
 # =========================
 @st.cache_data
 def load_data():
-       return pd.read_excel(
+    return pd.read_excel(
         "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx",
         sheet_name="data_disabilitas"
     )
@@ -23,7 +24,6 @@ def load_users():
         "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx",
         sheet_name="users"
     )
-
 
 data = load_data()
 users = load_users()
@@ -37,13 +37,9 @@ if "login" not in st.session_state:
 
 if not st.session_state.login:
 
-    st.markdown('<div class="center-box">', unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns([1,2,1])
 
     with col2:
-
-        st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
         st.markdown("## 🔐 Login Dashboard Disabilitas")
 
@@ -65,11 +61,34 @@ if not st.session_state.login:
             else:
                 st.error("Username atau password salah")
 
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
     st.stop()
+
+# =========================
+# SIDEBAR
+# =========================
+st.sidebar.title("📂 Menu")
+
+menu = st.sidebar.radio(
+    "Pilih Menu",
+    ["Home"]
+)
+
+st.sidebar.divider()
+
+# =========================
+# FILTER KABUPATEN / KOTA
+# =========================
+st.sidebar.header("🔎 Filter Wilayah")
+
+kabkota = st.sidebar.selectbox(
+    "Pilih Kabupaten / Kota",
+    ["Semua"] + sorted(data["kab_kota"].unique())
+)
+
+df = data.copy()
+
+if kabkota != "Semua":
+    df = df[df["kab_kota"] == kabkota]
 
 # =========================
 # HEADER
@@ -87,86 +106,41 @@ if st.button("Logout"):
 st.divider()
 
 # =========================
-# FILTER WILAYAH
-# =========================
-st.sidebar.header("🔎 Filter Wilayah")
-
-kabkota = st.sidebar.selectbox(
-    "Pilih Kabupaten / Kota",
-    ["Semua"] + sorted(data["kab_kota"].unique())
-)
-
-df = data.copy()
-if kabkota != "Semua":
-    df = df[df["kab_kota"] == kabkota]
-
-kecamatan = st.sidebar.selectbox(
-    "Pilih Kecamatan",
-    ["Semua"] + sorted(df["kecamatan"].unique())
-)
-
-if kecamatan != "Semua":
-    df = df[df["kecamatan"] == kecamatan]
-
-desa = st.sidebar.selectbox(
-    "Pilih Desa / Kelurahan",
-    ["Semua"] + sorted(df["desa_kelurahan"].unique())
-)
-
-if desa != "Semua":
-    df = df[df["desa_kelurahan"] == desa]
-
-
-# =========================
 # REKAP CEPAT
 # =========================
 col1, col2, col3 = st.columns(3)
+
 col1.metric("Jumlah Data", len(df))
-col2.metric("Jumlah Kecamatan", df["kecamatan"].nunique())
-col3.metric("Jumlah Kelurahan", df["desa_kelurahan"].nunique())
+col2.metric("Jumlah Kabupaten/Kota", df["kab_kota"].nunique())
+col3.metric("Jumlah Jenis Disabilitas", df["jenis_disabilitas"].nunique())
 
 st.divider()
 
 # =========================
-# A. REKAP PER JENIS DISABILITAS
+# REKAP PER JENIS
 # =========================
 st.subheader("📌 Rekap Penyandang per Jenis Disabilitas")
 
 rekap = df.groupby("jenis_disabilitas").size().reset_index(name="Jumlah")
+
 st.dataframe(rekap, use_container_width=True)
-st.divider()
+
+# =========================
+# GRAFIK
+# =========================
 st.subheader("📈 Grafik Penyandang Disabilitas")
 
-rekap_chart = (
-    df.groupby("jenis_disabilitas")
-    .size()
-    .reset_index(name="Jumlah")
-)
-
-import plotly.express as px
-
-
-rekap_jenis = (
-    df.groupby("jenis_disabilitas")
-    .size()
-    .reset_index(name="Jumlah")
-)
-
 fig_bar = px.bar(
-    rekap_jenis,
+    rekap,
     x="jenis_disabilitas",
     y="Jumlah",
-    title="Jumlah Penyandang Disabilitas per Jenis",
-    labels={
-        "jenis_disabilitas": "Jenis Disabilitas",
-        "Jumlah": "Jumlah"
-    }
+    title="Jumlah Penyandang Disabilitas per Jenis"
 )
 
 st.plotly_chart(fig_bar, use_container_width=True)
 
 fig_pie = px.pie(
-    rekap_jenis,
+    rekap,
     values="Jumlah",
     names="jenis_disabilitas",
     title="Distribusi Jenis Disabilitas"
@@ -174,17 +148,19 @@ fig_pie = px.pie(
 
 st.plotly_chart(fig_pie, use_container_width=True)
 
-
+# =========================
+# PETA SEBARAN
+# =========================
 st.divider()
 st.subheader("🗺️ Peta Sebaran Penyandang Disabilitas (Kab/Kota)")
 
 map_data = (
-    data.groupby("kab_kota")
+    df.groupby("kab_kota")
     .size()
     .reset_index(name="Jumlah")
 )
 
-# Titik perkiraan pusat kab/kota (contoh Sumut)
+# Koordinat contoh (bisa ditambah semua kabupaten)
 peta_kab = {
     "Kota Medan": [3.5952, 98.6722],
     "Kab. Deli Serdang": [3.4200, 98.9800],
@@ -192,11 +168,16 @@ peta_kab = {
 }
 
 map_rows = []
+
 for k, v in peta_kab.items():
+
     jumlah = map_data.loc[
-        map_data["kab_kota"] == k, "Jumlah"
+        map_data["kab_kota"] == k,
+        "Jumlah"
     ]
+
     if not jumlah.empty:
+
         map_rows.append({
             "lat": v[0],
             "lon": v[1],
@@ -204,15 +185,25 @@ for k, v in peta_kab.items():
         })
 
 if map_rows:
+
     map_df = pd.DataFrame(map_rows)
-    st.map(map_df, size="jumlah")
+
+    st.map(
+        map_df,
+        latitude="lat",
+        longitude="lon",
+        size="jumlah"
+    )
+
 else:
+
     st.info("Data peta belum tersedia")
 
 # =========================
-# B. KLIK REKAP → MUNCUL NAMA
+# DETAIL DATA
 # =========================
-st.subheader("📋 Detail Nama Berdasarkan Jenis")
+st.divider()
+st.subheader("📋 Detail Data Penyandang Disabilitas")
 
 jenis_pilih = st.selectbox(
     "Pilih Jenis Disabilitas",
@@ -220,26 +211,36 @@ jenis_pilih = st.selectbox(
 )
 
 if jenis_pilih != "Semua":
+
     df_detail = df[df["jenis_disabilitas"] == jenis_pilih]
+
 else:
+
     df_detail = df
 
 st.dataframe(
     df_detail[
-        ["nama", "jenis_disabilitas", "desa_kelurahan", "kecamatan"]
+        ["nama", "jenis_disabilitas", "kab_kota"]
     ],
     use_container_width=True
 )
 
 # =========================
-# C. DOWNLOAD EXCEL (FIX)
+# DOWNLOAD DATA
 # =========================
 st.divider()
 st.subheader("⬇️ Download Data")
 
 if st.session_state.role in ["admin", "operator"]:
+
     output = BytesIO()
-    df.to_excel(output, index=False, engine="openpyxl")
+
+    df.to_excel(
+        output,
+        index=False,
+        engine="openpyxl"
+    )
+
     output.seek(0)
 
     st.download_button(
@@ -248,25 +249,19 @@ if st.session_state.role in ["admin", "operator"]:
         file_name="rekap_disabilitas_filtered.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 else:
+
     st.info("Role viewer tidak memiliki hak download")
 
-
 # =========================
-# D. ROLE INFO
+# ROLE INFO
 # =========================
 st.divider()
+
 st.caption("""
 Role:
 - Admin    : Semua akses
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
-
-
-
-
-
-
-
-
