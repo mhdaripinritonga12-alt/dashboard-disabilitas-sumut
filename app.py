@@ -133,7 +133,7 @@ if not st.session_state.login:
                 username = st.text_input("Username", placeholder="👤  Username", label_visibility="collapsed")
                 password = st.text_input("Password", type="password", placeholder="🔑  Password", label_visibility="collapsed")
                 
-                if st.button("MASUK SISTEM"):
+                if st.button("MASUK KE DASHBOARD"):
                     if username == "admin" and password == "admin":
                         st.session_state.login = True
                         st.rerun()
@@ -148,3 +148,4 @@ st.title("Selamat Datang di Dashboard!")
 if st.button("Keluar"):
     st.session_state.login = False
     st.rerun()
+
