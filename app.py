@@ -3,72 +3,72 @@ from PIL import Image
 import pandas as pd
 
 st.set_page_config(
-    page_title="SI-PANDAI Dashboard",
+    page_title="SI-PANDAI",
     layout="wide"
 )
 
-# ===============================
-# BACKGROUND STYLE
-# ===============================
-page_bg = """
+# ==============================
+# STYLE LOGIN
+# ==============================
+st.markdown("""
 <style>
 
 [data-testid="stAppViewContainer"]{
-background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-background-size: cover;
+background-color:white;
 }
 
 .login-box{
-background: rgba(255,255,255,0.08);
-backdrop-filter: blur(12px);
-padding:40px;
-border-radius:20px;
+width:350px;
+margin:auto;
+padding:30px;
+border-radius:10px;
+border:1px solid #e0e0e0;
+box-shadow:0px 4px 15px rgba(0,0,0,0.1);
 text-align:center;
-box-shadow:0px 10px 30px rgba(0,0,0,0.4);
+background:white;
 }
 
 .title{
-color:white;
-font-size:38px;
+font-size:28px;
 font-weight:700;
+margin-top:10px;
 }
 
 .subtitle{
-color:#dddddd;
-font-size:18px;
+font-size:16px;
+color:gray;
 margin-bottom:20px;
 }
 
-.center{
-display:flex;
-justify-content:center;
-}
-
 </style>
-"""
+""", unsafe_allow_html=True)
 
-st.markdown(page_bg, unsafe_allow_html=True)
 
-# ===============================
+# ==============================
 # SESSION LOGIN
-# ===============================
+# ==============================
 if "login" not in st.session_state:
     st.session_state.login = False
 
 
-# ===============================
+# ==============================
 # HALAMAN LOGIN
-# ===============================
+# ==============================
 if st.session_state.login == False:
 
-    col1, col2, col3 = st.columns([1,2,1])
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+
+    col1, col2, col3 = st.columns([2,1,2])
 
     with col2:
 
         st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
         logo = Image.open("logo_sipandai.png")
-        st.image(logo, width=180)
+        st.image(logo, width=120)
 
         st.markdown('<div class="title">SI-PANDAI</div>', unsafe_allow_html=True)
         st.markdown('<div class="subtitle">Sistem Informasi Penyandang Disabilitas</div>', unsafe_allow_html=True)
@@ -76,44 +76,38 @@ if st.session_state.login == False:
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
-        if st.button("Login"):
+        if st.button("Login", use_container_width=True):
 
             if username == "admin" and password == "12345":
                 st.session_state.login = True
                 st.rerun()
             else:
-                st.error("Username atau password salah")
+                st.error("Username atau Password salah")
 
         st.markdown('</div>', unsafe_allow_html=True)
 
 
-
-# ===============================
+# ==============================
 # DASHBOARD
-# ===============================
+# ==============================
 else:
-
-    logo_sumut = Image.open("logo_sumut.png")
 
     col1,col2 = st.columns([1,8])
 
     with col1:
-        st.image(logo_sumut, width=80)
+        logo = Image.open("LOGO PEMPROV SUMUT WARNA.png")
+        st.image(logo, width=80)
 
     with col2:
-        st.title("Dashboard Disabilitas Sumatera Utara")
+        st.title("Dashboard SI-PANDAI")
         st.write("Pemerintah Provinsi Sumatera Utara")
 
     st.divider()
 
-    # LOAD DATA
     df = pd.read_csv("KOTA_MEDAN_LENGKAP_KELURAHAN.csv")
 
     st.subheader("Data Penyandang Disabilitas")
-
     st.dataframe(df, use_container_width=True)
-
-    st.subheader("Statistik")
 
     col1,col2,col3 = st.columns(3)
 
@@ -124,17 +118,10 @@ else:
         st.metric("Jumlah Kolom", len(df.columns))
 
     with col3:
-        st.metric("Jumlah Kecamatan", df["kecamatan"].nunique())
-
-    st.subheader("Visualisasi")
-
-    if "jenis_disabilitas" in df.columns:
-        chart = df["jenis_disabilitas"].value_counts()
-        st.bar_chart(chart)
+        st.metric("Jumlah Kecamatan", df.iloc[:,0].nunique())
 
     st.sidebar.title("Menu")
 
     if st.sidebar.button("Logout"):
         st.session_state.login = False
         st.rerun()
-
