@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==================================
-# Bagian 1: CSS CUSTOM (LOGIN & SIDEBAR GRADASI)
+# Bagian 1: CSS CUSTOM (MODERN DESIGN & GRADIENT)
 # ==================================
 st.markdown("""
 <style>
@@ -30,7 +30,7 @@ st.markdown("""
         background-color: #f0f4f8 !important;
     }
 
-    /* --- STYLE SIDEBAR GRADASI --- */
+    /* --- STYLE SIDEBAR GRADASI BIRU --- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
     }
@@ -42,6 +42,24 @@ st.markdown("""
         color: #333 !important;
     }
 
+    /* --- STYLE TOMBOL LOGOUT ORANGE GRADASI (Khusus Sidebar) --- */
+    section[data-testid="stSidebar"] div.stButton > button {
+        background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        border: none !important;
+        width: 100%;
+        height: 40px;
+        transition: 0.3s;
+    }
+    section[data-testid="stSidebar"] div.stButton > button:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+        color: white !important;
+    }
+
+    /* --- STYLE LOGIN (TIDAK BERUBAH) --- */
     /* KOTAK LOGIN: BIRU LEMBUT GRADASI PUTIH */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
         background: linear-gradient(180deg, #e3f2fd 0%, #ffffff 100%) !important;
@@ -64,6 +82,7 @@ st.markdown("""
         margin-bottom: 25px !important;
     }
 
+    /* Tombol Login Umum */
     div.stButton > button {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important;
@@ -152,8 +171,15 @@ if not st.session_state.login:
 # Bagian 4: DASHBOARD UTAMA (SETELAH LOGIN)
 # ==================================
 
-# --- SIDEBAR (FILTER & LOGOUT) ---
-st.sidebar.markdown("### SI-PANDAI SUMUT")
+# --- SIDEBAR (LOGO, FILTER & LOGOUT) ---
+
+# 1. Menambahkan Logo Sumut di Sidebar Atas (Kecil)
+if os.path.exists("logo_sumut.png"):
+    st.sidebar.image(Image.open("logo_sumut.png"), width=60)
+
+# 2. Menggunakan HTML untuk menurunkan tulisan sedikit (padding-top)
+st.sidebar.markdown('<p style="padding-top:15px; font-size:1.17em; font-weight:bold; margin:0; color: white;">SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+
 st.sidebar.write(f"👤 Role: **{st.session_state.role}**")
 st.sidebar.divider()
 
@@ -169,13 +195,13 @@ if kabkota != "Semua":
 
 st.sidebar.divider()
 
-# Tombol Logout dipindahkan ke Sidebar
+# Tombol Logout dipindahkan ke Sidebar, CSS Orange Gradasi diterapkan via selektor khusus di atas
 if st.sidebar.button("Logout 🚪", use_container_width=True):
     st.session_state.login = False
     st.session_state.role = ""
     st.rerun()
 
-# --- MAIN DASHBOARD ---
+# --- MAIN DASHBOARD (TIDAK BERUBAH) ---
 st.title("📊 Dashboard Sebaran Penyandang Disabilitas")
 st.subheader("Provinsi Sumatera Utara")
 st.divider()
