@@ -71,7 +71,7 @@ if "login" not in st.session_state:
 if not st.session_state.login:
     
     # 1. LOGO SUMUT DI TENGAH (Kecil)
-    col_s1, col_s2, col_s3 = st.columns([2, 0.4, 2])
+    col_s1, col_s2, col_s3 = st.columns([2, 0.3, 2])
     with col_s2:
         if os.path.exists("logo_sumut.png"):
             st.image(Image.open("logo_sumut.png"), use_container_width=True)
@@ -125,3 +125,4 @@ st.write(f"Selamat datang, **{st.session_state.role}**")
 if st.button("Logout"):
     st.session_state.login = False
     st.rerun()
+
