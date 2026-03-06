@@ -71,7 +71,7 @@ if "login" not in st.session_state:
 if not st.session_state.login:
     
     # 1. LOGO SUMUT DI TENGAH (Kecil)
-    col_s1, col_s2, col_s3 = st.columns([2, 0.3, 2])
+    col_s1, col_s2, col_s3 = st.columns([2, 0.4, 2])
     with col_s2:
         if os.path.exists("logo_sumut.png"):
             st.image(Image.open("logo_sumut.png"), use_container_width=True)
@@ -82,41 +82,38 @@ if not st.session_state.login:
     # Gunakan perbandingan kolom agar kartu berada di tengah dan tidak terlalu lebar
     _, col_card, _ = st.columns([1.5, 2, 1.5]) 
 
-    with col_card:
-        # Gunakan container dengan border untuk efek kartu
+  with col_card:
+        # Kotak dengan gradasi biru (diatur via CSS)
         with st.container(border=True):
-            # Membagi isi kartu menjadi dua secara horizontal
-            # Kolom kiri (Logo Aplikasi), Kolom kanan (Form)
-            col_logo, col_form = st.columns([1, 1.5])
+            # Layout Horizontal: Logo SI-PANDAI (Kiri), Form (Kanan)
+            col_l, col_r = st.columns([0.8, 1.5])
 
-            with col_logo:
-                st.write("") # Spasi atas
+            with col_l:
+                st.write("") # Spasi atas logo
                 if os.path.exists("logo_sipandai.png"):
                     st.image(Image.open("logo_sipandai.png"), use_container_width=True)
                 else:
                     st.write("SI-PANDAI")
 
-            with col_form:
-                st.markdown("<h4 style='margin:0; color:#073642;'>LOGIN USER</h4>", unsafe_allow_html=True)
-                st.markdown("<p style='margin:0 0 15px 0; font-size:12px; color:#1D976C;'>SI-PANDAI SUMUT</p>", unsafe_allow_html=True)
+            with col_r:
+                st.markdown("<h4>LOGIN USER</h4>", unsafe_allow_html=True)
+                st.markdown("<p>Sistem Pemetaan ATS Disabilitas Sumatera Utara</p>", unsafe_allow_html=True)
                 
-                username = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
-                password = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
+                # Input dengan Ikon di dalam placeholder
+                user = st.text_input("Username", placeholder="👤  Masukkan Username", label_visibility="collapsed")
+                pwd = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", label_visibility="collapsed")
                 
-                if st.button("MASUK"):
-                    # Logika pengecekan user (sesuaikan dengan file Excel Anda)
-                    # Ini contoh dummy untuk memastikan transisi berhasil
-                    if username == "admin" and password == "admin":
+                if st.button("MASUK KE SISTEM"):
+                    # Logika pengecekan (Dummy)
+                    if user == "admin" and pwd == "admin":
                         st.session_state.login = True
-                        st.session_state.role = "admin"
+                        st.session_state.role = "Admin"
                         st.rerun()
                     else:
-                        st.error("Login Gagal", icon="🚨")
+                        st.error("Gagal Masuk", icon="⚠️")
 
-        st.markdown('<div class="footer-text">© 2024 Dinas Pendidikan Provinsi Sumatera Utara</div>', unsafe_allow_html=True)
-
+    st.markdown('<div style="text-align:center; color:#999; font-size:10px; margin-top:15px;">© 2024 Dinas Pendidikan Provinsi Sumatera Utara</div>', unsafe_allow_html=True)
     st.stop()
-
 # ==================================
 # Bagian 4: DASHBOARD (SETELAH LOGIN)
 # ==================================
@@ -125,4 +122,5 @@ st.write(f"Selamat datang, **{st.session_state.role}**")
 if st.button("Logout"):
     st.session_state.login = False
     st.rerun()
+
 
