@@ -154,14 +154,14 @@ st.markdown("""
 # Bagian 2: LOAD DATA & USERS
 # ==================================
 # GANTI DENGAN PATH FILE EXCEL ANDA YANG SEBENARNYA
-FILE_PATH = "DATA_DISABILITAS_SUMUT.xlsx" 
+FILE_PATH = "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx" 
 
 @st.cache_data
 def load_data():
     if not os.path.exists(FILE_PATH):
         st.error(f"File '{FILE_PATH}' tidak ditemukan. Silakan periksa path file Excel Anda.")
         return pd.DataFrame() # Kembalikan dataframe kosong jika file tidak ada
-    return pd.read_excel(FILE_PATH, sheet_name="data_disabilitas")
+    return pd.read_excel(FILE_PATH, sheet_name="KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS")
 
 @st.cache_data
 def load_users():
@@ -463,5 +463,6 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
 
