@@ -161,7 +161,6 @@ if not st.session_state.login:
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.stop() # Menghentikan eksekusi kode dashboard di bawahnya jika belum login
-
 # =========================
 # SIDEBAR (Tidak Berubah)
 # =========================
@@ -360,3 +359,4 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
