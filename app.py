@@ -133,15 +133,14 @@ if not st.session_state.login:
                 username = st.text_input("Username", placeholder="👤  Username", label_visibility="collapsed")
                 password = st.text_input("Password", type="password", placeholder="🔑  Password", label_visibility="collapsed")
                 
-              if st.button("MASUK KE DASHBOARD"):
-                    # Logika Dummy (Ganti dengan pengecekan Excel Anda)
+                if st.button("MASUK SISTEM"):
                     if username == "admin" and password == "admin":
                         st.session_state.login = True
                         st.rerun()
                     else:
-                        st.error("Username/Password Salah")
+                        st.error("Credential Salah")
 
-    st.markdown('<p style="text-align:center; color:rgba(255,255,255,0.6); font-size:12px; margin-top:30px; font-weight:bold;">© 2026 Dinas Pendidikan Provinsi Sumatera Utara</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align:center; color:#adb5bd; font-size:11px; margin-top:30px;">Dinas Pendidikan Provinsi Sumatera Utara © 2026</p>', unsafe_allow_html=True)
     st.stop()
 
 # --- Dashboard Sederhana ---
