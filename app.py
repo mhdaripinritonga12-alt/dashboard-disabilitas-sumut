@@ -93,7 +93,7 @@ if st.session_state.login == False:
 # ===============================
 else:
 
-    logo_sumut = Image.open("LOGO PEMPROV SUMUT WARNA.png")
+    logo_sumut = Image.open("logo_sumut.png")
 
     col1,col2 = st.columns([1,8])
 
@@ -137,3 +137,4 @@ else:
     if st.sidebar.button("Logout"):
         st.session_state.login = False
         st.rerun()
+
