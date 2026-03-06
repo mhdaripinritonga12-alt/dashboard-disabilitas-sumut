@@ -168,3 +168,4 @@ st.title("Berhasil Masuk ke Dashboard SI-PANDAI")
 if st.button("Logout"):
     st.session_state.login = False
     st.rerun()
+
