@@ -13,83 +13,101 @@ st.set_page_config(
 )
 
 # ==================================
-# Bagian 1: CSS CUSTOM (MODERN DESIGN)
+# Bagian 1: CSS CUSTOM (SUMUT BACKGROUND & GLASSMORPHISM)
 # ==================================
 st.markdown("""
 <style>
-    /* Menggunakan Font yang lebih modern */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
     
     html, body, [data-testid="stWidgetLabel"] {
         font-family: 'Inter', sans-serif !important;
     }
 
-    /* Background Halaman */
+    /* BACKGROUND PEMANDANGAN SUMUT DENGAN OVERLAY GELAP */
     [data-testid="stAppViewContainer"] {
-        background-color: #f0f4f8 !important;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+                          url("https://images.unsplash.com/photo-1571746243149-6012b84299ec?q=80&w=2000&auto=format&fit=crop");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
     }
 
-    /* KOTAK LOGIN: BIRU LEMBUT GRADASI PUTIH (LINEAR) */
+    header {visibility: hidden;}
+
+    /* KOTAK LOGIN: PUTIH SEMI-TRANSPARAN (GLASSMORPHISM) */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
-        background: linear-gradient(180deg, #e3f2fd 0%, #ffffff 100%) !important;
-        border-radius: 24px !important; /* Lebih bulat agar modern */
-        border: 1px solid rgba(255, 255, 255, 0.8) !important;
-        padding: 35px !important;
-        box-shadow: 0px 20px 40px rgba(0,0,0,0.05) !important;
+        background: rgba(255, 255, 255, 0.12) !important; /* Putih Transparan Tipis */
+        backdrop-filter: blur(20px); /* Efek Blur Kaca */
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 25px !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 40px !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
     }
 
-    /* Teks Judul LOGIN USER (Warna Biru Navy Tua) */
+    /* WADAH LOGO SI-PANDAI (SEMI-TRANSPARAN) */
+    .logo-sipandai-box {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 25px;
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 10px;
+    }
+
+    /* Teks Judul & Subtitle */
     .login-title {
-        color: #0d47a1 !important;
-        font-size: 24px !important;
+        color: #ffffff !important;
+        font-size: 28px !important;
         font-weight: 800 !important;
-        margin-bottom: 2px !important;
-        letter-spacing: -0.5px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
     }
     
     .login-subtitle {
-        color: #546e7a !important;
-        font-size: 13px !important;
-        margin-bottom: 25px !important;
+        color: #00e5ff !important; /* Biru Neon agar menyala di latar gelap */
+        font-size: 14px !important;
+        font-weight: 700;
+        margin-bottom: 30px !important;
+        letter-spacing: 1px;
     }
 
-    /* STYLE INPUT FIELD */
+    /* Input Field (Sangat Bersih) */
     div[data-testid="stTextInput"] input {
+        background-color: rgba(255, 255, 255, 0.95) !important;
         border-radius: 12px !important;
-        border: 1.5px solid #d1d9e0 !important;
-        padding: 12px !important;
-        background-color: white !important;
-        transition: 0.3s;
-    }
-    
-    div[data-testid="stTextInput"] input:focus {
-        border-color: #1e88e5 !important;
-        box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1) !important;
+        border: none !important;
+        height: 48px !important;
+        color: #222 !important;
+        font-weight: 500;
     }
 
-    /* TOMBOL LOGIN (Vibrant Blue) */
+    /* Tombol Login Vibrant */
     div.stButton > button {
-        background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
+        background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%) !important;
         color: white !important;
         border-radius: 12px !important;
-        font-weight: 700 !important;
-        height: 48px;
+        font-weight: 800 !important;
+        height: 52px;
         border: none !important;
         width: 100%;
         margin-top: 20px;
-        box-shadow: 0px 4px 15px rgba(21, 101, 192, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0px 5px 20px rgba(0, 210, 255, 0.4);
     }
     
     div.stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0px 6px 20px rgba(21, 101, 192, 0.4);
+        box-shadow: 0px 8px 30px rgba(0, 210, 255, 0.6);
     }
 
-    /* Logo Sumut di atas */
-    .logo-header {
+    /* Logo Sumut di Atas */
+    .logo-sumut-header {
         display: flex;
         justify-content: center;
-        padding: 40px 0 20px 0;
+        padding: 50px 0 20px 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -102,50 +120,51 @@ if "login" not in st.session_state:
 
 if not st.session_state.login:
     
-    # 1. LOGO SUMUT (DIPERBESAR & DI TENGAH)
-    st.markdown('<div class="logo-header">', unsafe_allow_html=True)
-    col_l1, col_l2, col_l3 = st.columns([2, 0.5, 2])
-    with col_l2:
+    # 1. LOGO SUMUT (TENGAH ATAS - UKURAN PAS)
+    st.markdown('<div class="logo-sumut-header">', unsafe_allow_html=True)
+    col_t1, col_t2, col_t3 = st.columns([2, 0.4, 2])
+    with col_t2:
+        # Menggunakan logo_sumut.png dengan ukuran yang diperbesar namun tetap aman
         if os.path.exists("logo_sumut.png"):
-            # Ukuran dinaikkan ke 100 agar lebih dominan
-            st.image(Image.open("logo_sumut.png"), width=100) 
+            st.image(Image.open("logo_sumut.png"), width=90)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # 2. KARTU LOGIN (COMPACT HORIZONTAL)
-    _, col_card, _ = st.columns([1.5, 2.5, 1.5]) 
+    # 2. KARTU LOGIN GLASSMORPHISM (HORIZONTAL)
+    _, col_card, _ = st.columns([1.2, 2.8, 1.2]) 
 
     with col_card:
         with st.container(border=True):
-            # Layout Horizontal: Logo Kiri, Form Kanan
-            col_left, col_right = st.columns([1, 1.4])
+            col_l, col_r = st.columns([1, 1.3])
 
-            with col_left:
-                st.write("") # Spasi vertikal agar logo rata tengah
+            with col_l:
+                # Kotak logo SI-PANDAI semi-transparan
+                st.markdown('<div class="logo-sipandai-box">', unsafe_allow_html=True)
                 if os.path.exists("logo_sipandai.png"):
                     st.image(Image.open("logo_sipandai.png"), use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
-            with col_right:
-                # Judul & Subjudul
+            with col_r:
                 st.markdown('<div class="login-title">LOGIN USER</div>', unsafe_allow_html=True)
-                st.markdown('<div class="login-subtitle">Akses Dashboard SI-PANDAI SUMUT</div>', unsafe_allow_html=True)
+                st.markdown('<div class="login-subtitle">SI-PANDAI SUMUT</div>', unsafe_allow_html=True)
                 
-                # Form Input
-                username = st.text_input("Username", placeholder="👤  Username", label_visibility="collapsed")
-                password = st.text_input("Password", type="password", placeholder="🔑  Password", label_visibility="collapsed")
+                # Baris User & Password
+                user = st.text_input("Username", placeholder="👤  Username", label_visibility="collapsed")
+                pwd = st.text_input("Password", type="password", placeholder="🔑  Password", label_visibility="collapsed")
                 
-                if st.button("MASUK KE DASHBOARD"):
-                    if username == "admin" and password == "admin":
+                if st.button("MASUK SISTEM"):
+                    if user == "admin" and pwd == "admin":
                         st.session_state.login = True
                         st.rerun()
                     else:
-                        st.error("Credential Salah")
+                        st.error("Gagal Login")
 
-    st.markdown('<p style="text-align:center; color:#adb5bd; font-size:11px; margin-top:30px;">Dinas Pendidikan Provinsi Sumatera Utara © 2026</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align:center; color:rgba(255,255,255,0.6); font-size:12px; margin-top:30px; font-weight:700;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA © 2026</p>', unsafe_allow_html=True)
     st.stop()
 
-# --- Dashboard Sederhana ---
-st.title("Selamat Datang di Dashboard!")
-if st.button("Keluar"):
+# ==================================
+# HALAMAN DASHBOARD (SETELAH LOGIN)
+# ==================================
+st.title("Berhasil Masuk ke Dashboard SI-PANDAI")
+if st.button("Logout"):
     st.session_state.login = False
     st.rerun()
-
