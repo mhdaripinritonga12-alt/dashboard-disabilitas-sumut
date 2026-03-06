@@ -1,152 +1,166 @@
 import streamlit as st
 import pandas as pd
-from io import BytesIO
-import plotly.express as px
 from PIL import Image
 import os
+from io import BytesIO
+import plotly.express as px
 
-# Konfigurasi Halaman (Sudah benar di kode Anda, tetap sertakan)
+# ==================================
+# Bagian 0: KONFIGURASI HALAMAN
+# ==================================
 st.set_page_config(
-    page_title="Dashboard Disabilitas Sumut",
+    page_title="Halaman Login SI-PANDAI SUMUT",
     layout="wide",
-    page_icon="📊" # Menambahkan favicon
+    page_icon="🔒"
 )
 
 # ==================================
-# Bagian 1: STYLE LOGIN (PERBAIKAN UTAMA)
+# Bagian 1: STYLE LOGIN (CSS Khusus)
 # ==================================
-# Bagian CSS ini berfokus untuk membuat header kartu login berwarna gradasi gelap
-# dan elemen lainnya berwarna teal, sesuai gambar contoh.
+# Bagian ini mengatur estetika kartu login, gradasi, posisi logo, dan tombol teal.
 st.markdown("""
 <style>
-    /* 1. Reset & Layout Dasar */
-    /* Menghilangkan padding default Streamlit bagian atas agar konten lebih naik */
+    /* Reset padding default Streamlit agar konten lebih rapi */
     .block-container {
-        padding-top: 2rem;
+        padding-top: 0rem;
         padding-bottom: 0rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
     }
 
-    /* Memastikan latar belakang halaman utama berwarna putih bersih/abu sangat muda */
+    /* Memastikan latar belakang halaman utama berwarna abu-abu sangat muda/bersih */
     [data-testid="stAppViewContainer"] {
         background-color: #F8F9FA;
     }
 
-    /* --- KARTU LOGIN --- */
-    /* Container utama untuk memposisikan kartu login di tengah halaman secara vertikal & horizontal */
-    .login-card-container {
+    /* --- CONTAINER UTAMA LOGIN --- */
+    /* Membuat konten login berada di tengah-tengah layar secara vertikal & horizontal */
+    .login-main-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 80vh; /* Mengisi 80% tinggi layar untuk menengahkan */
+        min-height: 100vh; /* Memenuhi tinggi layar */
+        flex-direction: column; /* Menyusun elemen secara vertikal (Logo Sumut, Kartu, Info) */
     }
 
-    /* Desain Kartu Login Utama */
+    /* --- INFO HEADER (DI LUAR KARTU) --- */
+    /* Tempat Logo Pemprov Sumut berada */
+    .info-header {
+        text-align: center;
+        margin-bottom: 30px; /* Jarak dari kartu login */
+    }
+
+    /* --- KARTU LOGIN UTAMA --- */
+    /* Mengatur ukuran dan tampilan kartu login */
     .login-card {
-        width: 450px; /* Sedikit lebih lebar dari kode lama agar tidak sesak */
+        width: 380px; /* Ukuran kartu yang proporsional */
         background-color: white;
-        border-radius: 15px; /* Sudut lebih halus/membulat */
-        box-shadow: 0px 10px 30px rgba(0,0,0,0.1); /* Bayangan lebih lembut dan elegan */
-        overflow: hidden; /* Penting! Agar header gradasi mengikuti bentuk border-radius kartu */
-        border: 1px solid #EAEAEA; /* Border tipis abu-abu */
-        text-align: center; /* Perataan teks tengah default untuk konten di dalamnya */
+        border-radius: 12px; /* Sudut halus */
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.08); /* Bayangan lembut */
+        overflow: hidden; /* Memastikan header gradasi mengikuti bentuk border-radius kartu */
+        border: 1px solid #EAEAEA; /* Border tipis */
+        text-align: center;
     }
 
-    /* --- HEADER KARTU LOGIN (PERBAIKAN SESUAI GAMBAR) --- */
-    /* Bagian ini menciptakan area berwarna gradasi gelap di bagian atas kartu */
+    /* --- HEADER KARTU GRADASI (Teal ke Gelap) --- */
     .login-header-gradient {
-        background: linear-gradient(135deg, #1D976C 0%, #073642 100%); /* Gradasi Teal ke Biru Tua/Gelap */
-        padding: 30px 20px; /* Padding vertikal yang cukup */
-        color: white; /* Semua teks di dalam header ini berwarna putih */
+        background: linear-gradient(135deg, #1D976C 0%, #073642 100%); /* Gradasi sesuai gambar */
+        padding: 25px 20px; /* Padding vertikal */
+        color: white;
     }
 
-    /* Teks 'LOGIN USER' di dalam header gradasi */
     .login-header-title {
-        font-size: 24px;
+        font-size: 22px; /* Ukuran font disesuaikan */
         font-weight: 800; /* Sangat tebal */
         letter-spacing: 1px; /* Jarak antar huruf */
         margin: 0;
         text-transform: uppercase; /* Huruf besar semua */
     }
 
-    /* Teks 'SI-PANDAI SUMUT' di dalam header gradasi */
     .login-header-subtitle {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
-        margin-top: 5px; /* Jarak dari judul atas */
-        opacity: 0.9; /* Sedikit transparan agar tidak terlalu mencolok dibanding judul */
+        margin-top: 4px;
+        opacity: 0.9;
     }
 
-    /* --- KONTEN FORM LOGIN --- */
-    /* Area form di dalam kartu, di bawah header gradasi, berwarna latar putih */
+    /* --- KONTEN FORM LOGIN (Area Putih) --- */
+    /* Area tempat Logo SI-PANDAI dan Input berada */
     .login-form-content {
-        padding: 40px 35px; /* Padding yang luas agar form tidak berdesakan */
+        padding: 30px 30px 35px 30px; /* Padding yang luas */
+    }
+
+    /* --- LOGO SI-PANDAI (DI DALAM KARTU) --- */
+    .login-card-logo-container {
+        text-align: center;
+        margin-bottom: 25px; /* Jarak dari input fields */
     }
 
     /* --- STYLING INPUT & TOMBOL (Aksen Teal) --- */
-    /* Mengubah warna border input field (Username/Password) saat fokus/aktif menjadi Teal */
+    /* Mengubah warna fokus input field menjadi Teal */
     div[data-testid="stTextInput"] > div > div > input:focus {
         border-color: #1D976C;
-        box-shadow: 0 0 0 0.2rem rgba(29, 151, 108, 0.25);
+        box-shadow: 0 0 0 0.15rem rgba(29, 151, 108, 0.20);
     }
 
     /* Mengubah warna tombol LOGIN menjadi warna tema (Teal) */
     div.stButton > button {
         background-color: #1D976C; /* Warna Teal Solid */
         color: white;
-        border-radius: 8px;
-        padding: 12px 20px;
+        border-radius: 6px; /* Sudut tombol lebih halus */
+        padding: 10px 20px;
         font-weight: 700;
         border: none;
         width: 100%;
-        transition: all 0.3s ease; /* Efek transisi halus saat hover */
+        transition: all 0.3s ease; /* Efek transisi halus */
     }
     
-    /* Efek hover tombol LOGIN (Teal lebih gelap) */
     div.stButton > button:hover {
-        background-color: #147a57; 
+        background-color: #147a57; /* Warna lebih gelap saat hover */
         border: none;
         color: white;
     }
 
-    /* Teks 'Forgot Password' (Dummy) */
+    /* Teks 'Forgot Password' */
     .forgot-password {
         text-align: right;
-        font-size: 14px;
-        color: #1D976C; /* Warna Teal */
-        margin-top: -10px; /* Menaikkan sedikit agar dekat dengan input password */
-        margin-bottom: 20px;
+        font-size: 13px;
+        color: #1D976C;
+        margin-top: -10px;
+        margin-bottom: 18px;
     }
 
-    /* --- INFO HEADER & FOOTER (Luar Kartu) --- */
-    /* Area logo di luar kartu login */
-    .info-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    /* Info teks di bawah login form */
+    /* --- INFO TEKS & FOOTER (Luar Kartu) --- */
     .info-text-container {
         text-align: center;
-        margin-top: 30px;
-        color: #555;
-        font-size: 14px;
-        line-height: 1.6;
+        margin-top: 25px;
+        color: #666; /* Warna teks info */
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .page-footer {
+        text-align: center;
+        color: #888;
+        padding: 15px 0;
+        font-size: 11px;
+        margin-top: 40px;
     }
 
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
-# Bagian 2: Load Data & Users (Sama seperti kode Anda)
-# =========================
-# GANTI DENGAN PATH FILE ANDA YANG SEBENARNYA
-FILE_PATH = "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx" 
+# ==================================
+# Bagian 2: LOAD DATA & USERS
+# ==================================
+# GANTI DENGAN PATH FILE EXCEL ANDA YANG SEBENARNYA
+FILE_PATH = "DATA_DISABILITAS_SUMUT.xlsx" 
 
 @st.cache_data
 def load_data():
     if not os.path.exists(FILE_PATH):
-        st.error(f"File '{FILE_PATH}' tidak ditemukan. Periksa path file Anda.")
-        return pd.DataFrame()
+        st.error(f"File '{FILE_PATH}' tidak ditemukan. Silakan periksa path file Excel Anda.")
+        return pd.DataFrame() # Kembalikan dataframe kosong jika file tidak ada
     return pd.read_excel(FILE_PATH, sheet_name="data_disabilitas")
 
 @st.cache_data
@@ -158,97 +172,101 @@ def load_users():
 data = load_data()
 users = load_users()
 
-# =========================
-# Bagian 3: Session Login (Sama seperti kode Anda)
-# =========================
+# ==================================
+# Bagian 3: SESSION LOGIN
+# ==================================
 if "login" not in st.session_state:
     st.session_state.login = False
     st.session_state.role = ""
 
 # ==================================
-# Bagian 4: HALAMAN LOGIN (PERBAIKAN STRUKTUR HTML)
+# Bagian 4: HALAMAN LOGIN (Kartu)
 # ==================================
 if not st.session_state.login:
 
-    # Menempatkan seluruh konten login di dalam container agar berada di tengah
-    st.markdown('<div class="login-card-container">', unsafe_allow_html=True)
+    # Menempatkan seluruh konten login di dalam container utama agar berada di tengah halaman
+    st.markdown('<div class="login-main-container">', unsafe_allow_html=True)
     
-    # Membuat kolom untuk memposisikan kartu di tengah secara horizontal
-    col_left, col_main, col_right = st.columns([1, 2.5, 1])
+    # --- 1. Info Header (Luar Kartu - Logo Sumut) ---
+    st.markdown('<div class="info-header">', unsafe_allow_html=True)
+    try:
+        # Mencoba memuat Logo Pemprov Sumut
+        logo_pemprov = Image.open("logo_sumut.png") 
+        st.image(logo_pemprov, width=70) # Ukuran logo disesuaikan
+    except FileNotFoundError:
+        st.warning("File 'logo_sumut.png' tidak ditemukan. Letakkan file logo di folder yang sama.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    with col_main:
-        # 1. Info Header (Logo Pemprov Sumut - Di luar kartu)
-        st.markdown('<div class="info-header">', unsafe_allow_html=True)
-        # GANTI DENGAN NAMA FILE LOGO PEMPROV ANDA
-        try:
-            logo_pemprov = Image.open("logo_pemprov_sumut.png") 
-            st.image(logo_pemprov, width=80)
-        except FileNotFoundError:
-            st.warning("File 'logo_pemprov_sumut.png' tidak ditemukan. Letakkan file logo di folder yang sama.")
-        st.markdown('</div>', unsafe_allow_html=True)
+    # --- 2. Kartu Login Utama ---
+    st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
-        # 2. Kartu Login Utama
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
-        # --- Bagian A: Header Gradasi (Sesuai Gambar) ---
-        # Ini adalah area berwarna gelap dengan teks putih
-        st.markdown("""
-            <div class="login-header-gradient">
-                <div class="login-header-title">LOGIN USER</div>
-                <div class="login-header-subtitle">SI-PANDAI SUMUT</div>
-            </div>
-        """, unsafe_allow_html=True)
-
-        # --- Bagian B: Konten Form (Area Putih) ---
-        st.markdown('<div class="login-form-content">', unsafe_allow_html=True)
-        
-        # Input Fields menggunakan Streamlit natif
-        # Placeholder ditambahkan agar lebih informatif
-        username = st.text_input("👤 Username", placeholder="Masukkan Username Anda")
-        password = st.text_input("🔑 Password", type="password", placeholder="Masukkan Password Anda")
-        
-        # Teks 'Forgot Password' (Dummy)
-        st.markdown('<div class="forgot-password"><a href="#" style="color: #1D976C; text-decoration: none;">Forgot Password?</a></div>', unsafe_allow_html=True)
-
-        # Tombol LOGIN
-        if st.button("LOGIN", use_container_width=True):
-            if users.empty:
-                st.error("Data pengguna tidak tersedia.")
-            else:
-                user = users[
-                    (users["username"] == username) &
-                    (users["password"] == password)
-                ]
-
-                if not user.empty:
-                    st.session_state.login = True
-                    st.session_state.role = user.iloc[0]["role"]
-                    st.rerun()
-                else:
-                    st.error("Username atau password salah")
-
-        st.markdown('</div>', unsafe_allow_html=True) # Menutup login-form-content
-        st.markdown('</div>', unsafe_allow_html=True) # Menutup login-card
-
-        # 3. Info Teks di Bawah Kartu
-        st.markdown("""
-            <div class="info-text-container">
-                <div>Sistema Informasion Pensissiaan SI-Pandai Sumut</div>
-                <div>Pengatururaan Dengnan SI-Pandai Sumut</div>
-            </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True) # Menutup login-card-container
-
-    # Footer Halaman (Opsional, menambahkan kesan profesional)
+    # A. Header Gradasi (Sesuai Gambar)
     st.markdown("""
-        <div style="text-align: center; color: #888; padding: 20px 0; font-size: 12px; margin-top: 50px;">
+        <div class="login-header-gradient">
+            <div class="login-header-title">LOGIN USER</div>
+            <div class="login-header-subtitle">SI-PANDAI SUMUT</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # B. Konten Form (Area Putih)
+    st.markdown('<div class="login-form-content">', unsafe_allow_html=True)
+    
+    # Mencoba memuat Logo SI-PANDAI (Di dalam kartu)
+    st.markdown('<div class="login-card-logo-container">', unsafe_allow_html=True)
+    try:
+        logo_sipandai = Image.open("logo_sipandai.png") 
+        st.image(logo_sipandai, width=65) # Ukuran logo disesuaikan
+    except FileNotFoundError:
+        st.warning("File 'logo_sipandai.png' tidak ditemukan. Letakkan file logo di folder yang sama.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Input Fields menggunakan Streamlit natif
+    username = st.text_input("👤 Username", placeholder="Masukkan Username Anda")
+    password = st.text_input("🔑 Password", type="password", placeholder="Masukkan Password Anda")
+    
+    # Teks 'Forgot Password' (Dummy)
+    st.markdown('<div class="forgot-password"><a href="#" style="color: #1D976C; text-decoration: none;">Forgot Password?</a></div>', unsafe_allow_html=True)
+
+    # Tombol LOGIN
+    if st.button("LOGIN", use_container_width=True):
+        if users.empty:
+            st.error("Data pengguna tidak tersedia.")
+        else:
+            user = users[
+                (users["username"] == username) &
+                (users["password"] == password)
+            ]
+
+            if not user.empty:
+                st.session_state.login = True
+                st.session_state.role = user.iloc[0]["role"]
+                st.rerun()
+            else:
+                st.error("Username atau password salah")
+
+    st.markdown('</div>', unsafe_allow_html=True) # Menutup login-form-content
+    st.markdown('</div>', unsafe_allow_html=True) # Menutup login-card
+
+    # --- 3. Info Teks di Bawah Kartu ---
+    st.markdown("""
+        <div class="info-text-container">
+            <div>Sistema Informasion Pensissiaan SI-Pandai Sumut</div>
+            <div>Pengatururaan Dengnan SI-Pandai Sumut</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # --- 4. Footer Halaman ---
+    st.markdown("""
+        <div class="page-footer">
             © 2024 Dinas Pendidikan Provinsi Sumatera Utara
         </div>
     """, unsafe_allow_html=True)
 
+    st.markdown('</div>', unsafe_allow_html=True) # Menutup login-main-container
+
     st.stop() # Menghentikan eksekusi kode dashboard di bawahnya jika belum login
-# =========================
+
+
 # SIDEBAR
 # =========================
 st.sidebar.title("📂 Menu")
@@ -445,4 +463,5 @@ Role:
 - Operator : Lihat & Download
 - Viewer   : Lihat saja
 """)
+
 
