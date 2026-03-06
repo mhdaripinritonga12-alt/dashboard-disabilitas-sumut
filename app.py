@@ -13,67 +13,81 @@ st.set_page_config(
 )
 
 # ==================================
-# Bagian 1: CSS CUSTOM (GRADASI BIRU & ICON)
+# Bagian 1: CSS CUSTOM (GRADASI BIRU & LAYOUT KARTU)
 # ==================================
 st.markdown("""
 <style>
-    /* Mengatur latar belakang halaman */
+    /* Latar belakang halaman */
     [data-testid="stAppViewContainer"] {
-        background-color: #f0f2f6 !important;
+        background-color: #f4f7f9 !important;
     }
 
-    /* KOTAK LOGIN BIRU GRADASI */
+    /* Menghilangkan header default agar bersih */
+    header {visibility: hidden;}
+
+    /* Logo Sumut di tengah atas */
+    .logo-top-container {
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+        margin-bottom: -10px;
+    }
+
+    /* KARTU LOGIN UTAMA (BIRU GRADASI) */
     .stColumn > div > div > div[data-testid="stVerticalBlock"] {
-        /* Ini akan menargetkan container di dalam kolom */
+        /* Container kartu */
     }
-    
-    /* Custom Card Style untuk Container */
+
     [data-testid="stVerticalBlockBorderWrapper"] > div {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
-        border-radius: 15px !important;
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%) !important; /* Gradasi Biru Deep */
+        border-radius: 12px !important;
         border: none !important;
-        padding: 10px !important;
-        color: white !important;
+        padding: 15px !important;
+        box-shadow: 0px 10px 25px rgba(0,0,0,0.2) !important;
     }
 
-    /* Mengatur Teks Putih di Dalam Kartu */
-    .stMarkdown h4, .stMarkdown p {
-        color: white !important;
+    /* Teks di dalam kartu */
+    .stMarkdown h4 {
+        color: #ffffff !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 700 !important;
+        margin-bottom: 0px !important;
+    }
+    .stMarkdown p {
+        color: #a0d2eb !important;
+        font-size: 11px !important;
+        margin-bottom: 20px !important;
     }
 
-    /* Tombol Login (Teal agar kontras dengan biru) */
+    /* Gaya Input Field agar Ikon terlihat bagus */
+    div[data-testid="stTextInput"] input {
+        border-radius: 8px !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid #ddd !important;
+        color: #333 !important;
+    }
+
+    /* Tombol Login */
     div.stButton > button {
-        background-color: #00d2ff !important;
-        color: #002147 !important;
+        background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%) !important;
+        color: white !important;
         border-radius: 8px !important;
         font-weight: bold !important;
         border: none !important;
         width: 100%;
-        height: 42px;
+        height: 40px;
+        margin-top: 10px;
         transition: 0.3s;
     }
-    
     div.stButton > button:hover {
-        background-color: #ffffff !important;
-        transform: scale(1.02);
-    }
-
-    /* Logo Sumut agar tidak terpotong */
-    .logo-top {
-        padding-top: 10px;
-        display: flex;
-        justify-content: center;
-    }
-
-    /* Menghilangkan label input agar bersih */
-    label[data-testid="stWidgetLabel"] {
-        display: none;
+        transform: translateY(-2px);
+        box-shadow: 0px 5px 15px rgba(0,210,255,0.4);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==================================
-# Bagian 2: LOGIKA SESSION
+# Bagian 2: LOGIKA LOGIN
 # ==================================
 if "login" not in st.session_state:
     st.session_state.login = False
@@ -83,61 +97,59 @@ if "login" not in st.session_state:
 # Bagian 3: TAMPILAN LOGIN
 # ==================================
 if not st.session_state.login:
-    
-    # 1. LOGO SUMUT (DITENGAH & LEBIH KECIL)
-    # Menggunakan kolom rasio tinggi agar pas di tengah
-    st.markdown('<div class="logo-top">', unsafe_allow_html=True)
-    col_s1, col_s2, col_s3 = st.columns([2, 0.3, 2])
-    with col_s2:
+
+    # 1. Logo Sumut (DITENGAH & TIDAK TERPOTONG)
+    st.markdown('<div class="logo-top-container">', unsafe_allow_html=True)
+    col_t1, col_t2, col_t3 = st.columns([2, 0.4, 2])
+    with col_t2:
         if os.path.exists("logo_sumut.png"):
-            st.image(Image.open("logo_sumut.png"), width=55) # Ukuran diperkecil agar tidak terpotong
+            st.image(Image.open("logo_sumut.png"), width=50) # Ukuran diperkecil agar pas
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.write("") # Spasi
+    st.write("") # Jarak
 
-    # 2. KARTU LOGIN (UKURAN COMPACT/SEPARUH)
-    _, col_card, _ = st.columns([1.6, 2, 1.6]) 
+    # 2. KARTU LOGIN (COMPACT / SEPARUH LEBAR)
+    _, col_card, _ = st.columns([1.6, 2.2, 1.6]) 
 
     with col_card:
-        # Menggunakan Container dengan Border (CSS akan mengubahnya jadi Biru Gradasi)
+        # Kotak dengan gradasi biru (diatur via CSS)
         with st.container(border=True):
-            # Layout Horizontal: Logo Kiri, Form Kanan
-            col_logo, col_form = st.columns([1, 1.6])
+            # Layout Horizontal: Logo SI-PANDAI (Kiri), Form (Kanan)
+            col_l, col_r = st.columns([0.8, 1.5])
 
-            with col_logo:
-                st.write("") # Padding atas logo
+            with col_l:
+                st.write("") # Spasi atas logo
                 if os.path.exists("logo_sipandai.png"):
                     st.image(Image.open("logo_sipandai.png"), use_container_width=True)
                 else:
                     st.write("SI-PANDAI")
 
-            with col_form:
-                st.markdown("<h4 style='margin:0;'>LOGIN USER</h4>", unsafe_allow_html=True)
-                st.markdown("<p style='margin:0 0 15px 0; font-size:12px; opacity:0.8;'>Sistem Pemetaan ATS Disabilitas</p>", unsafe_allow_html=True)
+            with col_r:
+                st.markdown("<h4>LOGIN USER</h4>", unsafe_allow_html=True)
+                st.markdown("<p>Sistem Pemetaan ATS Disabilitas Sumatera Utara</p>", unsafe_allow_html=True)
                 
-                # Ikon orang dan kunci diletakkan di dalam placeholder
-                username = st.text_input("Username", placeholder="👤 Username", key="user_input")
-                password = st.text_input("Password", type="password", placeholder="🔑 Password", key="pass_input")
+                # Input dengan Ikon di dalam placeholder
+                user = st.text_input("Username", placeholder="👤  Masukkan Username", label_visibility="collapsed")
+                pwd = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", label_visibility="collapsed")
                 
-                st.write("") # Spasi sebelum tombol
-                
-                if st.button("MASUK SISTEM"):
-                    # Dummy Check (Ganti dengan logika Excel Anda)
-                    if username == "admin" and password == "admin":
+                if st.button("MASUK KE SISTEM"):
+                    # Logika pengecekan (Dummy)
+                    if user == "admin" and pwd == "admin":
                         st.session_state.login = True
-                        st.session_state.role = "admin"
+                        st.session_state.role = "Admin"
                         st.rerun()
                     else:
-                        st.error("Akses Ditolak", icon="🚫")
+                        st.error("Gagal Masuk", icon="⚠️")
 
-        st.markdown('<p style="text-align:center; font-size:10px; color:#888; margin-top:10px;">© 2024 Dinas Pendidikan Provinsi Sumatera Utara</p>', unsafe_allow_html=True)
-
+    st.markdown('<div style="text-align:center; color:#999; font-size:10px; margin-top:15px;">© 2024 Dinas Pendidikan Provinsi Sumatera Utara</div>', unsafe_allow_html=True)
     st.stop()
 
 # ==================================
-# Bagian 4: DASHBOARD (SETELAH LOGIN)
+# DASHBOARD (Hanya tampil setelah login)
 # ==================================
-st.success(f"Berhasil Masuk sebagai {st.session_state.role}")
-if st.button("Keluar"):
+st.title("Dashboard SI-PANDAI SUMUT")
+st.write(f"Selamat datang, **{st.session_state.role}**")
+if st.button("Logout"):
     st.session_state.login = False
     st.rerun()
+    
