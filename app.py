@@ -1,267 +1,139 @@
 import streamlit as st
+from PIL import Image
 import pandas as pd
-from io import BytesIO
-import plotly.express as px
 
 st.set_page_config(
-    page_title="Dashboard Disabilitas Sumut",
+    page_title="SI-PANDAI Dashboard",
     layout="wide"
 )
 
-# =========================
-# LOAD DATA
-# =========================
-@st.cache_data
-def load_data():
-    return pd.read_excel(
-        "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx",
-        sheet_name="data_disabilitas"
-    )
+# ===============================
+# BACKGROUND STYLE
+# ===============================
+page_bg = """
+<style>
 
-@st.cache_data
-def load_users():
-    return pd.read_excel(
-        "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx",
-        sheet_name="users"
-    )
+[data-testid="stAppViewContainer"]{
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+background-size: cover;
+}
 
-data = load_data()
-users = load_users()
+.login-box{
+background: rgba(255,255,255,0.08);
+backdrop-filter: blur(12px);
+padding:40px;
+border-radius:20px;
+text-align:center;
+box-shadow:0px 10px 30px rgba(0,0,0,0.4);
+}
 
-# =========================
-# LOGIN SYSTEM
-# =========================
+.title{
+color:white;
+font-size:38px;
+font-weight:700;
+}
+
+.subtitle{
+color:#dddddd;
+font-size:18px;
+margin-bottom:20px;
+}
+
+.center{
+display:flex;
+justify-content:center;
+}
+
+</style>
+"""
+
+st.markdown(page_bg, unsafe_allow_html=True)
+
+# ===============================
+# SESSION LOGIN
+# ===============================
 if "login" not in st.session_state:
     st.session_state.login = False
-    st.session_state.role = ""
 
-if not st.session_state.login:
+
+# ===============================
+# HALAMAN LOGIN
+# ===============================
+if st.session_state.login == False:
 
     col1, col2, col3 = st.columns([1,2,1])
 
     with col2:
 
-        st.markdown("## 🔐 Login Dashboard Disabilitas")
+        st.markdown('<div class="login-box">', unsafe_allow_html=True)
+
+        logo = Image.open("logo_sipandai.png")
+        st.image(logo, width=180)
+
+        st.markdown('<div class="title">SI-PANDAI</div>', unsafe_allow_html=True)
+        st.markdown('<div class="subtitle">Sistem Informasi Penyandang Disabilitas</div>', unsafe_allow_html=True)
 
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
-        if st.button("Login", use_container_width=True):
+        if st.button("Login"):
 
-            user = users[
-                (users["username"] == username) &
-                (users["password"] == password)
-            ]
-
-            if not user.empty:
+            if username == "admin" and password == "12345":
                 st.session_state.login = True
-                st.session_state.role = user.iloc[0]["role"]
-                st.success("Login berhasil")
                 st.rerun()
             else:
                 st.error("Username atau password salah")
 
-    st.stop()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# =========================
-# SIDEBAR
-# =========================
-st.sidebar.title("📂 Menu")
 
-menu = st.sidebar.radio(
-    "Pilih Menu",
-    ["Home"]
-)
 
-st.sidebar.divider()
-
-# =========================
-# FILTER KABUPATEN / KOTA
-# =========================
-st.sidebar.header("🔎 Filter Wilayah")
-
-kabkota = st.sidebar.selectbox(
-    "Pilih Kabupaten / Kota",
-    ["Semua"] + sorted(data["kab_kota"].unique())
-)
-
-df = data.copy()
-
-if kabkota != "Semua":
-    df = df[df["kab_kota"] == kabkota]
-
-# =========================
-# HEADER
-# =========================
-st.title("📊 Dashboard Sebaran Penyandang Disabilitas")
-st.subheader("Provinsi Sumatera Utara")
-
-st.write(f"👤 Role: **{st.session_state.role}**")
-
-if st.button("Logout"):
-    st.session_state.login = False
-    st.session_state.role = ""
-    st.rerun()
-
-st.divider()
-
-# =========================
-# REKAP CEPAT
-# =========================
-col1, col2, col3 = st.columns(3)
-
-col1.metric("Jumlah Data", len(df))
-col2.metric("Jumlah Kabupaten/Kota", df["kab_kota"].nunique())
-col3.metric("Jumlah Jenis Disabilitas", df["jenis_disabilitas"].nunique())
-
-st.divider()
-
-# =========================
-# REKAP PER JENIS
-# =========================
-st.subheader("📌 Rekap Penyandang per Jenis Disabilitas")
-
-rekap = df.groupby("jenis_disabilitas").size().reset_index(name="Jumlah")
-
-st.dataframe(rekap, use_container_width=True)
-
-# =========================
-# GRAFIK
-# =========================
-st.subheader("📈 Grafik Penyandang Disabilitas")
-
-fig_bar = px.bar(
-    rekap,
-    x="jenis_disabilitas",
-    y="Jumlah",
-    title="Jumlah Penyandang Disabilitas per Jenis"
-)
-
-st.plotly_chart(fig_bar, use_container_width=True)
-
-fig_pie = px.pie(
-    rekap,
-    values="Jumlah",
-    names="jenis_disabilitas",
-    title="Distribusi Jenis Disabilitas"
-)
-
-st.plotly_chart(fig_pie, use_container_width=True)
-
-# =========================
-# PETA SEBARAN
-# =========================
-st.divider()
-st.subheader("🗺️ Peta Sebaran Penyandang Disabilitas (Kab/Kota)")
-
-map_data = (
-    df.groupby("kab_kota")
-    .size()
-    .reset_index(name="Jumlah")
-)
-
-# Koordinat contoh (bisa ditambah semua kabupaten)
-peta_kab = {
-    "Kota Medan": [3.5952, 98.6722],
-    "Kab. Deli Serdang": [3.4200, 98.9800],
-    "Kab. Langkat": [3.7000, 98.2000],
-}
-
-map_rows = []
-
-for k, v in peta_kab.items():
-
-    jumlah = map_data.loc[
-        map_data["kab_kota"] == k,
-        "Jumlah"
-    ]
-
-    if not jumlah.empty:
-
-        map_rows.append({
-            "lat": v[0],
-            "lon": v[1],
-            "jumlah": int(jumlah.values[0])
-        })
-
-if map_rows:
-
-    map_df = pd.DataFrame(map_rows)
-
-    st.map(
-        map_df,
-        latitude="lat",
-        longitude="lon",
-        size="jumlah"
-    )
-
+# ===============================
+# DASHBOARD
+# ===============================
 else:
 
-    st.info("Data peta belum tersedia")
+    logo_sumut = Image.open("LOGO PEMPROV SUMUT WARNA.png")
 
-# =========================
-# DETAIL DATA
-# =========================
-st.divider()
-st.subheader("📋 Detail Data Penyandang Disabilitas")
+    col1,col2 = st.columns([1,8])
 
-jenis_pilih = st.selectbox(
-    "Pilih Jenis Disabilitas",
-    ["Semua"] + sorted(df["jenis_disabilitas"].unique())
-)
+    with col1:
+        st.image(logo_sumut, width=80)
 
-if jenis_pilih != "Semua":
+    with col2:
+        st.title("Dashboard Disabilitas Sumatera Utara")
+        st.write("Pemerintah Provinsi Sumatera Utara")
 
-    df_detail = df[df["jenis_disabilitas"] == jenis_pilih]
+    st.divider()
 
-else:
+    # LOAD DATA
+    df = pd.read_csv("KOTA_MEDAN_LENGKAP_KELURAHAN.csv")
 
-    df_detail = df
+    st.subheader("Data Penyandang Disabilitas")
 
-st.dataframe(
-    df_detail[
-        ["nama", "jenis_disabilitas", "kab_kota"]
-    ],
-    use_container_width=True
-)
+    st.dataframe(df, use_container_width=True)
 
-# =========================
-# DOWNLOAD DATA
-# =========================
-st.divider()
-st.subheader("⬇️ Download Data")
+    st.subheader("Statistik")
 
-if st.session_state.role in ["admin", "operator"]:
+    col1,col2,col3 = st.columns(3)
 
-    output = BytesIO()
+    with col1:
+        st.metric("Total Data", len(df))
 
-    df.to_excel(
-        output,
-        index=False,
-        engine="openpyxl"
-    )
+    with col2:
+        st.metric("Jumlah Kolom", len(df.columns))
 
-    output.seek(0)
+    with col3:
+        st.metric("Jumlah Kecamatan", df["kecamatan"].nunique())
 
-    st.download_button(
-        label="Download Excel",
-        data=output,
-        file_name="rekap_disabilitas_filtered.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    st.subheader("Visualisasi")
 
-else:
+    if "jenis_disabilitas" in df.columns:
+        chart = df["jenis_disabilitas"].value_counts()
+        st.bar_chart(chart)
 
-    st.info("Role viewer tidak memiliki hak download")
+    st.sidebar.title("Menu")
 
-# =========================
-# ROLE INFO
-# =========================
-st.divider()
-
-st.caption("""
-Role:
-- Admin    : Semua akses
-- Operator : Lihat & Download
-- Viewer   : Lihat saja
-""")
+    if st.sidebar.button("Logout"):
+        st.session_state.login = False
+        st.rerun()
