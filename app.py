@@ -197,7 +197,7 @@ if kab_pilih != "Semua":
 
 csv_data = df_download.to_csv(index=False).encode('utf-8')
 st.sidebar.download_button(
-    label="Download Master Data (CSV) ⬇️",
+    label="Download Data ⬇️",
     data=csv_data,
     file_name=f'data_sipandai_{kab_pilih}.csv',
     mime='text/csv',
@@ -309,3 +309,4 @@ else:
         </div>
         <p style='font-size:10px; color:gray; margin-top:10px;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>
     """, unsafe_allow_html=True)
+
