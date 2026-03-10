@@ -19,7 +19,6 @@ if "page_view" not in st.session_state:
     st.session_state.page_view = "dashboard"
 if "selected_school_data" not in st.session_state:
     st.session_state.selected_school_data = None
-# Menyiapkan memori filter kabupaten
 if "selected_kab" not in st.session_state:
     st.session_state.selected_kab = "Semua"
 
@@ -30,7 +29,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (FIX LOGIN, SIDEBAR, & KARTU)
+# Bagian 1: CSS CUSTOM (LOCKED)
 # ==================================
 st.markdown("""
 <style>
@@ -39,14 +38,14 @@ st.markdown("""
     [data-testid="stAppViewContainer"] { background-color: #f4f7f9 !important; }
     header {visibility: hidden;}
 
-    /* 1. SIDEBAR GRADASI ASLI */
+    /* SIDEBAR GRADASI ASLI */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div div { color: #333 !important; }
 
-    /* 2. TOMBOL LOGIN (GRADASI BIRU) */
+    /* TOMBOL LOGIN (GRADASI BIRU) */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important; border-radius: 10px !important; 
@@ -54,7 +53,7 @@ st.markdown("""
         width: 100%;
     }
 
-    /* 3. KOTAK BALON SEKOLAH (SHADOW) */
+    /* KOTAK BALON SEKOLAH (SHADOW) */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
         background: white !important;
         border-radius: 15px !important;
@@ -63,7 +62,7 @@ st.markdown("""
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* 4. NAMA SEKOLAH (BIRU TEBAL DI DALAM KOTAK) */
+    /* NAMA SEKOLAH (BIRU TEBAL) */
     div.stButton > button[key^="btn_"] {
         background: transparent !important;
         border: none !important;
@@ -80,13 +79,13 @@ st.markdown("""
         text-decoration: underline !important;
     }
 
-    /* 5. WARNA REKOMENDASI */
+    /* BALON REKOMENDASI */
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
     .mendesak { background-color: #fee2e2; color: #b91c1c; border-left: 5px solid #ef4444; }
     .rehab { background-color: #fef3c7; color: #b45309; border-left: 5px solid #f59e0b; }
     .aman { background-color: #dcfce7; color: #15803d; border-left: 5px solid #22c55e; }
 
-    /* INFO BOX DI HALAMAN DETAIL */
+    /* INFO BOX DETAIL */
     .detail-info-box {
         background-color: #e3f2fd; padding: 15px; border-radius: 10px; 
         border-left: 5px solid #1565c0; margin-top: 20px;
@@ -115,7 +114,7 @@ def load_all_data():
 data_wilayah, data_sekolah = load_all_data()
 
 # =========================
-# Bagian 3: HALAMAN LOGIN
+# Bagian 3: HALAMAN LOGIN (LOCKED)
 # =========================
 if "login" not in st.session_state: st.session_state.login = False
 
@@ -149,26 +148,32 @@ if not st.session_state.login:
 # Bagian 4: DASHBOARD UTAMA & DETAIL
 # ==================================
 
-# --- SIDEBAR ---
+# --- SIDEBAR (SESUAI GAMBAR 87b987) ---
 logo_b64 = get_base64_image("logo_sumut.png")
 if logo_b64:
     st.sidebar.markdown(f"""
         <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 20px;">
             <img src="data:image/png;base64,{logo_b64}" width="45">
-            <span style="font-size: 18px; font-weight: 800; color: white;">SI-PANDAI SUMUT</span>
+            <span style="font-size: 18px; font-weight: 800; color: white; line-height: 1.1;">SI-PANDAI<br>SUMUT</span>
         </div>
     """, unsafe_allow_html=True)
 
-# Filter Kabupaten menggunakan session_state agar terpaku (locked)
-opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
-kab_pilih = st.sidebar.selectbox(
-    "Pilih Kabupaten / Kota", 
-    opsi_kab, 
-    key="selected_kab" # KUNCI FITUR MEMORY FILTER
-)
+st.sidebar.write(f"👤 Role: **ADMIN**")
+st.sidebar.divider()
 
+if st.session_state.page_view == "dashboard":
+    st.sidebar.header("🔎 Filter")
+    opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
+    kab_pilih = st.sidebar.selectbox(
+        "Pilih Kabupaten / Kota", 
+        opsi_kab, 
+        key="selected_kab" # MEMORY FILTER
+    )
+else:
+    st.sidebar.info("Melihat Detail Sekolah")
+
+st.sidebar.divider()
 if st.sidebar.button("Logout 🚪", use_container_width=True):
-    # Reset memori filter saat logout
     st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.rerun()
@@ -176,6 +181,7 @@ if st.sidebar.button("Logout 🚪", use_container_width=True):
 # --- KONTEN HALAMAN ---
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🚀 Dashboard Utama</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color: #546e7a; font-size: 14px; margin-top: -5px;">Sistem Informasi Pemetaan ATS Disabilitas Sumatera Utara</p>', unsafe_allow_html=True)
     st.divider()
 
     df_filter = data_wilayah.copy()
@@ -183,15 +189,16 @@ if st.session_state.page_view == "dashboard":
         df_filter = df_filter[df_filter["kab_kota"] == kab_pilih]
 
     # Matriks
+    st.subheader("📌 Matriks Capaian Sektoral")
     m1, m2, m3 = st.columns(3)
     if kab_pilih == "Semua":
-        m1.metric("Total Penduduk Disabilitas", "6.732")
-        m2.metric("Total Siswa Disabilitas", "4.573")
-        m3.metric("Angka Partisipasi Sekolah", "67.93%")
+        m1.metric("Total Penduduk Disabilitas", "6.732", help="Sumber: LPPD PK 2025")
+        m2.metric("Total Siswa Disabilitas", "4.573", help="Sumber: TIKP Provsu 2025")
+        m3.metric("Angka Partisipasi Sekolah", "67.93%", delta="Target Sektoral")
     else:
         m1.metric("Penduduk Disabilitas", int(df_filter['jumlah_penduduk'].sum()))
         m2.metric("Siswa Belajar", int(df_filter['jumlah_siswa'].sum()))
-        m3.metric("ATS Disabilitas", int(df_filter['ats_disabilitas'].sum()), delta_color="inverse")
+        m3.metric("Anak Tidak Sekolah (ATS)", int(df_filter['ats_disabilitas'].sum()), delta_color="inverse")
 
     if kab_pilih != "Semua":
         st.divider()
@@ -218,17 +225,30 @@ if st.session_state.page_view == "dashboard":
                         st.markdown(f"<p style='color:#64748b; font-size:13px; margin-top:-10px;'>🆔 NPSN: {row.npsn}</p>", unsafe_allow_html=True)
 
     st.divider()
+    # Peta
     st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
     df_filter['map_size'] = df_filter['ats_disabilitas'] * 30
     st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
 
+    # TABEL DETAIL DATA PER WILAYAH (SESUAI GAMBAR 87b9bd)
+    st.divider()
+    st.subheader("📋 Detail Data per Wilayah")
+    st.dataframe(
+        df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']],
+        use_container_width=True,
+        column_config={
+            "kab_kota": "Kabupaten / Kota",
+            "jumlah_penduduk": "Populasi Disabilitas",
+            "jumlah_siswa": "Siswa Belajar",
+            "ats_disabilitas": "ATS (Gap)"
+        }
+    )
+
 else:
     # HALAMAN DETAIL
     sch = st.session_state.selected_school_data
-    
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
-        # Memori kab_pilih akan otomatis terjaga karena sudah di-set di selectbox 'key'
         st.rerun()
     
     st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah']}</h1>", unsafe_allow_html=True)
