@@ -62,7 +62,7 @@ st.markdown("""
 @st.cache_data
 def load_master_data():
     try:
-        # Memuat file master yang telah disepakati
+        # Memuat file master yang telah disepakati (Mengambil lat/lon dari sini)
         df = pd.read_csv("master_data_si_pandai.csv")
         return df
     except Exception as e:
@@ -71,7 +71,7 @@ def load_master_data():
 
 data = load_master_data()
 
-# Login Hardcoded (Karena file Excel user dihapus)
+# Login Hardcoded
 def check_login(u, p):
     return u == "admin" and p == "admin"
 
@@ -145,17 +145,15 @@ st.markdown('<p class="main-dashboard-title">🚀 Dashboard Utama</p>', unsafe_a
 st.markdown('<p style="color: #546e7a; font-size: 14px; margin-top: -5px;">Sistem Informasi Pemetaan ATS Disabilitas Sumatera Utara</p>', unsafe_allow_html=True)
 st.divider()
 
-# MATRIKS DASHBOARD (LPPD PK 2025)
+# MATRIKS DASHBOARD
 st.subheader("📌 Matriks Capaian Sektoral")
 m1, m2, m3 = st.columns(3)
 
 if kab_pilih == "Semua":
-    # Menampilkan total yang disepakati jika filter "Semua"
     m1.metric("Total Penduduk Disabilitas", "6.732", help="Sumber: LPPD PK 2025")
     m2.metric("Total Siswa Disabilitas", "4.573", help="Sumber: TIKP Provsu 2025")
     m3.metric("Angka Partisipasi Sekolah", "67.93%", delta="Target Sektoral")
 else:
-    # Menampilkan data dinamis sesuai kabupaten yang dipilih
     total_pop = int(df_filter['jumlah_penduduk'].sum())
     total_siswa = int(df_filter['jumlah_siswa'].sum())
     ats = int(df_filter['ats_disabilitas'].sum())
@@ -163,48 +161,9 @@ else:
     m2.metric("Siswa Belajar", f"{total_siswa}")
     m3.metric("Anak Tidak Sekolah (ATS)", f"{ats}", delta_color="inverse")
 
-# Keterangan Sumber Data (Wajib Ada)
+# Sumber Data
 st.markdown("""
     <div style="background-color: #e3f2fd; padding: 10px; border-radius: 10px; border-left: 5px solid #1565c0;">
         <p style="font-size: 12px; color: #0d47a1; margin: 0;">
             <b>Sumber Data:</b><br>
-            - Data Populasi: Bidang PK - Laporan LPPD 2025 (Usia 4-18 Tahun)<br>
-            - Data Siswa: Bidang PK - Rekapitulasi Dapodik/TIKP Provsu 2025
-        </p>
-    </div>
-""", unsafe_allow_html=True)
-
-st.divider()
-
-# --- PETA SEBARAN ---
-st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
-if not df_filter.empty:
-    # Menghitung ukuran titik berdasarkan jumlah ATS agar visual
-    df_filter['map_size'] = df_filter['ats_disabilitas'] * 50 
-    st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
-else:
-    st.info("Data koordinat belum tersedia untuk pilihan ini.")
-
-st.divider()
-
-# --- TABEL DETAIL ---
-st.subheader("📋 Detail Data per Wilayah")
-st.dataframe(
-    df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']],
-    use_container_width=True,
-    column_config={
-        "kab_kota": "Kabupaten / Kota",
-        "jumlah_penduduk": "Populasi Disabilitas",
-        "jumlah_siswa": "Siswa Belajar",
-        "ats_disabilitas": "ATS (Gap)"
-    }
-)
-
-# Tombol Download
-csv = df_filter.to_csv(index=False).encode('utf-8')
-st.download_button(
-    label="Download Master Data (CSV) ⬇️",
-    data=csv,
-    file_name='master_data_si_pandai_filtered.csv',
-    mime='text/csv',
-)
+            - Data Popul
