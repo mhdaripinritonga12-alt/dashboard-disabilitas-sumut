@@ -15,7 +15,7 @@ st.set_page_config(
     page_icon="🔒"
 )
 
-# Fungsi Base64 untuk Logo Sidebar (Agar Sejajar)
+# Fungsi Base64 untuk Logo Sidebar
 def get_base64_image(image_path):
     if os.path.exists(image_path):
         with open(image_path, "rb") as img_file:
@@ -62,7 +62,6 @@ st.markdown("""
 @st.cache_data
 def load_master_data():
     try:
-        # Memuat file master yang telah disepakati (Mengambil lat/lon dari sini)
         df = pd.read_csv("master_data_si_pandai.csv")
         return df
     except Exception as e:
@@ -71,7 +70,6 @@ def load_master_data():
 
 data = load_master_data()
 
-# Login Hardcoded
 def check_login(u, p):
     return u == "admin" and p == "admin"
 
@@ -100,8 +98,8 @@ if not st.session_state.login:
             with col_right:
                 st.markdown('<div class="login-title">LOGIN USER</div>', unsafe_allow_html=True)
                 st.markdown('<div class="login-subtitle">Akses Dashboard SI-PANDAI SUMUT</div>', unsafe_allow_html=True)
-                u_in = st.text_input("Username", placeholder="👤  Masukkan Username", label_visibility="collapsed")
-                p_in = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", label_visibility="collapsed")
+                u_in = st.text_input("Username", placeholder="👤  Masukkan Username", key="user_input", label_visibility="collapsed")
+                p_in = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", key="pass_input", label_visibility="collapsed")
                 if st.button("MASUK KE DASHBOARD", use_container_width=True):
                     if check_login(u_in, p_in):
                         st.session_state.login = True
@@ -127,7 +125,6 @@ if logo_b64:
 st.sidebar.write(f"👤 Role: **{st.session_state.role.upper()}**")
 st.sidebar.divider()
 
-# Filter Kabupaten
 st.sidebar.header("🔎 Filter")
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", ["Semua"] + sorted(data["kab_kota"].unique().tolist()))
 
@@ -157,13 +154,52 @@ else:
     total_pop = int(df_filter['jumlah_penduduk'].sum())
     total_siswa = int(df_filter['jumlah_siswa'].sum())
     ats = int(df_filter['ats_disabilitas'].sum())
-    m1.metric("Penduduk Disabilitas", f"{total_pop}")
-    m2.metric("Siswa Belajar", f"{total_siswa}")
-    m3.metric("Anak Tidak Sekolah (ATS)", f"{ats}", delta_color="inverse")
+    m1.metric("Penduduk Disabilitas", f"{total_pop:,}")
+    m2.metric("Siswa Belajar", f"{total_siswa:,}")
+    m3.metric("Anak Tidak Sekolah (ATS)", f"{ats:,}", delta_color="inverse")
 
 # Sumber Data
 st.markdown("""
     <div style="background-color: #e3f2fd; padding: 10px; border-radius: 10px; border-left: 5px solid #1565c0;">
         <p style="font-size: 12px; color: #0d47a1; margin: 0;">
             <b>Sumber Data:</b><br>
-            - Data Popul
+            - Data Populasi: Bidang PK - Laporan LPPD 2025 (Usia 4-18 Tahun)<br>
+            - Data Siswa: Bidang PK - Rekapitulasi Dapodik/TIKP Provsu 2025
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+
+st.divider()
+
+# --- PETA SEBARAN ---
+st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
+if not df_filter.empty:
+    # Menggunakan lat/lon langsung dari master_data_si_pandai.csv
+    df_filter['map_size'] = df_filter['ats_disabilitas'].apply(lambda x: (x + 1) * 20) 
+    st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
+else:
+    st.info("Data koordinat tidak tersedia.")
+
+st.divider()
+
+# --- TABEL DETAIL ---
+st.subheader("📋 Detail Data per Wilayah")
+st.dataframe(
+    df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']],
+    use_container_width=True,
+    column_config={
+        "kab_kota": "Kabupaten / Kota",
+        "jumlah_penduduk": "Populasi Disabilitas",
+        "jumlah_siswa": "Siswa Belajar",
+        "ats_disabilitas": "ATS (Gap)"
+    }
+)
+
+# Tombol Download
+csv_data = df_filter.to_csv(index=False).encode('utf-8')
+st.download_button(
+    label="Download Master Data (CSV) ⬇️",
+    data=csv_data,
+    file_name='master_data_si_pandai_filtered.csv',
+    mime='text/csv',
+)
