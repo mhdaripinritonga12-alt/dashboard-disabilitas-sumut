@@ -19,6 +19,7 @@ if "page_view" not in st.session_state:
     st.session_state.page_view = "dashboard"
 if "selected_school_data" not in st.session_state:
     st.session_state.selected_school_data = None
+# State untuk mengunci pilihan kabupaten
 if "selected_kab" not in st.session_state:
     st.session_state.selected_kab = "Semua"
 
@@ -161,16 +162,14 @@ if logo_b64:
 st.sidebar.write(f"👤 Role: **ADMIN**")
 st.sidebar.divider()
 
-if st.session_state.page_view == "dashboard":
-    st.sidebar.header("🔎 Filter")
-    opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
-    kab_pilih = st.sidebar.selectbox(
-        "Pilih Kabupaten / Kota", 
-        opsi_kab, 
-        key="selected_kab" # MEMORY FILTER
-    )
-else:
-    st.sidebar.info("Melihat Detail Sekolah")
+# FILTER DIKELUARKAN AGAR TERKUNCI (MEMORY FILTER AKTIF)
+st.sidebar.header("🔎 Filter")
+opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
+kab_pilih = st.sidebar.selectbox(
+    "Pilih Kabupaten / Kota", 
+    opsi_kab, 
+    key="selected_kab" # KUNCI PILIHAN DI SINI
+)
 
 st.sidebar.divider()
 if st.sidebar.button("Logout 🚪", use_container_width=True):
@@ -230,7 +229,7 @@ if st.session_state.page_view == "dashboard":
     df_filter['map_size'] = df_filter['ats_disabilitas'] * 30
     st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
 
-    # TABEL DETAIL DATA PER WILAYAH (SESUAI GAMBAR 87b9bd)
+    # TABEL DETAIL DATA PER WILAYAH
     st.divider()
     st.subheader("📋 Detail Data per Wilayah")
     st.dataframe(
