@@ -14,11 +14,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inisialisasi State Navigasi
+# Inisialisasi State Navigasi & Memori Filter
 if "page_view" not in st.session_state:
     st.session_state.page_view = "dashboard"
 if "selected_school_data" not in st.session_state:
     st.session_state.selected_school_data = None
+# Menyiapkan memori filter kabupaten
+if "selected_kab" not in st.session_state:
+    st.session_state.selected_kab = "Semua"
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
@@ -83,7 +86,7 @@ st.markdown("""
     .rehab { background-color: #fef3c7; color: #b45309; border-left: 5px solid #f59e0b; }
     .aman { background-color: #dcfce7; color: #15803d; border-left: 5px solid #22c55e; }
 
-    /* INFO BOX DI HALAMAN DETAIL (SESUAI GAMBAR) */
+    /* INFO BOX DI HALAMAN DETAIL */
     .detail-info-box {
         background-color: #e3f2fd; padding: 15px; border-radius: 10px; 
         border-left: 5px solid #1565c0; margin-top: 20px;
@@ -146,7 +149,7 @@ if not st.session_state.login:
 # Bagian 4: DASHBOARD UTAMA & DETAIL
 # ==================================
 
-# --- SIDEBAR (TETAP SAMA) ---
+# --- SIDEBAR ---
 logo_b64 = get_base64_image("logo_sumut.png")
 if logo_b64:
     st.sidebar.markdown(f"""
@@ -156,12 +159,17 @@ if logo_b64:
         </div>
     """, unsafe_allow_html=True)
 
-if st.session_state.page_view == "dashboard":
-    kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist()))
-else:
-    st.sidebar.info("Melihat Detail Sekolah")
+# Filter Kabupaten menggunakan session_state agar terpaku (locked)
+opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
+kab_pilih = st.sidebar.selectbox(
+    "Pilih Kabupaten / Kota", 
+    opsi_kab, 
+    key="selected_kab" # KUNCI FITUR MEMORY FILTER
+)
 
 if st.sidebar.button("Logout 🚪", use_container_width=True):
+    # Reset memori filter saat logout
+    st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.rerun()
 
@@ -203,7 +211,6 @@ if st.session_state.page_view == "dashboard":
                         else:
                             st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
 
-                        # 2. Nama Sekolah (Klik untuk ke Halaman Detail)
                         if st.button(row.nama_sekolah, key=f"btn_{row.npsn}"):
                             st.session_state.selected_school_data = row._asdict()
                             st.session_state.page_view = "detail"
@@ -216,24 +223,19 @@ if st.session_state.page_view == "dashboard":
     st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
 
 else:
-    # ==========================================
-    # HALAMAN DETAIL (PERSIS GAMBAR 888bfa & 888854)
-    # ==========================================
+    # HALAMAN DETAIL
     sch = st.session_state.selected_school_data
     
-    # Tombol Kembali (Warna Orange sesuai Logout)
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
+        # Memori kab_pilih akan otomatis terjaga karena sudah di-set di selectbox 'key'
         st.rerun()
     
-    # Header Halaman Detail (image_888bfa.png)
     st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah']}</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
     st.divider()
     
-    # Dua Kotak Informasi (image_888854.png)
     col1, col2 = st.columns(2)
-    
     with col1:
         with st.container(border=True):
             st.subheader("📌 Profil Umum")
@@ -249,7 +251,6 @@ else:
             st.write(f"**Rusak Sedang:** {sch['rusak_sedang']} Ruang")
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
 
-    # Kotak Rekomendasi Biru (image_888854.png)
     st.markdown(f"""
         <div class="detail-info-box">
             <p style="font-size: 14px; color: #0d47a1; margin: 0;">
