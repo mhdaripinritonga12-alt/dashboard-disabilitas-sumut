@@ -88,7 +88,7 @@ st.markdown("""
     .rehab { background-color: #fef3c7; color: #b45309; border-left: 5px solid #f59e0b; }
     .aman { background-color: #dcfce7; color: #15803d; border-left: 5px solid #22c55e; }
 
-    /* KOTAK SUMBER DATA (BIRU MUDA GARIS BIRU TUA) */
+    /* FIX: KOTAK SUMBER DATA (BIRU MUDA GARIS BIRU TUA) */
     .source-box-ui {
         background-color: #e3f2fd !important; 
         padding: 15px !important; 
@@ -128,7 +128,6 @@ st.markdown("""
 def load_all_data():
     try:
         df_ats = pd.read_csv("master_data_si_pandai.csv")
-        # MENGGUNAKAN FILE BARU
         df_sch = pd.read_csv("master_data_sekolah1.csv")
         return df_ats, df_sch
     except:
@@ -171,7 +170,7 @@ if not st.session_state.login:
 # Bagian 4: DASHBOARD & DETAIL
 # ==================================
 
-# --- SIDEBAR (LOCKED DESIGN) ---
+# --- SIDEBAR ---
 logo_b64 = get_base64_image("logo_sumut.png")
 if logo_b64:
     st.sidebar.markdown(f"""
@@ -198,7 +197,7 @@ if kab_pilih != "Semua":
 
 csv_data = df_download.to_csv(index=False).encode('utf-8')
 st.sidebar.download_button(
-    label="Download Data ⬇️",
+    label="Download Master Data (CSV) ⬇️",
     data=csv_data,
     file_name=f'data_sipandai_{kab_pilih}.csv',
     mime='text/csv',
@@ -206,7 +205,7 @@ st.sidebar.download_button(
 )
 
 st.sidebar.divider()
-# PERBAIKAN ERROR LOGOUT (MENGGUNAKAN CALLBACK)
+# FIX ERROR LOGOUT (MENGGUNAKAN CALLBACK)
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
 
 # --- KONTEN HALAMAN ---
@@ -251,7 +250,6 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sekolah_wilayah.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        # 1. Balon Rekomendasi
                         if row.jumlah_rombel > row.jumlah_ruang_kelas:
                             st.markdown(f"<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh {row.jumlah_rombel - row.jumlah_ruang_kelas} RKB</div>", unsafe_allow_html=True)
                         elif row.rusak_berat > 0:
@@ -259,7 +257,6 @@ if st.session_state.page_view == "dashboard":
                         else:
                             st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
 
-                        # 2. Nama Sekolah (Memory Locked)
                         if st.button(row.nama_sekolah, key=f"btn_{row.npsn}"):
                             st.session_state.selected_school_data = row._asdict()
                             st.session_state.page_view = "detail"
@@ -276,7 +273,7 @@ if st.session_state.page_view == "dashboard":
     st.dataframe(df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']], use_container_width=True)
 
 else:
-    # --- HALAMAN DETAIL (LOCKED DESIGN) ---
+    # --- HALAMAN DETAIL ---
     sch = st.session_state.selected_school_data
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
@@ -310,4 +307,5 @@ else:
                 Sekolah ini memerlukan perhatian pada aspek sarana prasarana serta ketersediaan daya listrik/internet untuk menunjang pembelajaran digital.
             </p>
         </div>
+        <p style='font-size:10px; color:gray; margin-top:10px;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>
     """, unsafe_allow_html=True)
