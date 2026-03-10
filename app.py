@@ -53,6 +53,10 @@ st.markdown("""
     }
     .main-dashboard-title { font-size: 24px !important; font-weight: 800 !important; color: #0d47a1 !important; margin-bottom: 0px !important; }
     .logo-header-center { display: flex; justify-content: center; padding-top: 30px; margin-bottom: 10px; }
+    
+    /* Style Kartu Sekolah */
+    .school-card-title { color: #0d47a1; font-weight: 800; font-size: 15px; margin-bottom: 5px; }
+    .rec-box { font-size: 11px; padding: 5px; border-radius: 5px; margin-top: 5px; line-height: 1.2; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -62,13 +66,15 @@ st.markdown("""
 @st.cache_data
 def load_master_data():
     try:
-        df = pd.read_csv("master_data_si_pandai.csv")
-        return df
+        df_ats = pd.read_csv("master_data_si_pandai.csv")
+        # Load Data Sekolah
+        df_sekolah = pd.read_csv("master_data_sekolah.csv") if os.path.exists("master_data_sekolah.csv") else pd.DataFrame()
+        return df_ats, df_sekolah
     except Exception as e:
-        st.error(f"File master_data_si_pandai.csv tidak ditemukan: {e}")
-        return pd.DataFrame(columns=["kab_kota", "jumlah_penduduk", "jumlah_siswa", "ats_disabilitas", "lat", "lon"])
+        st.error(f"Gagal memuat data: {e}")
+        return pd.DataFrame(), pd.DataFrame()
 
-data = load_master_data()
+data, data_sekolah = load_master_data()
 
 def check_login(u, p):
     return u == "admin" and p == "admin"
@@ -158,7 +164,7 @@ else:
     m2.metric("Siswa Belajar", f"{total_siswa:,}")
     m3.metric("Anak Tidak Sekolah (ATS)", f"{ats:,}", delta_color="inverse")
 
-# Sumber Data
+# Keterangan Sumber Data
 st.markdown("""
     <div style="background-color: #e3f2fd; padding: 10px; border-radius: 10px; border-left: 5px solid #1565c0;">
         <p style="font-size: 12px; color: #0d47a1; margin: 0;">
@@ -171,10 +177,60 @@ st.markdown("""
 
 st.divider()
 
+# --- FITUR KARTU SEKOLAH & REKOMENDASI (DITAMPILKAN JIKA PILIH KABUPATEN) ---
+if kab_pilih != "Semua":
+    st.subheader(f"🏫 Daftar SLB & Rekomendasi di {kab_pilih}")
+    
+    # Filter sekolah berdasarkan kabupaten
+    sekolah_wilayah = data_sekolah[data_sekolah['kab_kota'] == kab_pilih]
+    ats_wilayah = int(df_filter['ats_disabilitas'].sum())
+    
+    if not sekolah_wilayah.empty:
+        # Menampilkan dalam grid 3 kolom
+        cols = st.columns(3)
+        for i, row in enumerate(sekolah_wilayah.itertuples()):
+            with cols[i % 3]:
+                with st.container(border=True):
+                    st.markdown(f"<div class='school-card-title'>{row.nama_sekolah}</div>", unsafe_allow_html=True)
+                    st.write(f"🆔 **NPSN:** {row.npsn}")
+                    
+                    # LOGIKA REKOMENDASI OTOMATIS
+                    rekomendasi = []
+                    # 1. Cek Kebutuhan RKB
+                    if row.jumlah_rombel > row.jumlah_ruang_kelas:
+                        selisih = row.jumlah_rombel - row.jumlah_ruang_kelas
+                        rekomendasi.append(f"⚠️ **Mendesak:** Butuh {selisih} Ruang Kelas Baru (RKB).")
+                    
+                    # 2. Cek Kebutuhan Rehab
+                    if row.rusak_berat > 0:
+                        rekomendasi.append(f"🛠️ **Prioritas:** Rehab {row.rusak_berat} Ruang Rusak Berat.")
+                    
+                    # 3. Cek Penjangkauan ATS (Jika ada ATS di wilayah tersebut dan ada ruang kosong)
+                    if ats_wilayah > 0 and row.jumlah_ruang_kelas > row.jumlah_rombel:
+                        sisa_ruang = row.jumlah_ruang_kelas - row.jumlah_rombel
+                        rekomendasi.append(f"✅ **Outreach:** Rekomendasi penempatan ATS (Tersedia {sisa_ruang} Ruang).")
+
+                    # Tampilkan Balon Rekomendasi
+                    if rekomendasi:
+                        for r in rekomendasi:
+                            st.markdown(f"<div class='rec-box'>{r}</div>", unsafe_allow_html=True)
+                    else:
+                        st.markdown("<div class='rec-box' style='color:gray;'>✅ Kondisi Sekolah Stabil</div>", unsafe_allow_html=True)
+
+                    # Expander untuk Detail Sarpras
+                    with st.expander("Detail Sarpras & Alamat"):
+                        st.write(f"🏢 **Status:** {row.status}")
+                        st.write(f"👥 **Siswa:** {row.jumlah_siswa} | **Rombel:** {row.jumlah_rombel}")
+                        st.write(f"🏫 **Ruang Kelas:** {row.jumlah_ruang_kelas}")
+                        st.write(f"📍 **Alamat:** {row.alamat}")
+                        st.caption("Sumber: Data Kerusakan & Sarpras Bidang PK")
+    else:
+        st.info(f"Belum ada data detail sekolah untuk {kab_pilih}")
+    st.divider()
+
 # --- PETA SEBARAN ---
 st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
 if not df_filter.empty:
-    # Menggunakan lat/lon langsung dari master_data_si_pandai.csv
     df_filter['map_size'] = df_filter['ats_disabilitas'].apply(lambda x: (x + 1) * 20) 
     st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
 else:
