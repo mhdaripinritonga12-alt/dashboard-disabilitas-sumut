@@ -74,10 +74,6 @@ st.markdown("""
         box-shadow: none !important;
         margin-bottom: -10px !important;
     }
-    div.stButton > button[key^="btn_"]:hover {
-        color: #1e88e5 !important;
-        text-decoration: underline !important;
-    }
 
     /* BALON REKOMENDASI */
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
@@ -93,6 +89,16 @@ st.markdown("""
         border-left: 6px solid #0d47a1 !important; 
         margin-bottom: 25px !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+    }
+
+    /* FIX: DELTA METRIC (HIJAU, KECIL, DI BAWAH ANGKA) */
+    [data-testid="stMetricDelta"] > div {
+        color: #15803d !important; /* Warna Hijau */
+        font-size: 13px !important; /* Ukuran Lebih Kecil */
+        font-weight: 700 !important;
+    }
+    [data-testid="stMetricDelta"] svg {
+        display: none !important; /* Hilangkan panah default agar rapi */
     }
 
     /* TOMBOL DOWNLOAD (GREEN) */
@@ -172,12 +178,12 @@ if logo_b64:
 st.sidebar.write(f"👤 Role: **ADMIN**")
 st.sidebar.divider()
 
-# FILTER KABUPATEN (MEMORY LOCKED)
+# FILTER KABUPATEN
 st.sidebar.header("🔎 Filter")
 opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", opsi_kab, key="selected_kab")
 
-# --- TOMBOL DOWNLOAD (SIDEBAR) ---
+# TOMBOL DOWNLOAD
 st.sidebar.divider()
 st.sidebar.write("📄 **Ekspor Data**")
 df_download = data_wilayah.copy()
@@ -212,7 +218,7 @@ if st.session_state.page_view == "dashboard":
     # Matriks Capaian
     st.subheader("📌 Matriks Capaian Sektoral")
     
-    # SUMBER DATA (FIXED STYLE)
+    # SUMBER DATA (FIXED DESIGN)
     st.markdown("""
         <div class="source-box-ui">
             <p style="font-size: 13px; color: #0d47a1; margin: 0;">
@@ -224,8 +230,8 @@ if st.session_state.page_view == "dashboard":
 
     m1, m2, m3 = st.columns(3)
     if kab_pilih == "Semua":
-        m1.metric("Total Penduduk Disabilitas", "6.732", help="Sumber: LPPD PK 2025")
-        m2.metric("Total Siswa Disabilitas", "4.573", help="Sumber: TIKP Provsu 2025")
+        m1.metric("Total Penduduk Disabilitas", "6.732")
+        m2.metric("Total Siswa Disabilitas", "4.573")
         m3.metric("Angka Partisipasi Sekolah", "67.93%", delta="Target Sektoral")
     else:
         m1.metric("Penduduk Disabilitas", int(df_filter['jumlah_penduduk'].sum()))
@@ -256,24 +262,13 @@ if st.session_state.page_view == "dashboard":
                         st.markdown(f"<p style='color:#64748b; font-size:13px; margin-top:-10px;'>🆔 NPSN: {row.npsn}</p>", unsafe_allow_html=True)
 
     st.divider()
-    # Peta
     st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
     df_filter['map_size'] = df_filter['ats_disabilitas'] * 30
     st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
 
-    # Tabel Detail
     st.divider()
     st.subheader("📋 Detail Data per Wilayah")
-    st.dataframe(
-        df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']],
-        use_container_width=True,
-        column_config={
-            "kab_kota": "Kabupaten / Kota",
-            "jumlah_penduduk": "Populasi Disabilitas",
-            "jumlah_siswa": "Siswa Belajar",
-            "ats_disabilitas": "ATS (Gap)"
-        }
-    )
+    st.dataframe(df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']], use_container_width=True)
 
 else:
     # HALAMAN DETAIL
@@ -283,7 +278,6 @@ else:
         st.rerun()
     
     st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah']}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
     st.divider()
     
     col1, col2 = st.columns(2)
@@ -299,7 +293,6 @@ else:
             st.subheader("🏗️ Sarana Prasarana")
             st.write(f"**Jumlah Rombel:** {sch['jumlah_rombel']}")
             st.write(f"**Jumlah Ruang Kelas:** {sch['jumlah_ruang_kelas']}")
-            st.write(f"**Rusak Sedang:** {sch['rusak_sedang']} Ruang")
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
 
     st.markdown(f"""
@@ -309,5 +302,4 @@ else:
                 Sekolah ini memerlukan perhatian pada aspek sarana prasarana sesuai dengan rekapitulasi data Bidang PK.
             </p>
         </div>
-        <p style='font-size:10px; color:gray; margin-top:10px;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>
     """, unsafe_allow_html=True)
