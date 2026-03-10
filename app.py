@@ -1,326 +1,133 @@
 import streamlit as st
 import pandas as pd
-from io import BytesIO
-import plotly.express as px
 from PIL import Image
+import os
 
+# ==================================
+# Bagian 0: KONFIGURASI HALAMAN
+# ==================================
 st.set_page_config(
-    page_title="Dashboard Disabilitas Sumut",
-    layout="wide"
+    page_title="Login SI-PANDAI SUMUT",
+    layout="wide",
+    page_icon="🔒"
 )
 
-# =========================
-# STYLE LOGIN
-# =========================
+# ==================================
+# Bagian 1: CSS (GRADASI BIRU & ESTETIKA)
+# ==================================
 st.markdown("""
 <style>
+    /* Mengatur background halaman utama */
+    [data-testid="stAppViewContainer"] {
+        background-color: #f0f2f6 !important;
+    }
 
-[data-testid="stAppViewContainer"]{
-background-color:white;
-}
+    /* KOTAK LOGIN BIRU GRADASI */
+    /* Menargetkan container border agar memiliki gradasi biru */
+    [data-testid="stVerticalBlockBorderWrapper"] > div {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%) !important;
+        border-radius: 15px !important;
+        border: none !important;
+        padding: 20px !important;
+        box-shadow: 0px 10px 25px rgba(0,0,0,0.2) !important;
+    }
 
-/* CARD LOGIN */
+    /* Teks di dalam kartu agar putih */
+    .stMarkdown h4, .stMarkdown p {
+        color: white !important;
+        margin-bottom: 0px !important;
+    }
 
-.login-card{
-width:420px;
-margin:auto;
-padding:40px;
-border-radius:12px;
-border:1px solid #e6e6e6;
-box-shadow:0px 6px 25px rgba(0,0,0,0.08);
-text-align:center;
-background:white;
-}
+    /* Tombol Login (Biru Langit agar kontras) */
+    div.stButton > button {
+        background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        border: none !important;
+        height: 42px;
+        width: 100%;
+        margin-top: 15px;
+    }
+    
+    div.stButton > button:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 5px 15px rgba(0,210,255,0.3);
+    }
 
-/* TITLE GRADIENT */
-
-.title-gradient{
-font-size:30px;
-font-weight:800;
-background: linear-gradient(90deg,#0b7d3e,#1ca65a);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-margin-bottom:5px;
-}
-
-/* SUBTITLE */
-
-.subtitle-gradient{
-font-size:18px;
-font-weight:700;
-background: linear-gradient(90deg,#0b7d3e,#1ca65a);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-margin-bottom:25px;
-}
-
+    /* Logo Sumut di atas agar tidak terpotong */
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        padding-top: 25px; /* Memberi ruang di atas logo */
+        margin-bottom: -10px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
-# LOAD DATA
-# =========================
-@st.cache_data
-def load_data():
-    return pd.read_excel(
-        "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx",
-        sheet_name="data_disabilitas"
-    )
-
-@st.cache_data
-def load_users():
-    return pd.read_excel(
-        "KOTA_MEDAN_LENGKAP_KELURAHAN_DISABILITAS.xlsx",
-        sheet_name="users"
-    )
-
-data = load_data()
-users = load_users()
-
-# =========================
-# SESSION LOGIN
-# =========================
+# ==================================
+# Bagian 2: LOGIKA LOGIN
+# ==================================
 if "login" not in st.session_state:
     st.session_state.login = False
     st.session_state.role = ""
 
-# =========================
-# LOGIN PAGE
-# =========================
+# ==================================
+# Bagian 3: TAMPILAN LOGIN
+# ==================================
 if not st.session_state.login:
+    
+    # 1. LOGO SUMUT DI TENGAH (Kecil & Aman)
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+    col_s1, col_s2, col_s3 = st.columns([2, 0.3, 2]) # Rasio kecil di tengah
+    with col_s2:
+        if os.path.exists("logo_sumut.png"):
+            st.image(Image.open("logo_sumut.png"), width=50)
+        else:
+            st.write("LOGO")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    st.write("")
-    st.write("")
-    st.write("")
+    # 2. KARTU LOGIN (Compact/Separuh)
+    _, col_card, _ = st.columns([1.6, 2.2, 1.6]) 
 
-    col1, col2, col3 = st.columns([2,1,2])
+    with col_card:
+        # Container dengan gradasi biru (via CSS)
+        with st.container(border=True):
+            # Layout Horizontal: Logo Kiri, Form Kanan
+            col_l, col_r = st.columns([0.8, 1.5])
 
-    with col2:
+            with col_l:
+                st.write("") # Padding atas
+                if os.path.exists("logo_sipandai.png"):
+                    st.image(Image.open("logo_sipandai.png"), use_container_width=True)
+                else:
+                    st.write("SI-PANDAI")
 
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+            with col_r:
+                st.markdown("<h4>LOGIN USER</h4>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:11px; opacity:0.8;'>Sistem Pemetaan ATS Disabilitas</p>", unsafe_allow_html=True)
+                
+                # Input dengan Ikon di dalam placeholder
+                user = st.text_input("Username", placeholder="👤  Masukkan Username", label_visibility="collapsed")
+                pwd = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", label_visibility="collapsed")
+                
+                if st.button("MASUK KE SISTEM"):
+                    # Logika dummy (Silakan hubungkan ke Excel Anda)
+                    if user == "admin" and pwd == "admin":
+                        st.session_state.login = True
+                        st.session_state.role = "Admin"
+                        st.rerun()
+                    else:
+                        st.error("Login Gagal", icon="⚠️")
 
-        logo = Image.open("logo_sipandai.png")
-        st.image(logo, width=180)
-
-        st.markdown('<div class="title-gradient">LOGIN USER</div>', unsafe_allow_html=True)
-        st.markdown('<div class="subtitle-gradient">SI-PANDAI SUMUT</div>', unsafe_allow_html=True)
-
-        username = st.text_input("👤 Username")
-        password = st.text_input("🔑 Password", type="password")
-
-        if st.button("LOGIN", use_container_width=True):
-
-            user = users[
-                (users["username"] == username) &
-                (users["password"] == password)
-            ]
-
-            if not user.empty:
-                st.session_state.login = True
-                st.session_state.role = user.iloc[0]["role"]
-                st.rerun()
-            else:
-                st.error("Username atau password salah")
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown('<div style="text-align:center; color:#999; font-size:10px; margin-top:15px;">© 2024 Dinas Pendidikan Provinsi Sumatera Utara</div>', unsafe_allow_html=True)
     st.stop()
 
-# =========================
-# SIDEBAR
-# =========================
-st.sidebar.title("📂 Menu")
-
-menu = st.sidebar.radio(
-    "Pilih Menu",
-    ["Home"]
-)
-
-st.sidebar.divider()
-
-# =========================
-# FILTER WILAYAH
-# =========================
-st.sidebar.header("🔎 Filter Wilayah")
-
-kabkota = st.sidebar.selectbox(
-    "Pilih Kabupaten / Kota",
-    ["Semua"] + sorted(data["kab_kota"].unique())
-)
-
-df = data.copy()
-
-if kabkota != "Semua":
-    df = df[df["kab_kota"] == kabkota]
-
-# =========================
-# HEADER
-# =========================
-st.title("📊 Dashboard Sebaran Penyandang Disabilitas")
-st.subheader("Provinsi Sumatera Utara")
-
-st.write(f"👤 Role: **{st.session_state.role}**")
-
+# ==================================
+# Bagian 4: DASHBOARD (SETELAH LOGIN)
+# ==================================
+st.title("Berhasil Login")
+st.write(f"Selamat datang, **{st.session_state.role}**")
 if st.button("Logout"):
     st.session_state.login = False
-    st.session_state.role = ""
     st.rerun()
-
-st.divider()
-
-# =========================
-# REKAP CEPAT
-# =========================
-col1, col2, col3 = st.columns(3)
-
-col1.metric("Jumlah Data", len(df))
-col2.metric("Jumlah Kabupaten/Kota", df["kab_kota"].nunique())
-col3.metric("Jumlah Jenis Disabilitas", df["jenis_disabilitas"].nunique())
-
-st.divider()
-
-# =========================
-# REKAP PER JENIS
-# =========================
-st.subheader("📌 Rekap Penyandang per Jenis Disabilitas")
-
-rekap = df.groupby("jenis_disabilitas").size().reset_index(name="Jumlah")
-
-st.dataframe(rekap, use_container_width=True)
-
-# =========================
-# GRAFIK
-# =========================
-st.subheader("📈 Grafik Penyandang Disabilitas")
-
-fig_bar = px.bar(
-    rekap,
-    x="jenis_disabilitas",
-    y="Jumlah",
-    title="Jumlah Penyandang Disabilitas per Jenis"
-)
-
-st.plotly_chart(fig_bar, use_container_width=True)
-
-fig_pie = px.pie(
-    rekap,
-    values="Jumlah",
-    names="jenis_disabilitas",
-    title="Distribusi Jenis Disabilitas"
-)
-
-st.plotly_chart(fig_pie, use_container_width=True)
-
-# =========================
-# PETA
-# =========================
-st.divider()
-st.subheader("🗺️ Peta Sebaran Penyandang Disabilitas (Kab/Kota)")
-
-map_data = (
-    df.groupby("kab_kota")
-    .size()
-    .reset_index(name="Jumlah")
-)
-
-peta_kab = {
-    "Kota Medan": [3.5952, 98.6722],
-    "Kab. Deli Serdang": [3.4200, 98.9800],
-    "Kab. Langkat": [3.7000, 98.2000],
-}
-
-map_rows = []
-
-for k, v in peta_kab.items():
-
-    jumlah = map_data.loc[
-        map_data["kab_kota"] == k,
-        "Jumlah"
-    ]
-
-    if not jumlah.empty:
-
-        map_rows.append({
-            "lat": v[0],
-            "lon": v[1],
-            "jumlah": int(jumlah.values[0])
-        })
-
-if map_rows:
-
-    map_df = pd.DataFrame(map_rows)
-
-    st.map(
-        map_df,
-        latitude="lat",
-        longitude="lon",
-        size="jumlah"
-    )
-
-else:
-
-    st.info("Data peta belum tersedia")
-
-# =========================
-# DETAIL DATA
-# =========================
-st.divider()
-st.subheader("📋 Detail Data Penyandang Disabilitas")
-
-jenis_pilih = st.selectbox(
-    "Pilih Jenis Disabilitas",
-    ["Semua"] + sorted(df["jenis_disabilitas"].unique())
-)
-
-if jenis_pilih != "Semua":
-    df_detail = df[df["jenis_disabilitas"] == jenis_pilih]
-else:
-    df_detail = df
-
-st.dataframe(
-    df_detail[
-        ["nama", "jenis_disabilitas", "kab_kota"]
-    ],
-    use_container_width=True
-)
-
-# =========================
-# DOWNLOAD DATA
-# =========================
-st.divider()
-st.subheader("⬇️ Download Data")
-
-if st.session_state.role in ["admin", "operator"]:
-
-    output = BytesIO()
-
-    df.to_excel(
-        output,
-        index=False,
-        engine="openpyxl"
-    )
-
-    output.seek(0)
-
-    st.download_button(
-        label="Download Excel",
-        data=output,
-        file_name="rekap_disabilitas_filtered.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-
-else:
-    st.info("Role viewer tidak memiliki hak download")
-
-# =========================
-# ROLE INFO
-# =========================
-st.divider()
-
-st.caption("""
-Role:
-- Admin    : Semua akses
-- Operator : Lihat & Download
-- Viewer   : Lihat saja
-""")
-
