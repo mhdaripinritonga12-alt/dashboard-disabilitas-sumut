@@ -2,20 +2,13 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 import os
-from io import BytesIO
-import plotly.express as px
 import base64
 
 # ==================================
 # Bagian 0: KONFIGURASI HALAMAN
 # ==================================
-st.set_page_config(
-    page_title="Login SI-PANDAI SUMUT",
-    layout="wide",
-    page_icon="🔒"
-)
+st.set_page_config(page_title="Dashboard SI-PANDAI SUMUT", layout="wide", page_icon="🔒")
 
-# Fungsi Base64 untuk Logo Sidebar
 def get_base64_image(image_path):
     if os.path.exists(image_path):
         with open(image_path, "rb") as img_file:
@@ -23,239 +16,138 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM
+# Bagian 1: CSS CUSTOM (DESAIN BALON KOTAK & BAYANGAN)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
-    [data-testid="stAppViewContainer"] { background-color: #f4f7f9 !important; }
-    header {visibility: hidden;}
-    [data-testid="stVerticalBlockBorderWrapper"] > div {
-        background: linear-gradient(180deg, #e3f2fd 0%, #ffffff 100%) !important;
-        border-radius: 20px !important;
-        border: 1px solid #cde4f7 !important;
-        padding: 35px !important;
-        box-shadow: 0px 10px 30px rgba(0,0,0,0.08) !important;
-    }
-    .login-title { color: #0d47a1 !important; font-size: 24px !important; font-weight: 800 !important; margin-bottom: 2px !important; }
-    .login-subtitle { color: #546e7a !important; font-size: 13px !important; margin-bottom: 25px !important; }
-    div.stButton > button {
-        background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
-        color: white !important; border-radius: 10px !important; font-weight: 700 !important; height: 48px;
-    }
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important; }
-    [data-testid="stSidebar"] * { color: white !important; }
-    div[data-testid="stSelectbox"] div div { color: #333 !important; }
-    section[data-testid="stSidebar"] div.stButton > button {
-        background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
-        color: white !important; border-radius: 8px !important; font-weight: 700 !important; height: 40px; border: none !important;
-    }
-    .main-dashboard-title { font-size: 24px !important; font-weight: 800 !important; color: #0d47a1 !important; margin-bottom: 0px !important; }
-    .logo-header-center { display: flex; justify-content: center; padding-top: 30px; margin-bottom: 10px; }
+    [data-testid="stAppViewContainer"] { background-color: #f8fafc !important; }
     
-    /* Style Kartu Sekolah */
-    .school-card-title { color: #0d47a1; font-weight: 800; font-size: 15px; margin-bottom: 5px; }
-    .rec-box { font-size: 11px; padding: 5px; border-radius: 5px; margin-top: 5px; line-height: 1.2; }
+    /* STYLE KARTU SEKOLAH DENGAN BAYANGAN & GARIS */
+    [data-testid="stVerticalBlockBorderWrapper"] > div {
+        background: white !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    /* GAYA EXPANDER (NAMA SEKOLAH) */
+    .stExpander {
+        border: none !important;
+        background: transparent !important;
+    }
+    .stExpander [data-testid="stExpanderHeader"] p {
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+    }
+
+    /* BALON REKOMENDASI WARNA */
+    .rec-mendesak {
+        background-color: #fee2e2; color: #b91c1c; border-left: 5px solid #ef4444;
+        padding: 10px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 8px;
+    }
+    .rec-rehab {
+        background-color: #fef3c7; color: #b45309; border-left: 5px solid #f59e0b;
+        padding: 10px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 8px;
+    }
+    .rec-aman {
+        background-color: #dcfce7; color: #15803d; border-left: 5px solid #22c55e;
+        padding: 10px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 8px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Bagian 2: LOAD DATA MASTER
+# Bagian 2: LOAD DATA
 # =========================
 @st.cache_data
-def load_master_data():
-    try:
-        df_ats = pd.read_csv("master_data_si_pandai.csv")
-        # Load Data Sekolah
-        df_sekolah = pd.read_csv("master_data_sekolah.csv") if os.path.exists("master_data_sekolah.csv") else pd.DataFrame()
-        return df_ats, df_sekolah
-    except Exception as e:
-        st.error(f"Gagal memuat data: {e}")
-        return pd.DataFrame(), pd.DataFrame()
+def load_all_data():
+    df_ats = pd.read_csv("master_data_si_pandai.csv")
+    df_sch = pd.read_csv("master_data_sekolah.csv") if os.path.exists("master_data_sekolah.csv") else pd.DataFrame()
+    return df_ats, df_sch
 
-data, data_sekolah = load_master_data()
-
-def check_login(u, p):
-    return u == "admin" and p == "admin"
-
-if "login" not in st.session_state:
-    st.session_state.login = False
-    st.session_state.role = "Admin"
-
-# =========================
-# Bagian 3: HALAMAN LOGIN
-# =========================
-if not st.session_state.login:
-    st.markdown('<div class="logo-header-center">', unsafe_allow_html=True)
-    col_l1, col_l2, col_l3 = st.columns([2, 0.4, 2])
-    with col_l2:
-        if os.path.exists("logo_sumut.png"):
-            st.image(Image.open("logo_sumut.png"), width=95)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    _, col_card, _ = st.columns([1.5, 2.5, 1.5]) 
-    with col_card:
-        with st.container(border=True):
-            col_left, col_right = st.columns([1, 1.4])
-            with col_left:
-                if os.path.exists("logo_sipandai.png"):
-                    st.image(Image.open("logo_sipandai.png"), use_container_width=True)
-            with col_right:
-                st.markdown('<div class="login-title">LOGIN USER</div>', unsafe_allow_html=True)
-                st.markdown('<div class="login-subtitle">Akses Dashboard SI-PANDAI SUMUT</div>', unsafe_allow_html=True)
-                u_in = st.text_input("Username", placeholder="👤  Masukkan Username", key="user_input", label_visibility="collapsed")
-                p_in = st.text_input("Password", type="password", placeholder="🔑  Masukkan Password", key="pass_input", label_visibility="collapsed")
-                if st.button("MASUK KE DASHBOARD", use_container_width=True):
-                    if check_login(u_in, p_in):
-                        st.session_state.login = True
-                        st.rerun()
-                    else:
-                        st.error("Username atau Password Salah")
-    st.stop()
+data_wilayah, data_sekolah = load_all_data()
 
 # ==================================
-# Bagian 4: DASHBOARD UTAMA
+# Bagian 3: DASHBOARD UTAMA
 # ==================================
 
-# --- SIDEBAR ---
-logo_b64 = get_base64_image("logo_sumut.png")
-if logo_b64:
-    st.sidebar.markdown(f"""
-        <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 20px;">
-            <img src="data:image/png;base64,{logo_b64}" width="45">
-            <span style="font-size: 18px; font-weight: 800; color: white; line-height: 1.1;">SI-PANDAI<br>SUMUT</span>
-        </div>
-    """, unsafe_allow_html=True)
+# Sidebar Filter
+st.sidebar.header("🔎 Filter Wilayah")
+kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist()))
 
-st.sidebar.write(f"👤 Role: **{st.session_state.role.upper()}**")
-st.sidebar.divider()
-
-st.sidebar.header("🔎 Filter")
-kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", ["Semua"] + sorted(data["kab_kota"].unique().tolist()))
-
-df_filter = data.copy()
+df_filter = data_wilayah.copy()
 if kab_pilih != "Semua":
     df_filter = df_filter[df_filter["kab_kota"] == kab_pilih]
 
-st.sidebar.divider()
-if st.sidebar.button("Logout 🚪", use_container_width=True):
-    st.session_state.login = False
-    st.rerun()
-
-# --- MAIN AREA ---
-st.markdown('<p class="main-dashboard-title">🚀 Dashboard Utama</p>', unsafe_allow_html=True)
-st.markdown('<p style="color: #546e7a; font-size: 14px; margin-top: -5px;">Sistem Informasi Pemetaan ATS Disabilitas Sumatera Utara</p>', unsafe_allow_html=True)
+# Header
+st.markdown('<p style="font-size:26px; font-weight:800; color:#1e293b; margin-bottom:0;">🚀 SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
 st.divider()
 
-# MATRIKS DASHBOARD
-st.subheader("📌 Matriks Capaian Sektoral")
+# Matriks Utama
 m1, m2, m3 = st.columns(3)
-
 if kab_pilih == "Semua":
-    m1.metric("Total Penduduk Disabilitas", "6.732", help="Sumber: LPPD PK 2025")
-    m2.metric("Total Siswa Disabilitas", "4.573", help="Sumber: TIKP Provsu 2025")
-    m3.metric("Angka Partisipasi Sekolah", "67.93%", delta="Target Sektoral")
+    m1.metric("Total Penduduk Disabilitas", "6.732", help="LPPD PK 2025")
+    m2.metric("Total Siswa Disabilitas", "4.573", help="TIKP Provsu 2025")
+    m3.metric("Angka Partisipasi Sekolah", "67.93%")
 else:
-    total_pop = int(df_filter['jumlah_penduduk'].sum())
-    total_siswa = int(df_filter['jumlah_siswa'].sum())
+    pop = int(df_filter['jumlah_penduduk'].sum())
+    siswa = int(df_filter['jumlah_siswa'].sum())
     ats = int(df_filter['ats_disabilitas'].sum())
-    m1.metric("Penduduk Disabilitas", f"{total_pop:,}")
-    m2.metric("Siswa Belajar", f"{total_siswa:,}")
-    m3.metric("Anak Tidak Sekolah (ATS)", f"{ats:,}", delta_color="inverse")
+    m1.metric("Penduduk Disabilitas", f"{pop}")
+    m2.metric("Siswa Belajar", f"{siswa}")
+    m3.metric("ATS Disabilitas", f"{ats}", delta_color="inverse")
 
-# Keterangan Sumber Data
-st.markdown("""
-    <div style="background-color: #e3f2fd; padding: 10px; border-radius: 10px; border-left: 5px solid #1565c0;">
-        <p style="font-size: 12px; color: #0d47a1; margin: 0;">
-            <b>Sumber Data:</b><br>
-            - Data Populasi: Bidang PK - Laporan LPPD 2025 (Usia 4-18 Tahun)<br>
-            - Data Siswa: Bidang PK - Rekapitulasi Dapodik/TIKP Provsu 2025
-        </p>
-    </div>
-""", unsafe_allow_html=True)
-
-st.divider()
-
-# --- FITUR KARTU SEKOLAH & REKOMENDASI (DITAMPILKAN JIKA PILIH KABUPATEN) ---
+# --- DETAIL SEKOLAH (GRID BALON KOTAK) ---
 if kab_pilih != "Semua":
-    st.subheader(f"🏫 Daftar SLB & Rekomendasi di {kab_pilih}")
+    st.divider()
+    st.subheader(f"🏫 Daftar Satuan Pendidikan di {kab_pilih}")
     
-    # Filter sekolah berdasarkan kabupaten
     sekolah_wilayah = data_sekolah[data_sekolah['kab_kota'] == kab_pilih]
     ats_wilayah = int(df_filter['ats_disabilitas'].sum())
     
     if not sekolah_wilayah.empty:
-        # Menampilkan dalam grid 3 kolom
         cols = st.columns(3)
         for i, row in enumerate(sekolah_wilayah.itertuples()):
             with cols[i % 3]:
+                # Mulai Balon Kotak Sekolah
                 with st.container(border=True):
-                    st.markdown(f"<div class='school-card-title'>{row.nama_sekolah}</div>", unsafe_allow_html=True)
-                    st.write(f"🆔 **NPSN:** {row.npsn}")
                     
-                    # LOGIKA REKOMENDASI OTOMATIS
-                    rekomendasi = []
-                    # 1. Cek Kebutuhan RKB
+                    # LOGIKA REKOMENDASI & WARNA
                     if row.jumlah_rombel > row.jumlah_ruang_kelas:
                         selisih = row.jumlah_rombel - row.jumlah_ruang_kelas
-                        rekomendasi.append(f"⚠️ **Mendesak:** Butuh {selisih} Ruang Kelas Baru (RKB).")
-                    
-                    # 2. Cek Kebutuhan Rehab
-                    if row.rusak_berat > 0:
-                        rekomendasi.append(f"🛠️ **Prioritas:** Rehab {row.rusak_berat} Ruang Rusak Berat.")
-                    
-                    # 3. Cek Penjangkauan ATS (Jika ada ATS di wilayah tersebut dan ada ruang kosong)
-                    if ats_wilayah > 0 and row.jumlah_ruang_kelas > row.jumlah_rombel:
-                        sisa_ruang = row.jumlah_ruang_kelas - row.jumlah_rombel
-                        rekomendasi.append(f"✅ **Outreach:** Rekomendasi penempatan ATS (Tersedia {sisa_ruang} Ruang).")
-
-                    # Tampilkan Balon Rekomendasi
-                    if rekomendasi:
-                        for r in rekomendasi:
-                            st.markdown(f"<div class='rec-box'>{r}</div>", unsafe_allow_html=True)
+                        st.markdown(f"<div class='rec-mendesak'>⚠️ MENDESAK: Butuh {selisih} Ruang Kelas Baru (RKB)</div>", unsafe_allow_html=True)
+                    elif row.rusak_berat > 0:
+                        st.markdown(f"<div class='rec-rehab'>🛠️ PRIORITAS REHAB: {row.rusak_berat} Ruang Rusak Berat</div>", unsafe_allow_html=True)
                     else:
-                        st.markdown("<div class='rec-box' style='color:gray;'>✅ Kondisi Sekolah Stabil</div>", unsafe_allow_html=True)
+                        st.markdown("<div class='rec-aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
 
-                    # Expander untuk Detail Sarpras
-                    with st.expander("Detail Sarpras & Alamat"):
-                        st.write(f"🏢 **Status:** {row.status}")
-                        st.write(f"👥 **Siswa:** {row.jumlah_siswa} | **Rombel:** {row.jumlah_rombel}")
-                        st.write(f"🏫 **Ruang Kelas:** {row.jumlah_ruang_kelas}")
-                        st.write(f"📍 **Alamat:** {row.alamat}")
-                        st.caption("Sumber: Data Kerusakan & Sarpras Bidang PK")
+                    # NAMA SEKOLAH SEBAGAI CLICKABLE HEADER
+                    with st.expander(f"{row.nama_sekolah}"):
+                        st.markdown(f"""
+                            **Informasi Sekolah:**
+                            - 🆔 NPSN: `{row.npsn}`
+                            - 🏢 Status: {row.status}
+                            
+                            **Detail Sarpras:**
+                            - 👥 Jumlah Siswa: {row.jumlah_siswa} Orang
+                            - 📚 Jumlah Rombel: {row.jumlah_rombel}
+                            - 🏫 Ruang Kelas: {row.jumlah_ruang_kelas}
+                            - ❌ Rusak (S/B): {row.rusak_sedang} / {row.rusak_berat}
+                            
+                            **Lokasi:**
+                            - 📍 {row.alamat}
+                            
+                            <hr style='margin:10px 0;'>
+                            <p style='font-size:10px; color:gray;'>Sumber: Spreadsheet Bidang Pembinaan PK</p>
+                        """, unsafe_allow_html=True)
     else:
         st.info(f"Belum ada data detail sekolah untuk {kab_pilih}")
-    st.divider()
-
-# --- PETA SEBARAN ---
-st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
-if not df_filter.empty:
-    df_filter['map_size'] = df_filter['ats_disabilitas'].apply(lambda x: (x + 1) * 20) 
-    st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
-else:
-    st.info("Data koordinat tidak tersedia.")
 
 st.divider()
-
-# --- TABEL DETAIL ---
-st.subheader("📋 Detail Data per Wilayah")
-st.dataframe(
-    df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']],
-    use_container_width=True,
-    column_config={
-        "kab_kota": "Kabupaten / Kota",
-        "jumlah_penduduk": "Populasi Disabilitas",
-        "jumlah_siswa": "Siswa Belajar",
-        "ats_disabilitas": "ATS (Gap)"
-    }
-)
-
-# Tombol Download
-csv_data = df_filter.to_csv(index=False).encode('utf-8')
-st.download_button(
-    label="Download Master Data (CSV) ⬇️",
-    data=csv_data,
-    file_name='master_data_si_pandai_filtered.csv',
-    mime='text/csv',
-)
+# Peta & Tabel (Opsional di bawah)
+st.map(df_filter, latitude="lat", longitude="lon", size=df_filter['ats_disabilitas']*30)
