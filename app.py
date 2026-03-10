@@ -29,7 +29,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (LOCKED & USER FRIENDLY)
+# Bagian 1: CSS CUSTOM (LOCKED & FIXED)
 # ==================================
 st.markdown("""
 <style>
@@ -45,7 +45,7 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div div { color: #333 !important; }
 
-    /* TOMBOL LOGIN (GRADASI BIRU) */
+    /* TOMBOL LOGIN & DOWNLOAD */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important; border-radius: 10px !important; 
@@ -85,13 +85,17 @@ st.markdown("""
     .rehab { background-color: #fef3c7; color: #b45309; border-left: 5px solid #f59e0b; }
     .aman { background-color: #dcfce7; color: #15803d; border-left: 5px solid #22c55e; }
 
-    /* KOTAK SUMBER DATA (SESUAI GAMBAR 874128) */
+    /* FIX: KOTAK SUMBER DATA (BIRU MUDA GARIS BIRU TUA) */
     .source-box-ui {
-        background-color: #e3f2fd; padding: 12px; border-radius: 10px; 
-        border-left: 5px solid #1565c0; margin-bottom: 20px;
+        background-color: #e3f2fd !important; 
+        padding: 15px !important; 
+        border-radius: 10px !important; 
+        border-left: 6px solid #0d47a1 !important; 
+        margin-bottom: 25px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
     }
 
-    /* TOMBOL DOWNLOAD (USER FRIENDLY GREEN) */
+    /* TOMBOL DOWNLOAD (GREEN) */
     .stDownloadButton > button {
         background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%) !important;
         color: white !important; border-radius: 8px !important; 
@@ -155,7 +159,7 @@ if not st.session_state.login:
 # Bagian 4: DASHBOARD UTAMA & DETAIL
 # ==================================
 
-# --- SIDEBAR (SESUAI GAMBAR 87b987) ---
+# --- SIDEBAR ---
 logo_b64 = get_base64_image("logo_sumut.png")
 if logo_b64:
     st.sidebar.markdown(f"""
@@ -182,7 +186,7 @@ if kab_pilih != "Semua":
 
 csv_data = df_download.to_csv(index=False).encode('utf-8')
 st.sidebar.download_button(
-    label="Download Data ⬇️",
+    label="Download Master Data (CSV) ⬇️",
     data=csv_data,
     file_name=f'data_sipandai_{kab_pilih}.csv',
     mime='text/csv',
@@ -208,11 +212,12 @@ if st.session_state.page_view == "dashboard":
     # Matriks Capaian
     st.subheader("📌 Matriks Capaian Sektoral")
     
-    # SUMBER DATA (SESUAI GAMBAR 874128)
+    # SUMBER DATA (FIXED STYLE)
     st.markdown("""
         <div class="source-box-ui">
-            <p style="font-size: 12px; color: #0d47a1; margin: 0;">
-                <b>Sumber Data:</b> Bidang PK - Laporan LPPD 2025 & Rekapitulasi Dapodik/TIKP Provsu 2025
+            <p style="font-size: 13px; color: #0d47a1; margin: 0;">
+                <b style="font-size: 14px;">ℹ️ Sumber Data:</b><br>
+                Bidang PK - Laporan LPPD 2025 & Rekapitulasi Dapodik/TIKP Provsu 2025
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -237,7 +242,6 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sekolah_wilayah.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        # 1. Rekomendasi
                         if row.jumlah_rombel > row.jumlah_ruang_kelas:
                             st.markdown(f"<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh {row.jumlah_rombel - row.jumlah_ruang_kelas} RKB</div>", unsafe_allow_html=True)
                         elif row.rusak_berat > 0:
@@ -299,7 +303,7 @@ else:
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
 
     st.markdown(f"""
-        <div class="detail-info-box">
+        <div class="source-box-ui">
             <p style="font-size: 14px; color: #0d47a1; margin: 0;">
                 <b>Rekomendasi Kebijakan:</b><br>
                 Sekolah ini memerlukan perhatian pada aspek sarana prasarana sesuai dengan rekapitulasi data Bidang PK.
@@ -307,4 +311,3 @@ else:
         </div>
         <p style='font-size:10px; color:gray; margin-top:10px;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>
     """, unsafe_allow_html=True)
-
