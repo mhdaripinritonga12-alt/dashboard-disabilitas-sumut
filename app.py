@@ -50,7 +50,12 @@ st.markdown("""
     }
     [data-testid="stSidebar"] * { color: white !important; }
 
-    /* TOMBOL UTAMA */
+    /* FIX: TULISAN DI FILTER (SELECTBOX) TETAP HITAM */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+        color: #31333f !important;
+    }
+
+    /* TOMBOL UTAMA & LOGIN */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important; border-radius: 10px !important; 
@@ -67,7 +72,7 @@ st.markdown("""
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* BALON STATUS (WARNA SOLID) */
+    /* BALON STATUS WARNA */
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
     .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
     .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
@@ -94,7 +99,7 @@ st.markdown("""
     }
     [data-testid="stMetricDelta"] svg { display: none !important; }
 
-    /* DOWNLOAD BUTTON */
+    /* DOWNLOAD BUTTON (HIJAU) */
     .stDownloadButton > button {
         background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%) !important;
         color: white !important; border-radius: 10px !important; 
@@ -170,6 +175,7 @@ st.sidebar.divider()
 
 st.sidebar.header("🔎 Filter")
 opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
+# Filter Kabupaten/Kota
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", opsi_kab, key="selected_kab")
 
 st.sidebar.divider()
@@ -180,7 +186,7 @@ st.sidebar.download_button("Download Data (CSV) ⬇️", csv_data, f"data_sipand
 st.sidebar.divider()
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
 
-# --- KONTEN HALAMAN ---
+# --- KONTEN DASHBOARD ---
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🚀 Dashboard Utama</p>', unsafe_allow_html=True)
     st.markdown('<p style="color: #546e7a; font-size: 14px; margin-top: -5px;">Sistem Informasi Pemetaan ATS Disabilitas Sumatera Utara</p>', unsafe_allow_html=True)
@@ -215,7 +221,7 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sekolah_wilayah.itertuples()):
                 with cols_sch[i % 3]:
                     with st.container(border=True):
-                        # BALON STATUS
+                        # BALON STATUS WARNA
                         if row.rusak_berat > 0:
                             st.markdown(f"<div class='rec-box rehab'>🛠️ PRIORITAS REHAB: {row.rusak_berat} Ruang</div>", unsafe_allow_html=True)
                         elif row.jumlah_rombel > row.jumlah_ruang_kelas:
@@ -230,7 +236,7 @@ if st.session_state.page_view == "dashboard":
                             st.rerun()
                         st.caption(f"NPSN: {row.npsn}")
 
-    # 3. Visualisasi (Peta & Grafik)
+    # 3. Visualisasi
     st.divider()
     cv1, cv2 = st.columns([1.5, 1])
     with cv1:
@@ -266,7 +272,6 @@ else:
             st.subheader("📌 Profil Umum")
             st.write(f"**Status:** {sch['status']}")
             st.write(f"**Alamat:** {sch['alamat']}")
-            # JUMLAH SISWA MUNCUL DI SINI
             st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')} Orang")
             st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
     with c2:
@@ -277,4 +282,4 @@ else:
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi Kebijakan:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
