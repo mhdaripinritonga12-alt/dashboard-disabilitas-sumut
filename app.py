@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
+import plotly.express as px
 import os
 import base64
 
@@ -14,14 +14,13 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- FUNGSI RESET LOGOUT (FIX ERROR LOGOUT) ---
+# --- FUNGSI RESET LOGOUT (FIX ERROR) ---
 def proses_logout():
-    # Menghapus state login dan reset filter tanpa memicu API Exception
     st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.session_state.page_view = "dashboard"
 
-# Inisialisasi State Navigasi & Memori Filter
+# Inisialisasi State
 if "page_view" not in st.session_state:
     st.session_state.page_view = "dashboard"
 if "selected_school_data" not in st.session_state:
@@ -36,7 +35,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (LOCKED & FIXED)
+# Bagian 1: CSS CUSTOM (LOCKED & CLEAN)
 # ==================================
 st.markdown("""
 <style>
@@ -45,14 +44,14 @@ st.markdown("""
     [data-testid="stAppViewContainer"] { background-color: #f4f7f9 !important; }
     header {visibility: hidden;}
 
-    /* SIDEBAR GRADASI ASLI */
+    /* SIDEBAR GRADASI */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div div { color: #333 !important; }
 
-    /* TOMBOL LOGIN & DOWNLOAD */
+    /* TOMBOL LOGIN & UTAMA */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important; border-radius: 10px !important; 
@@ -60,7 +59,7 @@ st.markdown("""
         width: 100%;
     }
 
-    /* KOTAK BALON SEKOLAH (SHADOW) */
+    /* KOTAK BALON SEKOLAH */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
         background: white !important;
         border-radius: 15px !important;
@@ -69,51 +68,28 @@ st.markdown("""
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* NAMA SEKOLAH (BIRU TEBAL) */
+    /* NAMA SEKOLAH */
     div.stButton > button[key^="btn_"] {
-        background: transparent !important;
-        border: none !important;
-        color: #0d47a1 !important;
-        font-size: 18px !important;
-        font-weight: 800 !important;
-        padding: 0px !important;
-        text-align: left !important;
-        box-shadow: none !important;
-        margin-bottom: -10px !important;
+        background: transparent !important; color: #0d47a1 !important;
+        font-size: 18px !important; font-weight: 800 !important;
+        padding: 0px !important; text-align: left !important;
+        box-shadow: none !important; margin-bottom: -10px !important;
     }
 
-    /* BALON REKOMENDASI */
-    .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
-    .mendesak { background-color: #fee2e2; color: #b91c1c; border-left: 5px solid #ef4444; }
-    .rehab { background-color: #fef3c7; color: #b45309; border-left: 5px solid #f59e0b; }
-    .aman { background-color: #dcfce7; color: #15803d; border-left: 5px solid #22c55e; }
-
-    /* FIX: KOTAK SUMBER DATA (BIRU MUDA GARIS BIRU TUA) */
+    /* KOTAK SUMBER DATA */
     .source-box-ui {
-        background-color: #e3f2fd !important; 
-        padding: 15px !important; 
-        border-radius: 10px !important; 
-        border-left: 6px solid #0d47a1 !important; 
+        background-color: #e3f2fd !important; padding: 15px !important; 
+        border-radius: 10px !important; border-left: 6px solid #0d47a1 !important; 
         margin-bottom: 25px !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
     }
 
-    /* TARGET SEKTORAL (HIJAU, KECIL, DI BAWAH ANGKA) */
+    /* TARGET SEKTORAL (HIJAU KECIL) */
     [data-testid="stMetricDelta"] > div {
-        color: #15803d !important; 
-        font-size: 13px !important; 
-        font-weight: 700 !important;
+        color: #15803d !important; font-size: 13px !important; font-weight: 700 !important;
     }
     [data-testid="stMetricDelta"] svg { display: none !important; }
 
-    /* TOMBOL DOWNLOAD (GREEN) */
-    .stDownloadButton > button {
-        background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%) !important;
-        color: white !important; border-radius: 8px !important; 
-        font-weight: 700 !important; border: none !important;
-    }
-
-    /* LOGOUT & BACK BUTTON (ORANGE) */
+    /* LOGOUT BUTTON (ORANGE) */
     section[data-testid="stSidebar"] div.stButton > button {
         background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
         height: 40px !important;
@@ -122,7 +98,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==================================
-# Bagian 2: LOAD DATA (master_data_sekolah1)
+# Bagian 2: LOAD DATA
 # ==================================
 @st.cache_data
 def load_all_data():
@@ -170,7 +146,7 @@ if not st.session_state.login:
 # Bagian 4: DASHBOARD & DETAIL
 # ==================================
 
-# --- SIDEBAR ---
+# --- SIDEBAR (LOGO & FILTER) ---
 logo_b64 = get_base64_image("logo_sumut.png")
 if logo_b64:
     st.sidebar.markdown(f"""
@@ -188,24 +164,11 @@ st.sidebar.header("🔎 Filter")
 opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", opsi_kab, key="selected_kab")
 
-# TOMBOL DOWNLOAD
-st.sidebar.divider()
-st.sidebar.write("📄 **Ekspor Data**")
-df_download = data_wilayah.copy()
-if kab_pilih != "Semua":
-    df_download = df_download[df_download["kab_kota"] == kab_pilih]
-
-csv_data = df_download.to_csv(index=False).encode('utf-8')
-st.sidebar.download_button(
-    label="Download Data ⬇️",
-    data=csv_data,
-    file_name=f'data_sipandai_{kab_pilih}.csv',
-    mime='text/csv',
-    use_container_width=True
-)
+# Ekspor Data
+csv_data = data_wilayah.to_csv(index=False).encode('utf-8')
+st.sidebar.download_button("Download Data ⬇️", csv_data, f"data_{kab_pilih}.csv", "text/csv", use_container_width=True)
 
 st.sidebar.divider()
-# FIX ERROR LOGOUT (MENGGUNAKAN CALLBACK)
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
 
 # --- KONTEN HALAMAN ---
@@ -240,6 +203,26 @@ if st.session_state.page_view == "dashboard":
         m2.metric("Siswa Belajar", int(df_filter['jumlah_siswa'].sum()))
         m3.metric("Anak Tidak Sekolah (ATS)", int(df_filter['ats_disabilitas'].sum()), delta_color="inverse")
 
+    # --- ROW VISUALISASI (PETA & GRAFIK) ---
+    st.divider()
+    col_viz1, col_viz2 = st.columns([1.5, 1])
+    
+    with col_viz1:
+        st.subheader("🗺️ Peta Sebaran ATS")
+        df_filter['map_size'] = df_filter['ats_disabilitas'] * 30
+        st.map(df_filter, latitude="lat", longitude="lon", size="map_size", use_container_width=True)
+
+    with col_viz2:
+        st.subheader("📊 Grafik ATS Wilayah")
+        # Grafik Bar untuk ATS
+        df_chart = df_filter.sort_values("ats_disabilitas", ascending=False).head(10)
+        fig = px.bar(df_chart, x='ats_disabilitas', y='kab_kota', orientation='h', 
+                     color='ats_disabilitas', color_continuous_scale='Blues',
+                     labels={'ats_disabilitas': 'Jumlah ATS', 'kab_kota': ''})
+        fig.update_layout(height=350, margin=dict(l=0, r=0, t=0, b=0))
+        st.plotly_chart(fig, use_container_width=True)
+
+    # --- DAFTAR SEKOLAH ---
     if kab_pilih != "Semua":
         st.divider()
         st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
@@ -250,27 +233,20 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sekolah_wilayah.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        if row.jumlah_rombel > row.jumlah_ruang_kelas:
-                            st.markdown(f"<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh {row.jumlah_rombel - row.jumlah_ruang_kelas} RKB</div>", unsafe_allow_html=True)
-                        elif row.rusak_berat > 0:
-                            st.markdown(f"<div class='rec-box rehab'>🛠️ PRIORITAS REHAB: {row.rusak_berat} Ruang</div>", unsafe_allow_html=True)
+                        if row.rusak_berat > 0:
+                            st.markdown("<span style='color:red; font-size:12px;'>⚠️ Rusak Berat</span>", unsafe_allow_html=True)
                         else:
-                            st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
-
+                            st.markdown("<span style='color:green; font-size:12px;'>✅ Kondisi Aman</span>", unsafe_allow_html=True)
+                            
                         if st.button(row.nama_sekolah, key=f"btn_{row.npsn}"):
                             st.session_state.selected_school_data = row._asdict()
                             st.session_state.page_view = "detail"
                             st.rerun()
-                        st.markdown(f"<p style='color:#64748b; font-size:13px; margin-top:-10px;'>🆔 NPSN: {row.npsn}</p>", unsafe_allow_html=True)
+                        st.caption(f"NPSN: {row.npsn}")
 
     st.divider()
-    st.subheader("🗺️ Peta Pemetaan ATS Disabilitas")
-    df_filter['map_size'] = df_filter['ats_disabilitas'] * 30
-    st.map(df_filter, latitude="lat", longitude="lon", size="map_size")
-
-    st.divider()
-    st.subheader("📋 Detail Data per Wilayah")
-    st.dataframe(df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']], use_container_width=True)
+    with st.expander("📋 Lihat Detail Tabel"):
+        st.dataframe(df_filter[['kab_kota', 'jumlah_penduduk', 'jumlah_siswa', 'ats_disabilitas']], use_container_width=True)
 
 else:
     # --- HALAMAN DETAIL ---
@@ -287,7 +263,7 @@ else:
     with col1:
         with st.container(border=True):
             st.subheader("📌 Profil Umum")
-            st.write(f"**Status Sekolah:** {sch['status']}")
+            st.write(f"**Status:** {sch['status']}")
             st.write(f"**Alamat:** {sch['alamat']}")
             st.write(f"**Jumlah Siswa:** {sch['jumlah_siswa']} Orang")
             st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
@@ -295,8 +271,8 @@ else:
     with col2:
         with st.container(border=True):
             st.subheader("🏗️ Sarana Prasarana")
-            st.write(f"**Jumlah Rombel:** {sch['jumlah_rombel']}")
-            st.write(f"**Jumlah Ruang Kelas:** {sch['jumlah_ruang_kelas']}")
+            st.write(f"**Rombel:** {sch['jumlah_rombel']}")
+            st.write(f"**Ruang Kelas:** {sch['jumlah_ruang_kelas']}")
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
@@ -304,9 +280,8 @@ else:
         <div class="source-box-ui">
             <p style="font-size: 14px; color: #0d47a1; margin: 0;">
                 <b>Rekomendasi Kebijakan:</b><br>
-                Sekolah ini memerlukan perhatian pada aspek sarana prasarana serta ketersediaan daya listrik/internet untuk menunjang pembelajaran digital.
+                Sekolah ini memerlukan perhatian khusus pada aspek sarpras dan digitalisasi sesuai rekapitulasi data Bidang PK.
             </p>
         </div>
         <p style='font-size:10px; color:gray; margin-top:10px;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>
     """, unsafe_allow_html=True)
-
