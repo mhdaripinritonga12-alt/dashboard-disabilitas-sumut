@@ -35,7 +35,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (LOCKED & CLEAN)
+# Bagian 1: CSS CUSTOM (LOCKED & FIXED)
 # ==================================
 st.markdown("""
 <style>
@@ -51,7 +51,7 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div div { color: #333 !important; }
 
-    /* TOMBOL LOGIN & UTAMA */
+    /* TOMBOL UTAMA & LOGIN (BIRU) */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important; border-radius: 10px !important; 
@@ -59,7 +59,7 @@ st.markdown("""
         width: 100%;
     }
 
-    /* KOTAK BALON SEKOLAH */
+    /* KOTAK BALON SEKOLAH (SHADOW) */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
         background: white !important;
         border-radius: 15px !important;
@@ -68,7 +68,7 @@ st.markdown("""
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* NAMA SEKOLAH */
+    /* NAMA SEKOLAH (BIRU TEBAL) */
     div.stButton > button[key^="btn_"] {
         background: transparent !important; color: #0d47a1 !important;
         font-size: 18px !important; font-weight: 800 !important;
@@ -89,7 +89,15 @@ st.markdown("""
     }
     [data-testid="stMetricDelta"] svg { display: none !important; }
 
-    /* LOGOUT BUTTON (ORANGE) */
+    /* TOMBOL DOWNLOAD (HIJAU TETAP) */
+    .stDownloadButton > button {
+        background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; border: none !important;
+        width: 100% !important; height: 48px !important;
+    }
+
+    /* LOGOUT BUTTON */
     section[data-testid="stSidebar"] div.stButton > button {
         background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
         height: 40px !important;
@@ -159,14 +167,23 @@ if logo_b64:
 st.sidebar.write(f"👤 Role: **ADMIN**")
 st.sidebar.divider()
 
-# FILTER KABUPATEN (MEMORY LOCKED)
 st.sidebar.header("🔎 Filter")
 opsi_kab = ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist())
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", opsi_kab, key="selected_kab")
 
-# Ekspor Data
-csv_data = data_wilayah.to_csv(index=False).encode('utf-8')
-st.sidebar.download_button("Download Data ⬇️", csv_data, f"data_{kab_pilih}.csv", "text/csv", use_container_width=True)
+st.sidebar.divider()
+st.sidebar.write("📄 **Ekspor Data**")
+df_download = data_wilayah.copy()
+if kab_pilih != "Semua":
+    df_download = df_download[df_download["kab_kota"] == kab_pilih]
+
+csv_data = df_download.to_csv(index=False).encode('utf-8')
+st.sidebar.download_button(
+    label="Download Master Data (CSV) ⬇️",
+    data=csv_data,
+    file_name=f'data_sipandai_{kab_pilih}.csv',
+    mime='text/csv'
+)
 
 st.sidebar.divider()
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
@@ -181,9 +198,8 @@ if st.session_state.page_view == "dashboard":
     if kab_pilih != "Semua":
         df_filter = df_filter[df_filter["kab_kota"] == kab_pilih]
 
-    # Matriks Capaian
+    # 1. Matriks Capaian
     st.subheader("📌 Matriks Capaian Sektoral")
-    
     st.markdown("""
         <div class="source-box-ui">
             <p style="font-size: 13px; color: #0d47a1; margin: 0;">
@@ -203,7 +219,29 @@ if st.session_state.page_view == "dashboard":
         m2.metric("Siswa Belajar", int(df_filter['jumlah_siswa'].sum()))
         m3.metric("Anak Tidak Sekolah (ATS)", int(df_filter['ats_disabilitas'].sum()), delta_color="inverse")
 
-    # --- ROW VISUALISASI (PETA & GRAFIK) ---
+    # 2. Daftar Sekolah (POSISI PINDAH KE SINI - TEPAT DI BAWAH MATRIKS)
+    if kab_pilih != "Semua":
+        st.divider()
+        st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
+        sekolah_wilayah = data_sekolah[data_sekolah['kab_kota'] == kab_pilih]
+        
+        if not sekolah_wilayah.empty:
+            cols_sch = st.columns(3)
+            for i, row in enumerate(sekolah_wilayah.itertuples()):
+                with cols_sch[i % 3]:
+                    with st.container(border=True):
+                        if row.rusak_berat > 0:
+                            st.markdown("<span style='color:red; font-size:12px;'>⚠️ Rusak Berat</span>", unsafe_allow_html=True)
+                        else:
+                            st.markdown("<span style='color:green; font-size:12px;'>✅ Kondisi Aman</span>", unsafe_allow_html=True)
+                        
+                        if st.button(row.nama_sekolah, key=f"btn_{row.npsn}"):
+                            st.session_state.selected_school_data = row._asdict()
+                            st.session_state.page_view = "detail"
+                            st.rerun()
+                        st.caption(f"NPSN: {row.npsn}")
+
+    # 3. Visualisasi (Peta & Grafik)
     st.divider()
     col_viz1, col_viz2 = st.columns([1.5, 1])
     
@@ -214,35 +252,12 @@ if st.session_state.page_view == "dashboard":
 
     with col_viz2:
         st.subheader("📊 Grafik ATS Wilayah")
-        # Grafik Bar untuk ATS
         df_chart = df_filter.sort_values("ats_disabilitas", ascending=False).head(10)
         fig = px.bar(df_chart, x='ats_disabilitas', y='kab_kota', orientation='h', 
                      color='ats_disabilitas', color_continuous_scale='Blues',
                      labels={'ats_disabilitas': 'Jumlah ATS', 'kab_kota': ''})
         fig.update_layout(height=350, margin=dict(l=0, r=0, t=0, b=0))
         st.plotly_chart(fig, use_container_width=True)
-
-    # --- DAFTAR SEKOLAH ---
-    if kab_pilih != "Semua":
-        st.divider()
-        st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
-        sekolah_wilayah = data_sekolah[data_sekolah['kab_kota'] == kab_pilih]
-        
-        if not sekolah_wilayah.empty:
-            cols = st.columns(3)
-            for i, row in enumerate(sekolah_wilayah.itertuples()):
-                with cols[i % 3]:
-                    with st.container(border=True):
-                        if row.rusak_berat > 0:
-                            st.markdown("<span style='color:red; font-size:12px;'>⚠️ Rusak Berat</span>", unsafe_allow_html=True)
-                        else:
-                            st.markdown("<span style='color:green; font-size:12px;'>✅ Kondisi Aman</span>", unsafe_allow_html=True)
-                            
-                        if st.button(row.nama_sekolah, key=f"btn_{row.npsn}"):
-                            st.session_state.selected_school_data = row._asdict()
-                            st.session_state.page_view = "detail"
-                            st.rerun()
-                        st.caption(f"NPSN: {row.npsn}")
 
     st.divider()
     with st.expander("📋 Lihat Detail Tabel"):
@@ -255,24 +270,21 @@ else:
         st.session_state.page_view = "dashboard"
         st.rerun()
     
-    st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah']}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah']}</h1>")
+    st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>")
     st.divider()
     
-    col1, col2 = st.columns(2)
-    with col1:
+    c1, c2 = st.columns(2)
+    with c1:
         with st.container(border=True):
             st.subheader("📌 Profil Umum")
             st.write(f"**Status:** {sch['status']}")
             st.write(f"**Alamat:** {sch['alamat']}")
-            st.write(f"**Jumlah Siswa:** {sch['jumlah_siswa']} Orang")
             st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
-            
-    with col2:
+    with c2:
         with st.container(border=True):
             st.subheader("🏗️ Sarana Prasarana")
             st.write(f"**Rombel:** {sch['jumlah_rombel']}")
-            st.write(f"**Ruang Kelas:** {sch['jumlah_ruang_kelas']}")
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
