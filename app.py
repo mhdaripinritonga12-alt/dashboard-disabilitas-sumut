@@ -260,16 +260,11 @@ else:
             st.write(f"**Rusak Sedang:** {sch['rusak_sedang']} Ruang")
             st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
 
-    st.markdown(f"""
-        <div style="background-color: #e3f2fd; padding: 15px; border-radius: 10px; border-left: 5px solid #1565c0; margin-top: 20px;">
-            <p style="font-size: 14px; color: #0d47a1; margin: 0;">
-                <b>Rekomendasi Kebijakan:</b><br>
-                Sekolah ini memerlukan perhatian pada aspek sarana prasarana sesuai dengan rekapitulasi data Bidang PK.
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
+    # BALON REKOMENDASI
+    st.markdown('<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style="font-size:10px; color:gray;">Sumber: Data Kerusakan & Sarpras Bidang PK</p>', unsafe_allow_html=True)
 
-    )
+
+
 
 
 
