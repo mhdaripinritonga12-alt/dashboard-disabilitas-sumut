@@ -269,16 +269,8 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-# Tombol Download (Hanya muncul di dashboard)
-if st.session_state.page == "dashboard":
-    csv_data = df_filter.to_csv(index=False).encode('utf-8')
-    st.sidebar.download_button(
-        label="Download Data (CSV) ⬇️",
-        data=csv_data,
-        file_name='data_si_pandai_filtered.csv',
-        mime='text/csv',
-        use_container_width=True
     )
+
 
 
 
