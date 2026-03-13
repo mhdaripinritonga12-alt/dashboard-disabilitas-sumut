@@ -199,9 +199,7 @@ if st.session_state.page_view == "dashboard":
     if kab_pilih != "Semua":
         df_f = df_f[df_f["kab_kota"] == kab_pilih]
 
-    # BALON SUMBER DATA DASHBOARD
-    st.markdown('<div class="source-box-ui"><p style="font-size: 13px; color: #0d47a1; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>', unsafe_allow_html=True)
-  # 1. Matriks Capaian
+    # 1. Matriks Capaian
     st.subheader("📌 Matriks Capaian Sektoral")
     st.markdown("""<div class="source-box-ui"><p style="font-size: 13px; color: #0d47a1; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
 
@@ -285,5 +283,6 @@ else:
 
     # BALON REKOMENDASI
     st.markdown('<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style="font-size:10px; color:gray;">Sumber: Data Kerusakan & Sarpras Bidang PK</p>', unsafe_allow_html=True)
+
 
 
