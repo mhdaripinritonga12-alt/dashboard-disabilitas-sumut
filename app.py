@@ -39,10 +39,10 @@ def get_base64_image(image_path):
 # ==================================
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
-    html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
-    [data-testid="stAppViewContainer"] { background-color: #f4f7f9 !important; }
-    header {visibility: hidden;}
+   <style>
+    /* Pastikan header transparan tapi tetap ada (agar ikon > muncul) */
+    header { background-color: rgba(0,0,0,0) !important; visibility: visible !important; }
+    [data-testid="stHeader"] { background: none !important; }
 /* FIX: Jangan sembunyikan header total agar tombol sidebar muncul */
     header { background-color: rgba(0,0,0,0) !important; }
     [data-testid="stHeader"] { background: none !important; }
@@ -290,5 +290,6 @@ else:
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
 
 
