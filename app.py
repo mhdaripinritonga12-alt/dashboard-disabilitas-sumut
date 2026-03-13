@@ -215,17 +215,21 @@ if st.session_state.page_view == "dashboard":
                 with cols[i % 3]:
                     with st.container(border=True):
                        # --- LOGIKA PENENTUAN STATUS (FIXED) ---
-                        # 1. Cek apakah Rombel lebih banyak dari Ruang Kelas (Butuh RKB)
-                        if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
-                            st.markdown(f"<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
-                        
-                        # 2. Jika kelas cukup, cek apakah ada yang Rusak Berat
-                        elif getattr(row, 'rusak_berat', 0) > 0:
-                            st.markdown(f"<div class='rec-box rehab'>🛠️ PRIORITAS REHAB</div>", unsafe_allow_html=True)
-                        
-                        # 3. Jika semua aman
-                        else:
-                            st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
+                      
+if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
+    st.markdown(f"<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
+
+# 2. Cek Rusak Berat (Prioritas Kedua)
+elif getattr(row, 'rusak_berat', 0) > 0:
+    st.markdown(f"<div class='rec-box rehab'>🛠️ PRIORITAS REHAB: {getattr(row, 'rusak_berat', 0)} Ruang Berat</div>", unsafe_allow_html=True)
+
+# 3. Cek Rusak Sedang (TAMBAHAN BARU)
+elif getattr(row, 'rusak_sedang', 0) > 0:
+    st.markdown(f"<div class='rec-box rehab'>⚠️ REHAB SEDANG: {getattr(row, 'rusak_sedang', 0)} Ruang</div>", unsafe_allow_html=True)
+
+# 4. Kondisi Aman
+else:
+    st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
                         
                         # --- TOMBOL & KETERANGAN ---
                         if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
@@ -257,7 +261,7 @@ else:
     st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
     st.divider()
 
-    c1, c2 = st.columns(2)
+  c1, c2 = st.columns(2)
     with c1:
         with st.container(border=True):
             st.subheader("📌 Profil Umum")
@@ -270,11 +274,13 @@ else:
             st.subheader("🏗️ Sarana Prasarana")
             st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
             st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
+            st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', '0')} Ruang")
             st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     # BALON REKOMENDASI
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
 
 
 
