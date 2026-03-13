@@ -225,7 +225,23 @@ if st.session_state.page_view == "dashboard":
     cv1, cv2 = st.columns([1.5, 1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
-        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
+       # --- FITUR STREET VIEW / GOOGLE MAPS EMBED ---
+    # Menggunakan nama sekolah dan kabupaten sebagai query pencarian peta
+    search_query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
+    map_url = f"https://www.google.com/maps?q={search_query}&output=embed"
+    
+    components.html(f"""
+        <iframe 
+            width="100%" 
+            height="400" 
+            frameborder="0" 
+            scrolling="no" 
+            marginheight="0" 
+            marginwidth="0" 
+            src="{map_url}"
+            style="border: 1px solid #e2e8f0; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </iframe>
+    """, height=420)
     with cv2:
         st.subheader("📊 Grafik ATS Wilayah")
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h', color_continuous_scale='Blues'), use_container_width=True)
@@ -243,23 +259,7 @@ else:
     st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
     
-    # --- FITUR STREET VIEW / GOOGLE MAPS EMBED ---
-    # Menggunakan nama sekolah dan kabupaten sebagai query pencarian peta
-    search_query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
-    map_url = f"https://www.google.com/maps?q={search_query}&output=embed"
-    
-    components.html(f"""
-        <iframe 
-            width="100%" 
-            height="400" 
-            frameborder="0" 
-            scrolling="no" 
-            marginheight="0" 
-            marginwidth="0" 
-            src="{map_url}"
-            style="border: 1px solid #e2e8f0; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        </iframe>
-    """, height=420)
+   
 
     st.divider()
 
@@ -281,3 +281,4 @@ else:
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
