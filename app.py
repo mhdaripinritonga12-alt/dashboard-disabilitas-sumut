@@ -69,17 +69,28 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==================================
-# 2. LOAD & CLEAN DATA
+# 2. LOAD & AUTO-FIX COORDINATES
 # ==================================
 @st.cache_data
 def load_all_data():
     try:
         df_ats = pd.read_csv("master_data_si_pandai.csv")
         df_sch = pd.read_csv("master_data_sekolah1.csv")
-        # Normalisasi kolom agar tidak KeyError
-        for df in [df_ats, df_sch]:
+        
+        # Fungsi Normalisasi Kolom
+        def clean_df(df):
+            # 1. Kecilkan semua nama kolom dan buang spasi
             df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
-        return df_ats, df_sch
+            
+            # 2. DETEKSI OTOMATIS LAT/LON (KUNCI UTAMA)
+            rename_dict = {}
+            for col in df.columns:
+                if 'lat' in col or 'lintang' in col: rename_dict[col] = 'latitude'
+                if 'lon' in col or 'long' in col or 'bujur' in col: rename_dict[col] = 'longitude'
+            
+            return df.rename(columns=rename_dict)
+
+        return clean_df(df_ats), clean_df(df_sch)
     except Exception as e:
         return pd.DataFrame(), pd.DataFrame()
 
@@ -144,10 +155,13 @@ if st.session_state.page_view == "dashboard":
         if kab_pilih != "Semua":
             df_map = df_map[df_map[target_col] == kab_pilih]
         
-        if not df_map.empty and 'latitude' in df_map.columns:
+        # Validasi akhir koordinat sebelum tampil
+        if not df_map.empty and 'latitude' in df_map.columns and 'longitude' in df_map.columns:
             st.map(df_map, latitude="latitude", longitude="longitude", use_container_width=True)
         else:
-            st.info("Peta tidak dapat dimuat (Cek kolom latitude/longitude di CSV).")
+            st.warning("⚠️ Kolom latitude/longitude tidak ditemukan di CSV atau data kosong.")
+            with st.expander("Klik untuk cek nama kolom CSV Abang:"):
+                st.write(list(df_map.columns))
 
     with cv2:
         st.subheader("📊 Statistik Wilayah")
@@ -168,8 +182,6 @@ if st.session_state.page_view == "dashboard":
                             st.markdown("<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
                         elif getattr(row, 'rusak_berat', 0) > 0:
                             st.markdown("<div class='rec-box rehab'>🛠️ PRIORITAS REHAB</div>", unsafe_allow_html=True)
-                        elif getattr(row, 'rusak_sedang', 0) > 0:
-                            st.markdown("<div class='rec-box rehab' style='background-color:#fff7ed; color:#c2410c;'>⚠️ REHAB SEDANG</div>", unsafe_allow_html=True)
                         else:
                             st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
                         
@@ -180,7 +192,7 @@ if st.session_state.page_view == "dashboard":
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
 # ==================================
-# 6. HALAMAN DETAIL (STREET VIEW)
+# 6. HALAMAN DETAIL
 # ==================================
 else:
     sch = st.session_state.selected_school_data
@@ -201,12 +213,10 @@ else:
             st.subheader("📌 Profil")
             st.write(f"**Alamat:** {sch.get('alamat', '-')}")
             st.write(f"**Siswa:** {sch.get('jumlah_siswa', 0)} Orang")
-            st.write(f"**Internet:** {sch.get('akses_internet', '-')}")
     with c2:
         with st.container(border=True):
             st.subheader("🏗️ Sarpras")
             st.write(f"**Rombel:** {sch.get('jumlah_rombel', 0)} | **Kelas:** {sch.get('jumlah_ruang_kelas', 0)}")
-            st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', 0)} | **Berat:** {sch.get('rusak_berat', 0)}")
-            st.write(f"**Listrik:** {sch.get('daya_listrik', '-')}")
+            st.write(f"**Rusak Berat:** {sch.get('rusak_berat', 0)}")
 
     st.markdown('<div style="background-color:#e3f2fd; padding:15px; border-radius:10px; border-left:6px solid #0d47a1;"><p style="margin:0; color:#0d47a1;"><b>Rekomendasi:</b> Perhatian khusus pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>', unsafe_allow_html=True)
