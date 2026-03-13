@@ -261,3 +261,5 @@ else:
 
     # BALON REKOMENDASI
     st.markdown('<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>', unsafe_allow_html=True)
+<p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
