@@ -51,6 +51,11 @@ st.markdown("""
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
+    /* SIDEBAR NAVY */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
+    }
+    [data-testid="stSidebar"] * { color: white !important; }
 
     /* FIX: TULISAN DI FILTER (SELECTBOX) TETAP HITAM */
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
@@ -285,4 +290,5 @@ else:
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
 
