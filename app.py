@@ -85,6 +85,19 @@ st.markdown("""
     .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
     .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
     .aman { background-color: #dcfce7 !important; color: #15803d !important; border-left: 5px solid #22c55e !important; }
+  /* KOTAK SUMBER DATA */
+    .source-box-ui {
+        background-color: #e3f2fd !important; padding: 15px !important; 
+        border-radius: 10px !important; border-left: 6px solid #0d47a1 !important; 
+        margin-bottom: 25px !important;
+    }
+
+    /* TARGET SEKTORAL (HIJAU KECIL) */
+    [data-testid="stMetricDelta"] > div {
+        color: #15803d !important; font-size: 13px !important; font-weight: 700 !important;
+    }
+    [data-testid="stMetricDelta"] svg { display: none !important; }
+
 
     /* NAMA SEKOLAH (BIRU TEBAL) */
     div.stButton > button[key^="btn_"] {
@@ -100,6 +113,12 @@ st.markdown("""
         color: white !important; border-radius: 10px !important; 
         font-weight: 700 !important; width: 100% !important; height: 48px !important;
     }
+    /* LOGOUT */
+    section[data-testid="stSidebar"] div.stButton > button {
+        background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
+        height: 40px !important;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -252,3 +271,4 @@ else:
         st.session_state.page_view = "dashboard"
         st.rerun()
     st.markdown(f"<h1 style='color:#0d47a1;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
+
