@@ -233,33 +233,52 @@ if st.session_state.page_view == "dashboard":
         st.dataframe(df_f, use_container_width=True)
 
 else:
-    # --- HALAMAN DETAIL SEKOLAH (RESTORED & FIXED) ---
-    sch = st.session_state.selected_school_data
-    if st.button("⬅️ Kembali ke Dashboard"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
+   # --- TAMPILAN HALAMAN DETAIL SEKOLAH ---
+    sch = st.session_state.selected_school
     
-    st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page = "dashboard"
+        st.rerun()
+        
+    st.markdown(f"<h1 style='color: #0d47a1; margin-bottom: 0px;'>🏫 {sch['nama_sekolah']}</h1>", unsafe_allow_html=True)
+    st.write(f"Wilayah: **{sch['kab_kota']}** | NPSN: **{sch['npsn']}**")
     st.divider()
-
-    c1, c2 = st.columns(2)
-    with c1:
+    
+    col_d1, col_d2 = st.columns(2)
+    with col_d1:
         with st.container(border=True):
             st.subheader("📌 Profil Umum")
-            st.write(f"**Status:** {sch.get('status', 'Negeri')}")
-            st.write(f"**Alamat:** {sch.get('alamat', '-')}")
-            st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')} Orang")
-            st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
-    with c2:
+            st.write(f"**Status Sekolah:** {sch['status']}")
+            st.write(f"**Alamat:** {sch['alamat']}")
+            st.write(f"**Jumlah Siswa:** {sch['jumlah_siswa']} Orang")
+            
+    with col_d2:
         with st.container(border=True):
             st.subheader("🏗️ Sarana Prasarana")
-            st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
-            st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
-            st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
-            st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
+            st.write(f"**Jumlah Rombel:** {sch['jumlah_rombel']}")
+            st.write(f"**Jumlah Ruang Kelas:** {sch['jumlah_ruang_kelas']}")
+            st.write(f"**Rusak Sedang:** {sch['rusak_sedang']} Ruang")
+            st.write(f"**Rusak Berat:** {sch['rusak_berat']} Ruang")
 
-    # BALON REKOMENDASI
-    st.markdown('<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style="font-size:10px; color:gray;">Sumber: Data Kerusakan & Sarpras Bidang PK</p>', unsafe_allow_html=True)
+    st.markdown(f"""
+        <div style="background-color: #e3f2fd; padding: 15px; border-radius: 10px; border-left: 5px solid #1565c0; margin-top: 20px;">
+            <p style="font-size: 14px; color: #0d47a1; margin: 0;">
+                <b>Rekomendasi Kebijakan:</b><br>
+                Sekolah ini memerlukan perhatian pada aspek sarana prasarana sesuai dengan rekapitulasi data Bidang PK.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Tombol Download (Hanya muncul di dashboard)
+if st.session_state.page == "dashboard":
+    csv_data = df_filter.to_csv(index=False).encode('utf-8')
+    st.sidebar.download_button(
+        label="Download Data (CSV) ⬇️",
+        data=csv_data,
+        file_name='data_si_pandai_filtered.csv',
+        mime='text/csv',
+        use_container_width=True
+    )
+
 
 
