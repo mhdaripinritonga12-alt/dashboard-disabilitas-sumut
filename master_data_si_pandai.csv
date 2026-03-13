@@ -1,4 +1,4 @@
-kab_kota,jumlah_penduduk,jumlah_siswa,ats_disabilitas,lat,lon
+Kab_Kota,Jumlah_Penduduk,Jumlah_Siswa,ATS_Disabilitas,lat,lon
 Kab. Asahan,175,123,52,2.9833,99.6333
 Kab. Batubara,212,137,75,3.2167,99.5
 Kab. Dairi,144,26,118,2.7417,98.3125
@@ -32,3 +32,4 @@ Kota Pematangsiantar,184,141,43,2.9603,99.062
 Kota Sibolga,43,58,0,1.74,98.78
 Kota Tanjungbalai,66,107,0,2.9667,99.8
 Kota Tebing Tinggi,155,227,0,3.3274,99.1623
+
