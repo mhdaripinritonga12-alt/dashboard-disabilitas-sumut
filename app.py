@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import os
 import base64
+import streamlit.components.v1 as components
 
 # ==================================
 # Bagian 0: KONFIGURASI HALAMAN
@@ -88,7 +89,6 @@ st.markdown("""
     [data-testid="stVerticalBlockBorderWrapper"] > div {
         background: white !important; border-radius: 15px !important;
         padding: 20px !important; border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     }
 
     .stDownloadButton > button {
@@ -118,7 +118,7 @@ svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5
 svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
 
 # ==================================
-# Bagian 2: LOAD DATA
+# Bagian 2: LOAD DATA (FIX KEYERROR)
 # ==================================
 @st.cache_data
 def load_all_data():
@@ -171,7 +171,7 @@ opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_w
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", opsi, key="selected_kab")
 
 st.sidebar.divider()
-df_dl = data_wilayah.copy() if kab_pilih == "Semua" else data_wilayah[data_wilayah[col_kab] == kab_pilih]
+df_dl = data_wilayah.copy() if kab_pilih == "Semua" else data_wilayah[data_wilayah["kab_kota"] == kab_pilih]
 st.sidebar.download_button("Download Data (CSV) ⬇️", df_dl.to_csv(index=False).encode('utf-8'), f"data_{kab_pilih}.csv", "text/csv")
 st.sidebar.divider()
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
@@ -206,11 +206,10 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sch_wil.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        # LOGIKA STATUS (INCLUDING RUSAK SEDANG)
                         if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
-                            st.markdown("<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
                         elif getattr(row, 'rusak_berat', 0) > 0:
-                            st.markdown(f"<div class='rec-box rehab'>🛠️ PRIORITAS REHAB: {getattr(row, 'rusak_berat', 0)} Ruang Berat</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='rec-box rehab'>🛠️ PRIORITAS REHAB: {getattr(row, 'rusak_berat', 0)} Ruang</div>", unsafe_allow_html=True)
                         elif getattr(row, 'rusak_sedang', 0) > 0:
                             st.markdown(f"<div class='rec-box rehab'>⚠️ REHAB SEDANG: {getattr(row, 'rusak_sedang', 0)} Ruang</div>", unsafe_allow_html=True)
                         else:
@@ -235,7 +234,7 @@ if st.session_state.page_view == "dashboard":
         st.dataframe(df_f, use_container_width=True)
 
 else:
-    # --- HALAMAN DETAIL SEKOLAH ---
+    # --- HALAMAN DETAIL SEKOLAH (RESTORED & FIXED) ---
     sch = st.session_state.selected_school_data
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
@@ -243,6 +242,25 @@ else:
     
     st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='color:#546e7a; font-size:16px;'>Wilayah: <b>{sch['kab_kota']}</b> | NPSN: <b>{sch['npsn']}</b></p>", unsafe_allow_html=True)
+    
+    # --- FITUR STREET VIEW / GOOGLE MAPS EMBED ---
+    # Menggunakan nama sekolah dan kabupaten sebagai query pencarian peta
+    search_query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
+    map_url = f"https://www.google.com/maps?q={search_query}&output=embed"
+    
+    components.html(f"""
+        <iframe 
+            width="100%" 
+            height="400" 
+            frameborder="0" 
+            scrolling="no" 
+            marginheight="0" 
+            marginwidth="0" 
+            src="{map_url}"
+            style="border: 1px solid #e2e8f0; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </iframe>
+    """, height=420)
+
     st.divider()
 
     c1, c2 = st.columns(2)
