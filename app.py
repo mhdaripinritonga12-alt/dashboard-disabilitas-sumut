@@ -71,6 +71,14 @@ st.markdown("""
         border-radius: 10px !important; border-left: 6px solid #0d47a1 !important; 
         margin-bottom: 25px !important;
     }
+    /* NAMA SEKOLAH (BIRU TEBAL) */
+    div.stButton > button[key^="btn_"] {
+        background: transparent !important; color: #0d47a1 !important;
+        font-size: 16px !important; font-weight: 800 !important;
+        padding: 0px !important; text-align: left !important;
+        box-shadow: none !important; margin-bottom: -5px !important;
+    }
+
 
     /* KARTU SEKOLAH */
     [data-testid="stVerticalBlockBorderWrapper"] > div {
@@ -89,6 +97,19 @@ st.markdown("""
         padding: 0px !important; text-align: left !important;
         box-shadow: none !important; margin-bottom: -5px !important;
     }
+     /* DOWNLOAD BUTTON (HIJAU) */
+    .stDownloadButton > button {
+        background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; width: 100% !important; height: 48px !important;
+    }
+
+    /* LOGOUT */
+    section[data-testid="stSidebar"] div.stButton > button {
+        background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
+        height: 40px !important;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -159,6 +180,7 @@ if logo_b64:
     st.sidebar.markdown(f'<div style="display: flex; align-items: center; gap: 12px; padding-bottom: 20px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size: 18px; font-weight: 800; color: white;">SI-PANDAI</span></div>', unsafe_allow_html=True)
 
 st.sidebar.write(f"👤 Role: **ADMIN**")
+st.sidebar.header("🔎 Filter")
 st.sidebar.divider()
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten / Kota", ["Semua"] + sorted(data_wilayah["kab_kota"].unique().tolist()), key="selected_kab")
 st.sidebar.divider()
@@ -259,3 +281,4 @@ else:
 
     # BALON REKOMENDASI
     st.markdown('<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style="font-size:10px; color:gray;">Sumber: Data Kerusakan & Sarpras Bidang PK</p>', unsafe_allow_html=True)
+
