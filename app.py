@@ -200,9 +200,9 @@ if st.session_state.page_view == "dashboard":
     val_a = f"{int(df_f.iloc[:,3].sum()):,}" if not df_f.empty else "0"
     val_APS = f"{(int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100):.2f}%" if not df_f.empty and int(df_f.iloc[:,1].sum()) > 0 else "0%"
 
-    with m1: draw_tile_svg("Penduduk Disabilitas", val_p, svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", val_s, svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning, "tile-blue-dark")
+    with m1: draw_tile_svg("Penduduk Disabilitas", val_p, svg_people_black, "tile-orange-light")
+    with m2: draw_tile_svg("Siswa Belajar", val_s, svg_cap_black, "tile-blue-light")
+    with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning_red, "tile-blue-dark-light")
     with m4: draw_tile_svg("Angka Partisipasi Sekolah", val_APS, svg_cap, "tile-green-light")
 
     if kab_pilih != "Semua":
@@ -275,6 +275,7 @@ else:
 
     # BALON REKOMENDASI
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
 
 
 
