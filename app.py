@@ -206,17 +206,29 @@ if st.session_state.page_view == "dashboard":
     # 1. Matriks Capaian
     st.subheader("📌 Matriks Capaian Sektoral")
     st.markdown("""<div class="source-box-ui"><p style="font-size: 13px; color: #0d47a1; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
+def draw_tile(label, value, icon, style_class):
+    st.markdown(f"""
+        <div class="metric-tile {style_class}">
+            <div class="tile-icon">{icon}</div>
+            <div>
+                <div class="tile-label">{label}</div>
+                <div class="tile-value">{value}</div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
+# Cara menampilkan di Dashboard:
+m1, m2, m3 = st.columns(3)
+if kab_pilih == "Semua":
+with m1:
+    draw_tile("Penduduk Disabilitas", "6.732", "👥", "tile-orange")
+with m2:
+    draw_tile("Siswa Belajar", "4.573", "🎓", "tile-blue-light")
+with m3:
+    draw_tile("ATS Disabilitas", "2.159", "⚠️", "tile-blue-dark")
     m1, m2, m3 = st.columns(3)
-    if kab_pilih == "Semua":
-        m1.metric("Total Penduduk Disabilitas", "6.732")
-        m2.metric("Total Siswa Disabilitas", "4.573")
-        m3.metric("Angka Partisipasi Sekolah", "67.93%", delta="Target Sektoral")
-    else:
-        m1.metric("Penduduk Disabilitas", int(df_filter['jumlah_penduduk'].sum()))
-        m2.metric("Siswa Belajar", int(df_filter['jumlah_siswa'].sum()))
-        m3.metric("Anak Tidak Sekolah (ATS)", int(df_filter['ats_disabilitas'].sum()), delta_color="inverse")
-
+    
+      
     # 2. Daftar Sekolah (POSISI DI BAWAH MATRIKS)
     if kab_pilih != "Semua":
         st.divider()
@@ -290,5 +302,6 @@ else:
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
+
 
 
