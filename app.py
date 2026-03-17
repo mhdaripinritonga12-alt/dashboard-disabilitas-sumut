@@ -63,7 +63,7 @@ st.markdown("""
     }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
-    .tile-blue-dark { background: linear-gradient(135deg, #3f51b5 0%, #303f9f 100%); }
+    .tile-red-dark { background: linear-gradient(135deg, #3f51b5 0%, #303f9f 100%); }
     .tile-green-light { background: linear-gradient(135deg, #98ec2d 0%, #17ad4a 100%); }
     
     .tile-icon-svg { width: 40px; height: 40px; fill: white; opacity: 0.9; }
@@ -194,7 +194,7 @@ if st.session_state.page_view == "dashboard":
 
     with m1: draw_tile_svg("Penduduk Disabilitas", val_p, svg_people, "tile-orange")
     with m2: draw_tile_svg("Siswa Belajar", val_s, svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning, "tile-blue-dark")
+    with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning, "tile-red-dark")
     with m4: draw_tile_svg("Angka Partisipasi", val_APS, svg_cap, "tile-green-light")
 
     if kab_pilih != "Semua":
