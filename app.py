@@ -1,3 +1,4 @@
+import pydeck as pdk  # NEW
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -196,6 +197,25 @@ if st.session_state.page_view == "dashboard":
     with m2: draw_tile_svg("Siswa Belajar", val_s, svg_cap, "tile-blue-light")
     with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning, "tile-red-dark")
     with m4: draw_tile_svg("Angka Partisipasi", val_APS, svg_cap, "tile-green-light")
+        # ==================================
+# INSIGHT OTOMATIS (NEW)
+# ==================================
+if not df_f.empty:
+    try:
+        col_ats = df_f.columns[3]
+        top_kab = df_f.loc[df_f[col_ats].idxmax(), col_kab]
+        total_ats = int(df_f[col_ats].sum())
+
+        st.markdown(f"""
+        <div style="background:#fff3cd; padding:15px; border-radius:10px; border-left:6px solid #ffc107; margin-top:10px;">
+        📊 <b>Insight Otomatis:</b><br>
+        • Total ATS: <b>{total_ats:,}</b><br>
+        • Wilayah tertinggi: <b>{top_kab}</b><br>
+        • Rekomendasi: <b>Prioritaskan intervensi di wilayah tersebut</b>
+        </div>
+        """, unsafe_allow_html=True)
+    except:
+        pass
 
     if kab_pilih != "Semua":
         st.divider()
@@ -225,13 +245,74 @@ if st.session_state.page_view == "dashboard":
     cv1, cv2 = st.columns([1.5, 1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
-        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
+        if not df_f.empty: try:
+    layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=df_f,
+        get_position='[lon, lat]',
+        get_radius=5000,
+        get_fill_color='[200, 30, 0, 160]',
+        pickable=True
+    )
+
+    view_state = pdk.ViewState(
+        latitude=df_f["lat"].mean(),
+        longitude=df_f["lon"].mean(),
+        zoom=6
+    )
+
+    st.pydeck_chart(pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        tooltip={"text": "{kab_kota}\nATS: {"+df_f.columns[3]+"}"}
+    ))
+except:
+    st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
     with cv2:
         st.subheader("📊 Grafik ATS Wilayah")
-        if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h', color_continuous_scale='Blues'), use_container_width=True)
+        if not df_f.empty: try:
+    col_ats = df_f.columns[3]
+    df_top = df_f.sort_values(by=col_ats, ascending=False).head(10)
 
+    fig = px.bar(
+        df_top,
+        x=col_ats,
+        y=col_kab,
+        orientation='h',
+        text=col_ats,
+        color=col_ats,
+        color_continuous_scale='Reds'
+    )
+
+    fig.update_traces(textposition='outside')
+    fig.update_layout(yaxis=dict(autorange="reversed"))
+
+    st.plotly_chart(fig, use_container_width=True)
+except:
+    st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
     with st.expander("📋 Lihat Detail Tabel"):
         st.dataframe(df_f, use_container_width=True)
+        # ==================================
+# KESIMPULAN DASHBOARD (NEW)
+# ==================================
+if not df_f.empty:
+    try:
+        col_ats = df_f.columns[3]
+        top_kab = df_f.loc[df_f[col_ats].idxmax(), col_kab]
+
+        st.markdown(f"""
+        <div style="background:#e8f5e9; padding:20px; border-radius:12px; border-left:6px solid #2e7d32; margin-top:20px;">
+        <h4 style="margin-top:0;">📌 Kesimpulan Dashboard</h4>
+        <ul>
+            <li>Wilayah dengan ATS tertinggi: <b>{top_kab}</b></li>
+            <li>Distribusi ATS belum merata antar wilayah</li>
+            <li>Diperlukan intervensi kebijakan berbasis data</li>
+            <li>Dashboard ini siap digunakan sebagai instrumen pengambilan keputusan</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    except:
+        pass
 
 else:
     # --- HALAMAN DETAIL SEKOLAH (RESTORED & FIXED) ---
