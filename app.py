@@ -228,6 +228,14 @@ if st.session_state.page_view == "dashboard":
         if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
     with cv2:
         st.subheader("📊 Grafik ATS Wilayah")
+        # INSIGHT TANPA CSS (AMAN 100%)
+if not df_f.empty:
+    top = df_f.sort_values(by=df_f.columns[3], ascending=False).iloc[0]
+
+    st.info(
+        f"📊 Insight: Wilayah {top[col_kab]} memiliki ATS tertinggi "
+        f"sebanyak {top[df_f.columns[3]]}. Perlu menjadi prioritas."
+    )
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h', color_continuous_scale='Blues'), use_container_width=True)
 
     with st.expander("📋 Lihat Detail Tabel"):
