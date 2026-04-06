@@ -222,24 +222,33 @@ if st.session_state.page_view == "dashboard":
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
     st.divider()
-    cv1, cv2 = st.columns([1.5, 1])
-    with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS")
-        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
-  with cv2:
+   cv1, cv2 = st.columns([1.5, 1])
+
+with cv1:
+    st.subheader("🗺️ Peta Sebaran ATS")
+    if not df_f.empty:
+        st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
+
+with cv2:
     st.subheader("📊 Grafik ATS Wilayah")
 
     if not df_f.empty:
-        st.plotly_chart(
-            px.bar(
-                df_f.head(10),
-                x=df_f.columns[3],
-                y=col_kab,
-                orientation='h',
-                color_continuous_scale='Blues'
-            ),
-            use_container_width=True
+        fig = px.bar(
+            df_f.head(10),
+            x=df_f.columns[3],
+            y=col_kab,
+            orientation='h',
+            color=df_f.columns[3],
+            color_continuous_scale='Blues'
         )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+        # Insight sederhana (AMAN)
+        top = df_f.sort_values(by=df_f.columns[3], ascending=False).iloc[0]
+        st.info(
+            f"📊 {top[col_kab]} memiliki ATS tertinggi: {top[df_f.columns[3]]}"
+        )     
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h', color_continuous_scale='Blues'), use_container_width=True)
 
     with st.expander("📋 Lihat Detail Tabel"):
