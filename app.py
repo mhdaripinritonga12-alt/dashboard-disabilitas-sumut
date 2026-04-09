@@ -63,7 +63,7 @@ st.markdown("""
     }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
-    .tile-red-dark { background: linear-gradient(135deg, #3f51b5 0%, #303f9f 100%); }
+    .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
     .tile-green-light { background: linear-gradient(135deg, #98ec2d 0%, #17ad4a 100%); }
     
     .tile-icon-svg { width: 40px; height: 40px; fill: white; opacity: 0.9; }
