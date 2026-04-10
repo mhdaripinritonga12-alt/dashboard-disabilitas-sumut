@@ -42,6 +42,67 @@ st.markdown("""
     [data-testid="stSidebar"] { background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important; }
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
+ /* SIDEBAR NAVY GRADASI */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
+    }
+    [data-testid="stSidebar"] * { color: white !important; }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
+
+    /* TOMBOL UTAMA (BIRU GRADASI) */
+    div.stButton > button:not([key^="btn_"]) {
+        background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; height: 48px; border: none !important; width: 100%;
+    }
+ /* BALON NAMA SEKOLAH (BIRU GRADASI) */
+    div.stButton > button[key^="btn_"] {
+        background: linear-gradient(90deg, #0d47a1 0%, #1976d2 100%) !important;
+        color: white !important; border-radius: 20px !important; 
+        font-size: 14px !important; font-weight: 700 !important;
+        padding: 8px 15px !important; text-align: center !important;
+        width: 100% !important; border: none !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    }
+
+    .source-box-ui {
+        background-color: #e3f2fd !important; padding: 15px !important; 
+        border-radius: 10px !important; border-left: 6px solid #0d47a1 !important; 
+        margin-bottom: 25px !important;
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"] > div {
+        background: white !important; border-radius: 15px !important;
+        padding: 20px !important; border: 1px solid #e2e8f0 !important;
+    }
+
+    .stDownloadButton > button {
+        background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; width: 100% !important; height: 48px !important;
+    }
+
+    section[data-testid="stSidebar"] div.stButton > button {
+        background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important;
+        height: 40px !important;
+    }
+
+    .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
+    .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
+    .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
+    .aman { background-color: #dcfce7 !important; color: #15803d !important; border-left: 5px solid #22c55e !important; }
+</style>
+""", unsafe_allow_html=True)
+
+def draw_tile_svg(label, value, svg_icon, style_class):
+    st.markdown(f'<div class="metric-tile {style_class}"><div class="tile-icon-svg">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
+
+# SVG Icons
+svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
+svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
+svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
+
+
     
     /* Warna ATS Merah */
     .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
