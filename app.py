@@ -164,8 +164,10 @@ st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logou
 
 # --- DASHBOARD ---
 if st.session_state.page_view == "dashboard":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🚀 Dashboard Utama</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">📌 Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     st.divider()
+ st.markdown("""<div class="source-box-ui"><p style="font-size: 13px; color: #0d47a1; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
+
 
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
@@ -224,14 +226,17 @@ if st.session_state.page_view == "dashboard":
             mime='text/csv',
         )
 
-# --- DETAIL SEKOLAH ---
+# --- B. HALAMAN DETAIL SEKOLAH ---
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
         st.rerun()
     
-    st.markdown(f"<h1 style='color:#0d47a1;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:gray;'>Wilayah: {sch['kab_kota']} | NPSN: {sch['npsn']}</p>", unsafe_allow_html=True)
+    
+    # Embed Google Maps
     query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
     map_url = f"https://www.google.com/maps?q={query}&output=embed"
     components.html(f'<iframe width="100%" height="400" src="{map_url}" style="border-radius:15px; border:1px solid #ddd;"></iframe>', height=420)
@@ -244,11 +249,17 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Status:** {sch.get('status', 'Negeri')}")
             st.write(f"**Alamat:** {sch.get('alamat', '-')}")
             st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')} Orang")
+            st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
     with c2:
         with st.container(border=True):
             st.subheader("🏗️ Sarana Prasarana")
+            st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
             st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
+            st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', '0')} Ruang")
             st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
+            st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
+
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
 
 # --- LAINNYA ---
 elif st.session_state.page_view == "tentang_pk":
