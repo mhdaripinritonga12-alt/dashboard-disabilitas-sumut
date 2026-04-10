@@ -40,11 +40,34 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
     
-    /* SIDEBAR */
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important; }
-    [data-testid="stSidebar"] * { color: white !important; }
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
+    /* SIDEBAR (UPGRADE MODERN) */
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #1e3a8a 0%,
+        #2563eb 40%,
+        #3b82f6 70%,
+        #60a5fa 100%
+    ) !important;
+    position: relative;
+}
 
+/* EFEK CAHAYA (BIAR PREMIUM) */
+[data-testid="stSidebar"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
+    pointer-events: none;
+}
+
+/* TEXT TETAP PUTIH */
+[data-testid="stSidebar"] * { 
+    color: white !important; 
+}
     /* TOMBOL UTAMA */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
