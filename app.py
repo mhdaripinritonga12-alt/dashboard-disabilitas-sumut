@@ -164,6 +164,22 @@ if logo_b64:
 
 st.sidebar.write(f"👤 Role: **ADMIN**")
 st.sidebar.divider()
+# --- MENU NAVIGASI ---
+st.sidebar.header("📌 Menu Utama")
+menu_pilihan = st.sidebar.radio(
+    "Navigasi Halaman:",
+    ["🚀 Dashboard Utama", "🎓 Tentang Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
+    index=0 if st.session_state.page_view == "dashboard" else 0 # Default ke dashboard
+)
+
+# Logic perpindahan halaman berdasarkan klik radio button
+if "Dashboard Utama" in menu_pilihan:
+    st.session_state.page_view = "dashboard"
+elif "Pendidikan Khusus" in menu_pilihan:
+    st.session_state.page_view = "tentang_pk"
+elif "Tentang Dashboard" in menu_pilihan:
+    st.session_state.page_view = "tentang_dashboard"
+st.sidebar.divider()
 st.sidebar.header("🔎 Filter")
 
 col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
@@ -176,7 +192,61 @@ st.sidebar.download_button("Download Data (CSV) ⬇️", df_dl.to_csv(index=Fals
 st.sidebar.divider()
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
 
+# ==================================
+# Bagian 4: LOGIKA TAMPILAN HALAMAN
+# ==================================
+
+# --- HALAMAN 1: DASHBOARD UTAMA ---
 if st.session_state.page_view == "dashboard":
+    # --- MASUKKAN SELURUH KODE DASHBOARD KAMU DI SINI ---
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🚀 Dashboard Utama</p>', unsafe_allow_html=True)
+    st.divider()
+    
+    # ... (Semua kode dashboard, matriks, peta, dan tabel yang sudah kamu punya tetap di sini) ...
+    # [KODE DASHBOARD ASLI ANDA]
+
+# --- HALAMAN 2: TENTANG PENDIDIKAN KHUSUS ---
+elif st.session_state.page_view == "tentang_pk":
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🎓 Mengenal Pendidikan Khusus</p>', unsafe_allow_html=True)
+    st.divider()
+    with st.container(border=True):
+        st.markdown("""
+        ### Apa itu Pendidikan Khusus?
+        Pendidikan khusus merupakan penyelenggaraan pendidikan untuk peserta didik yang memiliki tingkat kesulitan dalam mengikuti proses pembelajaran karena kelainan fisik, emosional, mental, sosial, dan/atau memiliki potensi kecerdasan dan bakat istimewa.
+        
+        **Layanan di Sumatera Utara:**
+        * **SLB (Sekolah Luar Biasa):** Melayani berbagai jenis hambatan (A, B, C, D, E, G).
+        * **Pendidikan Inklusif:** Sekolah reguler yang menerima peserta didik berkebutuhan khusus.
+        """)
+        st.info("Fokus utama SI-PANDAI adalah memastikan data anak disabilitas terekam dengan baik untuk intervensi kebijakan yang tepat.")
+
+# --- HALAMAN 3: TENTANG DASHBOARD ---
+elif st.session_state.page_view == "tentang_dashboard":
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+    st.divider()
+    with st.container(border=True):
+        st.subheader("Sistem Informasi Pendidikan Khusus & Anak Disabilitas")
+        st.write("""
+        **SI-PANDAI SUMUT** adalah platform analitik yang dirancang untuk memetakan capaian sektoral pendidikan khusus di Provinsi Sumatera Utara.
+        
+        **Fitur Utama:**
+        1. **Monitoring ATS:** Melacak angka Anak Tidak Sekolah di tiap kabupaten.
+        2. **Mapping Satuan Pendidikan:** Pemetaan lokasi SLB dan sekolah inklusif.
+        3. **Analisis Sarpras:** Rekomendasi perbaikan gedung sekolah (RKB/Rehab).
+        
+        **Kontak Teknis:**
+        Bidang PK - LPPD & TIKP Dinas Pendidikan Provinsi Sumatera Utara.
+        """)
+
+# --- HALAMAN 4: DETAIL SEKOLAH (EXISTING) ---
+else:
+    # --- MASUKKAN KODE DETAIL SEKOLAH KAMU DI SINI ---
+    # [KODE DETAIL SEKOLAH ASLI ANDA]
+    sch = st.session_state.selected_school_data
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+    # ... sisanya sama ...
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🚀 Dashboard Utama</p>', unsafe_allow_html=True)
     st.divider()
 
