@@ -121,12 +121,14 @@ st.sidebar.divider()
 # --- LOGIKA NAVIGASI AGAR TIDAK BENTROK DENGAN TOMBOL SEKOLAH ---
 st.sidebar.header("📌 Menu Utama")
 # Gunakan on_change untuk navigasi sidebar
+# Ganti fungsi ubah_halaman kamu dengan ini:
 def ubah_halaman():
-    if "Dashboard" in st.session_state.nav_radio:
+    pilihan = st.session_state.nav_radio
+    if "Dashboard Utama" in pilihan:
         st.session_state.page_view = "dashboard"
-    elif "Pendidikan" in st.session_state.nav_radio:
+    elif "Pendidikan Khusus" in pilihan:
         st.session_state.page_view = "tentang_pk"
-    else:
+    elif "Tentang Dashboard" in pilihan:
         st.session_state.page_view = "tentang_dashboard"
 
 st.sidebar.radio(
