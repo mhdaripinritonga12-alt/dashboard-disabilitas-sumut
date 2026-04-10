@@ -217,7 +217,32 @@ if st.session_state.page_view == "dashboard":
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
     st.divider()
-     # --- HALAMAN DETAIL SEKOLAH (RESTORED & FIXED) ---
+  
+        st.subheader("🗺️ Peta Sebaran ATS")
+        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
+    with cv2:
+        st.subheader("📊 Grafik ATS Wilayah")
+        if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
+
+# --- HALAMAN 2: TENTANG PK ---
+elif st.session_state.page_view == "tentang_pk":
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🎓 Mengenal Pendidikan Khusus</p>', unsafe_allow_html=True)
+    st.divider()
+    with st.container(border=True):
+        st.markdown("""
+        ### Apa itu Pendidikan Khusus?
+        Pendidikan khusus merupakan penyelenggaraan pendidikan untuk peserta didik yang memiliki tingkat kesulitan dalam mengikuti proses pembelajaran karena kelainan fisik, emosional, mental, sosial, dan/atau memiliki potensi kecerdasan dan bakat istimewa.
+        """)
+
+# --- HALAMAN 3: TENTANG DASHBOARD ---
+elif st.session_state.page_view == "tentang_dashboard":
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+    st.divider()
+    with st.container(border=True):
+        st.write("Sistem informasi analitik pemetaan Pendidikan Khusus Sumatera Utara.")
+
+# --- HALAMAN 4: DETAIL SEKOLAH ---
+   # --- HALAMAN DETAIL SEKOLAH (RESTORED & FIXED) ---
     sch = st.session_state.selected_school_data
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
@@ -266,50 +291,3 @@ if st.session_state.page_view == "dashboard":
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div><p style='font-size:10px; color:gray;'>Sumber: Data Kerusakan & Sarpras Bidang PK</p>""", unsafe_allow_html=True)
     cv1, cv2 = st.columns([1.5, 1])
     with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS")
-        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
-    with cv2:
-        st.subheader("📊 Grafik ATS Wilayah")
-        if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
-
-# --- HALAMAN 2: TENTANG PK ---
-elif st.session_state.page_view == "tentang_pk":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🎓 Mengenal Pendidikan Khusus</p>', unsafe_allow_html=True)
-    st.divider()
-    with st.container(border=True):
-        st.markdown("""
-        ### Apa itu Pendidikan Khusus?
-        Pendidikan khusus merupakan penyelenggaraan pendidikan untuk peserta didik yang memiliki tingkat kesulitan dalam mengikuti proses pembelajaran karena kelainan fisik, emosional, mental, sosial, dan/atau memiliki potensi kecerdasan dan bakat istimewa.
-        """)
-
-# --- HALAMAN 3: TENTANG DASHBOARD ---
-elif st.session_state.page_view == "tentang_dashboard":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
-    st.divider()
-    with st.container(border=True):
-        st.write("Sistem informasi analitik pemetaan Pendidikan Khusus Sumatera Utara.")
-
-# --- HALAMAN 4: DETAIL SEKOLAH ---
-else:
-    sch = st.session_state.selected_school_data
-    if st.button("⬅️ Kembali ke Dashboard"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-    
-    st.markdown(f"<h1 style='color:#0d47a1;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
-    search_query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
-    map_url = f"https://www.google.com/maps?q={search_query}&output=embed"
-    components.html(f'<iframe width="100%" height="400" src="{map_url}" style="border-radius: 15px;"></iframe>', height=420)
-    
-    st.divider()
-    c1, c2 = st.columns(2)
-    with c1:
-        with st.container(border=True):
-            st.subheader("📌 Profil Umum")
-            st.write(f"**Alamat:** {sch.get('alamat', '-')}")
-            st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')}")
-    with c2:
-        with st.container(border=True):
-            st.subheader("🏗️ Sarpras")
-            st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
-            st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')}")
