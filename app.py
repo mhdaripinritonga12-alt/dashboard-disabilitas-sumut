@@ -63,6 +63,50 @@ st.markdown("""
     background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
     pointer-events: none;
 }
+/* ========================= */
+/* MENU SIDEBAR MODERN STYLE */
+/* ========================= */
+
+/* Container radio */
+[data-testid="stSidebar"] .stRadio > div {
+    background: rgba(255,255,255,0.10);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+/* Hilangkan bulatan radio */
+[data-testid="stSidebar"] input[type="radio"] {
+    display: none;
+}
+
+/* Label menu */
+[data-testid="stSidebar"] .stRadio label {
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Hover efek */
+[data-testid="stSidebar"] .stRadio > div:hover {
+    background: rgba(255,255,255,0.20);
+    transform: translateX(6px);
+}
+
+/* Aktif (selected) */
+[data-testid="stSidebar"] input[type="radio"]:checked + div {
+    background: linear-gradient(90deg, #1e88e5, #42a5f5);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border-left: 4px solid white;
+}
+/* ICON SPACING */
+[data-testid="stSidebar"] .stRadio label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 /* MENU SIDEBAR STYLE */
 [data-testid="stSidebar"] .stRadio > div {
     background: rgba(255,255,255,0.08);
@@ -234,13 +278,15 @@ st.sidebar.markdown("### 📌 Menu Utama")
 
 menu = st.sidebar.radio(
     "",
-    ["dashboard", "pk", "about"],
-    format_func=lambda x: {
-        "dashboard": "🚀 Dashboard Utama",
-        "pk": "🎓 Pendidikan Khusus",
-        "about": "ℹ️ Tentang Dashboard"
-    }[x]
+    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"]
 )
+
+if "Dashboard" in menu:
+    st.session_state.page_view = "dashboard"
+elif "Pendidikan" in menu:
+    st.session_state.page_view = "tentang_pk"
+elif "Tentang" in menu:
+    st.session_state.page_view = "tentang_dashboard"
 
 # Mapping ke halaman
 if menu == "dashboard":
