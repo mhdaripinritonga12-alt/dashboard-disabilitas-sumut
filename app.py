@@ -63,7 +63,35 @@ st.markdown("""
     background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
     pointer-events: none;
 }
+/* MENU SIDEBAR STYLE */
+[data-testid="stSidebar"] .stRadio > div {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 8px;
+    transition: 0.3s;
+}
 
+/* HOVER */
+[data-testid="stSidebar"] .stRadio > div:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateX(5px);
+}
+
+/* SELECTED */
+[data-testid="stSidebar"] input[type="radio"]:checked + div {
+    background: rgba(255,255,255,0.25);
+    font-weight: 700;
+}
+/* HOVER MENU */
+[data-testid="stSidebar"] .stRadio > div {
+    border-radius: 10px;
+    padding: 5px;
+}
+
+[data-testid="stSidebar"] .stRadio > div:hover {
+    background-color: rgba(255,255,255,0.15);
+}
 /* TEXT TETAP PUTIH */
 [data-testid="stSidebar"] * { 
     color: white !important; 
@@ -202,13 +230,25 @@ def ubah_halaman():
     elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
     elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
 
-st.sidebar.header("📌 Menu Utama")
-st.sidebar.radio(
-    "Navigasi:", 
-    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
-    key="nav_radio",
-    on_change=ubah_halaman
+st.sidebar.markdown("### 📌 Menu Utama")
+
+menu = st.sidebar.radio(
+    "",
+    ["dashboard", "pk", "about"],
+    format_func=lambda x: {
+        "dashboard": "🚀 Dashboard Utama",
+        "pk": "🎓 Pendidikan Khusus",
+        "about": "ℹ️ Tentang Dashboard"
+    }[x]
 )
+
+# Mapping ke halaman
+if menu == "dashboard":
+    st.session_state.page_view = "dashboard"
+elif menu == "pk":
+    st.session_state.page_view = "tentang_pk"
+elif menu == "about":
+    st.session_state.page_view = "tentang_dashboard"
 
 st.sidebar.divider()
 st.sidebar.header("🔎 Filter Wilayah")
