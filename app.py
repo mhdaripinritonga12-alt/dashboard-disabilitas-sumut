@@ -76,7 +76,13 @@ st.markdown("""
     transition: all 0.3s ease;
     backdrop-filter: blur(6px);
 }
+/* ========================= */
+/* HILANGKAN BULAT RADIO */
+/* ========================= */
 
+[data-testid="stSidebar"] input[type="radio"] {
+    display: none !important;
+}
 /* Hilangkan bulatan radio */
 [data-testid="stSidebar"] input[type="radio"] {
     display: none;
