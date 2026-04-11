@@ -80,6 +80,20 @@ st.markdown("""
         width: 100% !important;
         display: block;
     }
+/* --- STYLE AREA TABEL (PEMBERIAN BORDER HIJAU) --- */
+/* Karena tabel dataframe menggunakan canvas, kita beri bingkai agar bertema hijau */
+div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
+    border: 2px solid #4caf50 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    background-color: #f1f8e9 !important; /* Latar belakang hijau sangat tipis */
+}
+ /* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
+    div[data-baseweb="popover"] li {
+        color: black !important;
+    }
 
     .gradient-line-inner {
         height: 2px;
