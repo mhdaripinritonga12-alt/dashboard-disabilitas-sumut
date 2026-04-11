@@ -34,7 +34,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (SIDEBAR & HEADER)
+# Bagian 1: CSS CUSTOM (MODERN UI)
 # ==================================
 st.markdown("""
 <style>
@@ -44,31 +44,20 @@ st.markdown("""
     /* --- SIDEBAR GRADIENT --- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important;
+        background-attachment: fixed !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
     /* --- HEADER AREA (PUTIH) --- */
-    .custom-header {
-        background-color: white;
-        padding: 15px 20px;
-        border-radius: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        margin-bottom: 25px;
-        border: 1px solid #eee;
-    }
-
-    /* Styling Tombol Admin di Header */
     div.stButton > button[key="admin_header_btn"] {
         background-color: #0d47a1 !important;
         color: white !important;
         border-radius: 50px !important;
-        padding: 8px 20px !important;
+        padding: 8px 25px !important;
         font-weight: 700 !important;
         border: none !important;
+        box-shadow: 0 4px 10px rgba(13, 71, 161, 0.2);
     }
 
     /* --- MENU UTAMA (SIDEBAR BUTTONS) --- */
@@ -95,7 +84,7 @@ st.markdown("""
         border: none !important;
     }
 
-    /* --- TILES DASHBOARD --- */
+    /* --- DASHBOARD TILES --- */
     .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
@@ -105,7 +94,7 @@ st.markdown("""
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
-    /* TOMBOL BALON SEKOLAH */
+    /* TOMBOL SEKOLAH */
     div.stButton > button[key^="btn_"] {
         background: linear-gradient(90deg, #0d47a1 0%, #1976d2 100%) !important;
         color: white !important; border-radius: 20px !important; font-size: 13px !important; width: 100% !important;
@@ -144,15 +133,15 @@ if not st.session_state.login:
     _, col_card, _ = st.columns([1.5, 2, 1.5])
     with col_card:
         with st.container(border=True):
-            if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png")
-            st.markdown("<h3 style='text-align:center;'>LOGIN</h3>", unsafe_allow_html=True)
-            u = st.text_input("Username")
-            p = st.text_input("Password", type="password")
-            if st.button("MASUK", use_container_width=True):
+            if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png", use_container_width=True)
+            st.markdown("<h3 style='text-align:center; color:#0d47a1;'>LOGIN USER</h3>", unsafe_allow_html=True)
+            u = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
+            p = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
+            if st.button("MASUK KE DASHBOARD", use_container_width=True):
                 if u == "admin" and p == "admin": 
                     st.session_state.login = True
                     st.rerun()
-                else: st.error("Gagal")
+                else: st.error("Login Gagal")
     st.stop()
 
 # ==================================
@@ -161,7 +150,7 @@ if not st.session_state.login:
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
-        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:20px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:20px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
     st.write("👤 Role: **ADMIN**")
     st.divider()
@@ -191,16 +180,19 @@ with st.sidebar:
 # HEADER PUTIH DENGAN ICON ADMIN KLIKABEL
 h_col1, h_col2 = st.columns([1, 4])
 with h_col1:
+    # KLIK ICON INI UNTUK MELIHAT DATA ADMIN
     if st.button("👤 USER ADMIN", key="admin_header_btn"):
-        st.session_state.page_view = "dashboard"
+        st.session_state.page_view = "admin_profile"
         st.rerun()
 
 with h_col2:
-    st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800; margin-top:5px;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
 
 st.divider()
 
-# LOGIKA HALAMAN
+# --- LOGIKA HALAMAN ---
+
+# 1. HALAMAN DASHBOARD UTAMA
 if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
@@ -238,15 +230,38 @@ if st.session_state.page_view == "dashboard":
         st.subheader("📊 Statistik")
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
 
+# 2. HALAMAN DATA ADMIN (MUNCUL SAAT HEADER DIKLIK)
+elif st.session_state.page_view == "admin_profile":
+    st.markdown("### 👤 Data Akun Administrator")
+    with st.container(border=True):
+        col_img, col_txt = st.columns([1, 3])
+        with col_img:
+            st.markdown("<h1 style='text-align:center; font-size:100px;'>👤</h1>", unsafe_allow_html=True)
+        with col_txt:
+            st.write("### Admin SI-PANDAI PROVSU")
+            st.write("**ID Pegawai:** 198807012010121001")
+            st.write("**Role:** Super Administrator (Bidang PK)")
+            st.write("**Email:** admin.pk@sumutprov.go.id")
+            st.write("**Status:** Aktif")
+            st.caption("Data ini dikelola oleh Bidang TIKP & PK Dinas Pendidikan Sumut.")
+    
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+
+# 3. HALAMAN DETAIL SEKOLAH
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data
     st.markdown(f"### 🏫 {sch['nama_sekolah'].upper()}")
-    st.button("⬅️ Kembali", on_click=lambda: setattr(st.session_state, 'page_view', 'dashboard'))
+    if st.button("⬅️ Kembali"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
 
+# 4. HALAMAN LAINNYA
 elif st.session_state.page_view == "tentang_pk":
     st.title("🎓 Pendidikan Khusus")
-    st.write("Konten Pendidikan Khusus.")
+    st.write("Informasi mengenai Pendidikan Khusus Sumatera Utara.")
 
 elif st.session_state.page_view == "tentang_dashboard":
     st.title("ℹ️ Tentang SI-PANDAI")
-    st.write("Sistem Informasi Analitik.")
+    st.write("Sistem Informasi Analitik Pendidikan Khusus.")
