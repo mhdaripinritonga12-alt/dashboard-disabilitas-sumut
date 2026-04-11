@@ -40,28 +40,66 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
     
-    /* SIDEBAR (UPGRADE MODERN) */
+    /* ========================= */
+/* SIDEBAR FULL MODERN CLEAN */
+/* ========================= */
+
 [data-testid="stSidebar"] {
     background: linear-gradient(
         180deg,
         #1e3a8a 0%,
-        #2563eb 40%,
-        #3b82f6 70%,
-        #60a5fa 100%
+        #2563eb 50%,
+        #3b82f6 100%
     ) !important;
-    position: relative;
 }
 
-/* EFEK CAHAYA (BIAR PREMIUM) */
-[data-testid="stSidebar"]::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
-    pointer-events: none;
+/* Hilangkan SEMUA bullet / radio */
+[data-testid="stSidebar"] input[type="radio"] {
+    display: none !important;
+}
+[data-testid="stSidebar"] .stRadio label {
+    backdrop-filter: blur(6px);
+}
+/* Bungkus tiap menu */
+[data-testid="stSidebar"] .stRadio > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Item menu */
+[data-testid="stSidebar"] .stRadio label {
+    background: rgba(255,255,255,0.10);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* Hover */
+[data-testid="stSidebar"] .stRadio label:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateX(6px);
+}
+
+/* Selected (AKTIF) */
+[data-testid="stSidebar"] .stRadio input:checked + div label {
+    background: linear-gradient(90deg, #ff9800, #ff5722);
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Hilangkan dot kecil kiri */
+[data-testid="stSidebar"] .stRadio label::before {
+    display: none !important;
+}
+
+/* Text tetap putih */
+[data-testid="stSidebar"] * {
+    color: white !important;
 }
 /* ========================= */
 /* MENU SIDEBAR MODERN STYLE */
