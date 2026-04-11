@@ -62,11 +62,11 @@ st.markdown("""
         border-radius: 0px 0px 15px 15px; /* Membulat hanya di bawah */
         padding: 5px 0px; /* Sangat tipis vertikal */
         border-bottom: 2px solid rgba(13, 71, 161, 0.1);
-        border-left: 1px solid rgba(13, 71, 161, 0.05);
-        border-right: 1px solid rgba(13, 71, 161, 0.05);
+        border-left: 0px solid rgba(13, 71, 161, 0.05);
+        border-right: 0px solid rgba(13, 71, 161, 0.05);
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         text-align: center;
-        margin-top: 5px; /* Pas di bawah bar pelangi */
+        margin-top: 0px; /* Pas di bawah bar pelangi */
         margin-bottom: 20px;
         width: 100% !important; /* Mentok kiri kanan */
         display: block;
