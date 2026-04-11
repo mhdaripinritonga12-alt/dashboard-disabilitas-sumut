@@ -40,112 +40,11 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
     
-    /* SIDEBAR (UPGRADE MODERN) */
-[data-testid="stSidebar"] {
-    background: linear-gradient(
-        180deg,
-        #1e3a8a 0%,
-        #2563eb 40%,
-        #3b82f6 70%,
-        #60a5fa 100%
-    ) !important;
-    position: relative;
-}
+    /* SIDEBAR */
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important; }
+    [data-testid="stSidebar"] * { color: white !important; }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-/* EFEK CAHAYA (BIAR PREMIUM) */
-[data-testid="stSidebar"]::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
-    pointer-events: none;
-}
-/* ========================= */
-/* MENU SIDEBAR MODERN STYLE */
-/* ========================= */
-
-/* Container radio */
-[data-testid="stSidebar"] .stRadio > div {
-    background: rgba(255,255,255,0.10);
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(6px);
-}
-/* ========================= */
-/* HILANGKAN BULAT RADIO */
-/* ========================= */
-
-[data-testid="stSidebar"] input[type="radio"] {
-    display: none !important;
-}
-/* Hilangkan bulatan radio */
-[data-testid="stSidebar"] input[type="radio"] {
-    display: none;
-}
-
-/* Label menu */
-[data-testid="stSidebar"] .stRadio label {
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* Hover efek */
-[data-testid="stSidebar"] .stRadio > div:hover {
-    background: rgba(255,255,255,0.20);
-    transform: translateX(6px);
-}
-
-/* Aktif (selected) */
-[data-testid="stSidebar"] input[type="radio"]:checked + div {
-    background: linear-gradient(90deg, #1e88e5, #42a5f5);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    border-left: 4px solid white;
-}
-/* ICON SPACING */
-[data-testid="stSidebar"] .stRadio label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-/* MENU SIDEBAR STYLE */
-[data-testid="stSidebar"] .stRadio > div {
-    background: rgba(255,255,255,0.08);
-    border-radius: 10px;
-    padding: 8px;
-    margin-bottom: 8px;
-    transition: 0.3s;
-}
-
-/* HOVER */
-[data-testid="stSidebar"] .stRadio > div:hover {
-    background: rgba(255,255,255,0.18);
-    transform: translateX(5px);
-}
-
-/* SELECTED */
-[data-testid="stSidebar"] input[type="radio"]:checked + div {
-    background: rgba(255,255,255,0.25);
-    font-weight: 700;
-}
-/* HOVER MENU */
-[data-testid="stSidebar"] .stRadio > div {
-    border-radius: 10px;
-    padding: 5px;
-}
-
-[data-testid="stSidebar"] .stRadio > div:hover {
-    background-color: rgba(255,255,255,0.15);
-}
-/* TEXT TETAP PUTIH */
-[data-testid="stSidebar"] * { 
-    color: white !important; 
-}
     /* TOMBOL UTAMA */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
@@ -280,27 +179,13 @@ def ubah_halaman():
     elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
     elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
 
-st.sidebar.markdown("### 📌 Menu Utama")
-
-menu = st.sidebar.radio(
-    "",
-    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"]
+st.sidebar.header("📌 Menu Utama")
+st.sidebar.radio(
+    "Navigasi:", 
+    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
+    key="nav_radio",
+    on_change=ubah_halaman
 )
-
-if "Dashboard" in menu:
-    st.session_state.page_view = "dashboard"
-elif "Pendidikan" in menu:
-    st.session_state.page_view = "tentang_pk"
-elif "Tentang" in menu:
-    st.session_state.page_view = "tentang_dashboard"
-
-# Mapping ke halaman
-if menu == "dashboard":
-    st.session_state.page_view = "dashboard"
-elif menu == "pk":
-    st.session_state.page_view = "tentang_pk"
-elif menu == "about":
-    st.session_state.page_view = "tentang_dashboard"
 
 st.sidebar.divider()
 st.sidebar.header("🔎 Filter Wilayah")
