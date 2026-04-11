@@ -6,7 +6,7 @@ import base64
 import streamlit.components.v1 as components
 
 # ==================================
-# 1. KONFIGURASI HALAMAN
+# Bagian 0: KONFIGURASI HALAMAN
 # ==================================
 st.set_page_config(
     page_title="SI-PANDAI SUMUT",
@@ -25,7 +25,6 @@ def proses_logout():
     st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.session_state.page_view = "dashboard"
-    st.rerun()
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
@@ -34,87 +33,215 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# 2. CSS CUSTOM (ULTRA SLIM & RAPAT)
+# Bagian 1: CSS CUSTOM (ULTRA SLIM & SOFT DESIGN)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    .block-container { padding-top: 0rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+    /* --- 1. POSISI PALING ATAS (ZERO MARGIN) --- */
+    .block-container {
+        padding-top: 0rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
     [data-testid="stHeader"] { display: none !important; }
-    
-    /* Bar Pelangi Atas */
+
+    /* --- 2. BAR PELANGI TIPIS --- */
     .top-gradient-bar {
-        position: fixed; top: 0; left: 0; width: 100%; height: 10px;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 10px;
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
     }
-
-    /* Balon Header Biru Slim */
-    .header-balloon-card {
-        background: linear-gradient(90deg, #f0f7ff 0%, #d1e1ff 50%, #1a237e 100%) !important;
-        border-radius: 0px 0px 15px 15px;
-        padding: 2px 0px !important;
-        text-align: center; margin-bottom: 5px;
-        width: 100% !important; display: block; line-height: 1.1;
-    }
-
-    /* Balon Sumber Data Orens Slim */
-    .source-box-ui { 
-        background-color: #fff3e0 !important; padding: 4px 12px !important; 
-        border-radius: 8px; border-left: 5px solid #ff9800; 
-        width: 100% !important; display: block !important; box-sizing: border-box;
-    }
-
-    /* --- SIDEBAR DESIGN (ULTRA SLIM & RAPAT) --- */
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
-    [data-testid="stSidebar"] * { color: white !important; }
-
-    /* Menghilangkan jarak antar widget di sidebar */
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: 0rem !important; }
-
-    /* Fix Teks Filter Hitam */
-    div[data-testid="stSidebar"] [data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+/* --- FIX: TULISAN HITAM DI KOTAK FILTER (SIDEBAR) --- */
+    /* Target khusus teks yang dipilih (label utama) */
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div {
         color: black !important;
     }
-    div[data-baseweb="popover"] li { color: black !important; }
+    /* Target teks di dalam list/dropdown saat diklik */
+    div[data-baseweb="popover"] li, 
+    div[data-baseweb="popover"] span {
+        color: black !important;
+    }
+    /* Target khusus placeholder atau value */
+    div[data-testid="stSidebar"] [data-testid="stSelectbox"] div[role="button"] {
+        color: black !important;
+    }
+ 
+    /* TOMBOL UTAMA (BIRU GRADASI) */
+    div.stButton > button:not([key^="btn_"]) {
+        background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; height: 48px; border: none !important; width: 100%;
+    }
+/* --- 4. SIDEBAR & FIX TEXT HITAM --- */
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
+   [data-testid="stSidebar"] * { color: white !important; }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-    /* Gaya Tombol Sidebar (ULTRA SLIM & PANJANG) */
+    /* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
+    div[data-baseweb="popover"] li {
+        color: black !important;
+    }
+    
+    /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
+    .header-balloon-card {
+        background: linear-gradient(90deg, #f0f7ff 0%, #d1e9ff 100%) !important; /* Biru sangat muda/tipis */
+        border-radius: 0px 0px 15px 15px; /* Membulat hanya di bawah */
+        padding: 5px 0px; /* Sangat tipis vertikal */
+        border-bottom: 2px solid rgba(13, 71, 161, 0.1);
+        border-left: 1px solid rgba(13, 71, 161, 0.05);
+        border-right: 1px solid rgba(13, 71, 161, 0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        text-align: center;
+        margin-top: 2px; /* Pas di bawah bar pelangi */
+        margin-bottom: 20px;
+        width: 100% !important; /* Mentok kiri kanan */
+        display: block;
+    }
+
+    /* GARIS BIRU LEMBUT DI DALAM BALON */
+    .gradient-line-inner {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #0d47a1, transparent);
+        margin: 3px auto;
+        width: 50%;
+        opacity: 0.3;
+    }
+/* --- FIX: EXPANDER HIJAU GRADASI --- */
+/* Menargetkan kotak utama expander */
+div[data-testid="stExpander"] details summary {
+    background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    padding: 10px 15px !important;
+    border: none !important;
+    transition: 0.3s;
+}
+
+/* Menargetkan teks di dalam expander agar putih tebal */
+div[data-testid="stExpander"] details summary span p {
+    color: white !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+}
+
+/* Mengubah warna icon panah menjadi putih */
+div[data-testid="stExpander"] details summary svg {
+    fill: white !important;
+    color: white !important;
+}
+
+/* Efek hover agar lebih interaktif */
+div[data-testid="stExpander"] details summary:hover {
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    opacity: 0.9;
+}
+
+/* Memastikan teks "Lihat & Download Data Tabel" berwarna putih */
+.streamlit-expanderHeader p {
+    color: white !important;
+    font-weight: 700 !important;
+}
+/* --- STYLE TOMBOL DOWNLOAD CSV (HIJAU GRADASI) --- */
+div.stDownloadButton > button {
+    background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    border: none !important;
+    font-weight: 700 !important;
+    width: 100% !important; /* Tombol jadi panjang penuh */
+    height: 45px !important;
+    transition: 0.3s !important;
+    margin-top: 10px !important;
+}
+
+div.stDownloadButton > button:hover {
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4) !important;
+    opacity: 0.9 !important;
+}
+
+/* --- STYLE AREA TABEL (PEMBERIAN BORDER HIJAU) --- */
+/* Karena tabel dataframe menggunakan canvas, kita beri bingkai agar bertema hijau */
+div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
+    border: 2px solid #4caf50 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    background-color: #f1f8e9 !important; /* Latar belakang hijau sangat tipis */
+}
+/* Mengubah warna icon panah expander menjadi putih agar senada */
+.streamlit-expanderHeader svg {
+    fill: white !important;
+}
+        /* --- 4. SIDEBAR DESIGN --- */
+
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important;
+    }
+    [data-testid="stSidebar"] * { color: white !important; }
+
+    /* TOMBOL SIDEBAR TRANSPARAN TOTAL */
     section[data-testid="stSidebar"] .stButton button {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 8px !important; width: 100% !important;
-        font-weight: 600 !important; text-align: left !important;
-        padding: 2px 12px !important; /* Tinggi tombol sangat tipis */
-        font-size: 13px !important;
-        transition: 0.2s;
-        margin-bottom: 2px !important;
-        min-height: 30px !important;
+        background-color: transparent !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+        text-align: left !important;
+        box-shadow: none !important;
     }
     section[data-testid="stSidebar"] .stButton button:hover {
-        background-color: rgba(255, 255, 255, 0.2) !important;
-        border: 1px solid white !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* Tombol Logout Merah Slim */
-    div.logout-btn-container section[data-testid="stSidebar"] .stButton button {
-        background: linear-gradient(90deg, #ef5350, #b71c1c) !important;
-        border: none !important; text-align: center !important;
-        margin-top: 10px !important;
+    /* TOMBOL UTAMA */
+    div.stButton > button:not([key^="btn_"]) {
+        background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; height: 48px; width: 100%;
     }
 
-    /* Matriks Tiles */
-    .metric-tile { padding: 15px; border-radius: 12px; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-    .tile-orange { background: linear-gradient(135deg, #ff9800, #f57c00); }
-    .tile-blue-light { background: linear-gradient(135deg, #03a9f4, #0288d1); }
-    .tile-red-dark { background: linear-gradient(135deg, #ff4b2b, #ff416c); }
-    .tile-green-light { background: linear-gradient(135deg, #4caf50, #2e7d32); }
+     /* --- TILES DASHBOARD --- */
+    .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+    .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
+    .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
+    .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
+    .tile-green-light { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
+    .tile-icon-svg { width: 42px; height: 42px; fill: white !important; }
+    .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
+    .tile-value { font-size: 22px; font-weight: 800; }
+
+    /* BALON NAMA SEKOLAH (BIRU KEMBALI) */
+    div.stButton > button[key^="btn_"] {
+        background: linear-gradient(90deg, #0d47a1 0%, #1976d2 100%) !important;
+        color: white !important; border-radius: 20px !important; 
+        font-size: 13px !important; font-weight: 700 !important;
+        padding: 8px 15px !important; width: 100% !important; border: none !important;
+    }
+
+   .source-box-ui {background-color: #fff3e0 !important; /* Warna Orens sangat muda */ padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; */margin-bottom: 0px; display: block !important;}
+    .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
+    .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
+    .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
+    .aman { background-color: #dcfce7 !important; color: #15803d !important; border-left: 5px solid #22c55e !important; }
 </style>
 """, unsafe_allow_html=True)
 
+def draw_tile_svg(label, value, svg_icon, style_class):
+    st.markdown(f'<div class="metric-tile {style_class}"><div class="tile-icon-svg">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
+
+# SVG Icons
+svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
+svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
+svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
+svg_chart = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>'
+
 # ==================================
-# 3. LOAD DATA
+# Bagian 2: LOAD DATA
 # ==================================
 @st.cache_data
 def load_all_data():
@@ -124,136 +251,262 @@ def load_all_data():
         for df in [df_ats, df_sch]:
             df.columns = df.columns.str.strip().str.lower()
         return df_ats, df_sch
-    except:
-        return pd.DataFrame(), pd.DataFrame()
+    except: return pd.DataFrame(), pd.DataFrame()
 
 data_wilayah, data_sekolah = load_all_data()
 
 # =========================
-# 4. LOGIN CHECK
+# Bagian 3: LOGIN
 # =========================
 if not st.session_state.login:
+    _, col_logo, _ = st.columns([2, 0.6, 2])
+    with col_logo:
+        if os.path.exists("logo_sumut.png"): st.image("logo_sumut.png", width=100)
     _, col_card, _ = st.columns([1.5, 2, 1.5])
     with col_card:
         with st.container(border=True):
-            st.markdown("<h3 style='color:#0d47a1; text-align:center;'>LOGIN USER</h3>", unsafe_allow_html=True)
-            u = st.text_input("Username", placeholder="Username")
-            p = st.text_input("Password", type="password", placeholder="Password")
-            if st.button("MASUK KE DASHBOARD", use_container_width=True):
-                if u == "admin" and p == "admin": 
-                    st.session_state.login = True
-                    st.rerun()
-                else: st.error("Login Gagal")
+            col_l, col_r = st.columns([1, 1.5])
+            with col_l:
+                if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png", use_container_width=True)
+            with col_r:
+                st.markdown("<h3 style='color:#0d47a1; margin-bottom:0;'>LOGIN USER</h3>", unsafe_allow_html=True)
+                u = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
+                p = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
+                if st.button("MASUK KE DASHBOARD"):
+                    if u == "admin" and p == "admin": 
+                        st.session_state.login = True
+                        st.rerun()
+                    else: st.error("Login Gagal")
+    st.stop()
+# ==================================
+# Bagian 2: LOAD DATA
+# ==================================
+@st.cache_data
+def load_all_data():
+    try:
+        df_ats = pd.read_csv("master_data_si_pandai.csv")
+        df_sch = pd.read_csv("master_data_sekolah1.csv")
+        for df in [df_ats, df_sch]:
+            df.columns = df.columns.str.strip().str.lower()
+        return df_ats, df_sch
+    except: return pd.DataFrame(), pd.DataFrame()
+
+data_wilayah, data_sekolah = load_all_data()
+
+# =========================
+# Bagian 3: LOGIN
+# =========================
+if not st.session_state.login:
+    _, col_logo, _ = st.columns([2, 0.6, 2])
+    with col_logo:
+        if os.path.exists("logo_sumut.png"): st.image("logo_sumut.png", width=100)
+    _, col_card, _ = st.columns([1.5, 2, 1.5])
+    with col_card:
+        with st.container(border=True):
+            col_l, col_r = st.columns([1, 1.5])
+            with col_l:
+                if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png", use_container_width=True)
+            with col_r:
+                st.markdown("<h3 style='color:#0d47a1; margin-bottom:0;'>LOGIN USER</h3>", unsafe_allow_html=True)
+                u = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
+                p = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
+                if st.button("MASUK KE DASHBOARD"):
+                    if u == "admin" and p == "admin": 
+                        st.session_state.login = True
+                        st.rerun()
+                    else: st.error("Login Gagal")
     st.stop()
 
 # ==================================
-# 5. SIDEBAR (ULTRA SLIM & RAPAT)
+# Bagian 4: SIDEBAR & NAVIGASI
 # ==================================
 with st.sidebar:
+    # 1. LOGO & JUDUL (Sekarang di dalam sidebar)
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
         st.markdown(f'''
-            <div style="display:flex;align-items:center;gap:10px;padding-bottom:10px;">
-                <img src="data:image/png;base64,{logo_b64}" width="35">
-                <span style="font-size:16px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
+            <div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;">
+                <img src="data:image/png;base64,{logo_b64}" width="80">
+                <span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
             </div>
         ''', unsafe_allow_html=True)
     
-    # Tombol Role (Panjang & Slim)
-    if st.button("👤 Role: ADMIN", key="role_btn", use_container_width=True):
+    # 2. TOMBOL ROLE ADMIN (Sekarang di dalam sidebar)
+    if st.button("👤 Role: Admin", key="role_admin_btn"):
         st.session_state.page_view = "admin_profile"
         st.rerun()
         
     st.divider()
 
-    # Menu Utama
-    st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="color:#ff9800;font-size:20px;">⊞</span><span style="font-weight:700;font-size:1rem;">Menu Utama</span></div>', unsafe_allow_html=True)
-    
-    if st.button("🚀 Dashboard Utama", key="nav_dash", use_container_width=True):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-    if st.button("🎓 Pendidikan Khusus", key="nav_pk", use_container_width=True):
-        st.session_state.page_view = "tentang_pk"
-        st.rerun()
-    if st.button("ℹ️ Tentang Dashboard", key="nav_about", use_container_width=True):
-        st.session_state.page_view = "tentang_dashboard"
-        st.rerun()
+def ubah_halaman():
+    pilihan = st.session_state.nav_radio
+    if "Dashboard Utama" in pilihan: st.session_state.page_view = "dashboard"
+    elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
+    elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
 
-    st.divider()
+st.sidebar.header("⊞ Menu Utama")
+st.sidebar.radio(
+    "Navigasi:", 
+    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
+    key="nav_radio",
+    on_change=ubah_halaman
+)
 
-    # Filter Wilayah
-    st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="color:#00e5ff;font-size:20px;">⌕</span><span style="font-weight:700;font-size:1rem;">Filter Wilayah</span></div>', unsafe_allow_html=True)
-    col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0] if not data_wilayah.empty else ""
-    opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
-    kab_pilih = st.selectbox("Pilih Wilayah", opsi, key="selected_kab", label_visibility="collapsed")
+st.sidebar.divider()
+st.sidebar.header("🔎 Filter Wilayah")
+col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
+opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
+kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
 
-    st.divider()
-    
-    # Logout Merah Slim
-    st.markdown('<div class="logout-btn-container">', unsafe_allow_html=True)
-    if st.button("Logout ⏻", key="logout_btn", use_container_width=True):
-        proses_logout()
-    st.markdown('</div>', unsafe_allow_html=True)
+st.sidebar.divider()
+st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
 # ==================================
-# 6. HEADER & ISI HALAMAN
+# Bagian 5: HEADER (ULTRA SLIM & SOFT)
 # ==================================
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
+
 st.markdown("""
     <div class="header-balloon-card">
-        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
-        <div style="height: 1px; background: linear-gradient(90deg, transparent, #0d47a1, transparent); margin: 2px auto; width: 40%; opacity: 0.3;"></div>
-        <p style='color: #1565c0; font-size: 13px; font-weight: 700; margin: 0;'>
+        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>
+            DASHBOARD SI-PANDAI SUMUT
+        </h2>
+        <div class="gradient-line-inner"></div>
+        <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
             Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
 
-def draw_tile_svg(label, value, svg_icon, style_class):
-    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:35px;height:35px;fill:white;">{svg_icon}</div><div><div style="font-size:12px;font-weight:800;text-transform:uppercase;">{label}</div><div style="font-size:20px;font-weight:800;">{value}</div></div></div>', unsafe_allow_html=True)
-
-# SVG Icons
-svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
-svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
-svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
-svg_chart = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>'
-
-# --- HALAMAN DASHBOARD ---
+# --- A. HALAMAN DASHBOARD ---
 if st.session_state.page_view == "dashboard":
-    st.markdown('<p style="font-size:22px; font-weight:800; color:#0d47a1; margin-bottom: 2px;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 11px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang Pendidikan Khusus, Data LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
-    st.markdown("<div style='margin-bottom: 10px;'></div>", unsafe_allow_html=True)
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
+ 
+    # KOTAK SUMBER DATA ORENS (SLIM & LEBAR)
+    st.markdown("""
+        <div class="source-box-ui">
+            <p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;">
+            <b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, Data LPPD Disdik & Data TIKP Provsu 2025
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
+    # SPACER MANUAL AGAR TIDAK NEMPEL
+    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
+   
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
+    # Matriks
     m1, m2, m3, m4 = st.columns(4)
-    if not df_f.empty:
-        v_p = f"{int(df_f.iloc[:,1].sum()):,}"; v_s = f"{int(df_f.iloc[:,2].sum()):,}"
-        v_a = f"{int(df_f.iloc[:,3].sum()):,}"
-        v_aps = f"{(int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100):.2f}%" if int(df_f.iloc[:,1].sum()) > 0 else "0%"
-    else:
-        v_p = v_s = v_a = "0"; v_aps = "0%"
+    val_p = f"{int(df_f.iloc[:,1].sum()):,}" if not df_f.empty else "0"
+    val_s = f"{int(df_f.iloc[:,2].sum()):,}" if not df_f.empty else "0"
+    val_a = f"{int(df_f.iloc[:,3].sum()):,}" if not df_f.empty else "0"
+    val_APS = f"{(int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100):.2f}%" if not df_f.empty and int(df_f.iloc[:,1].sum()) > 0 else "0%"
 
-    with m1: draw_tile_svg("Penduduk Disabilitas", v_p, svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", v_s, svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", v_a, svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Angka Partisipasi", v_aps, svg_chart, "tile-green-light")
+    with m1: draw_tile_svg("Penduduk Disabilitas", val_p, svg_people, "tile-orange")
+    with m2: draw_tile_svg("Siswa Belajar", val_s, svg_cap, "tile-blue-light")
+    with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning, "tile-red-dark")
+    with m4: draw_tile_svg("Angka Partisipasi", val_APS, svg_chart, "tile-green-light")
 
+    if kab_pilih != "Semua":
+        st.divider()
+        st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
+        sch_wil = data_sekolah[data_sekolah[col_kab] == kab_pilih] if not data_sekolah.empty else pd.DataFrame()
+        if not sch_wil.empty:
+            cols = st.columns(3)
+            for i, row in enumerate(sch_wil.itertuples()):
+                with cols[i % 3]:
+                    with st.container(border=True):
+                        if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
+                            st.markdown("<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
+                        elif getattr(row, 'rusak_berat', 0) > 0:
+                            st.markdown("<div class='rec-box rehab'>🛠️ PRIORITAS REHAB</div>", unsafe_allow_html=True)
+                        else: st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
+
+                        if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
+                            st.session_state.selected_school_data = row._asdict()
+                            st.session_state.page_view = "detail"
+                            st.rerun()
+                        st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
+
+    st.divider()
+    cv1, cv2 = st.columns([1.5, 1])
+    with cv1:
+        st.subheader("🗺️ Peta Sebaran ATS")
+        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
+    with cv2:
+        st.subheader("📊 Grafik ATS Wilayah")
+        if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
+
+    # --- FITUR TABEL DOWNLOAD ---
     st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
-        st.download_button(label="Download CSV 📥", data=csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')
+        st.download_button(
+            label="Download Data sebagai CSV 📥",
+            data=csv,
+            file_name=f'data_ats_{kab_pilih}.csv',
+            mime='text/csv',
+        )
 
+# --- B. HALAMAN DETAIL SEKOLAH ---
+elif st.session_state.page_view == "detail":
+    sch = st.session_state.selected_school_data   
+   
+    st.markdown(f"<h3 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:gray;'>Wilayah: {sch['kab_kota']} | NPSN: {sch['npsn']}</p>", unsafe_allow_html=True)
+    
+    query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
+    map_url = f"https://www.google.com/maps?q={query}&output=embed"
+    components.html(f'<iframe width="100%" height="400" src="{map_url}" style="border-radius:15px; border:1px solid #ddd;"></iframe>', height=420)
+
+    st.divider()
+    c1, c2 = st.columns(2)
+    with c1:
+        with st.container(border=True):
+            st.subheader("📌 Profil Umum")
+            st.write(f"**Status:** {sch.get('status', 'Negeri')}")
+            st.write(f"**Alamat:** {sch.get('alamat', '-')}")
+            st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')} Orang")
+            st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
+    with c2:
+        with st.container(border=True):
+            st.subheader("🏗️ Sarana Prasarana")
+            st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
+            st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
+            st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', '0')} Ruang")
+            st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
+            st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
+
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
+    st.divider()
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+# 2. PROFIL ADMIN (HALAMAN BARU)
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
+    with st.container(border=True):
+        st.write("### Super Admin SI-PANDAI")
+        st.write("**Username:** admin")
+        st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
+        st.write("**Bidang:** Pendidikan Khusus (PK)")
+        st.write("**Status:** Aktif")
+        st.caption("Data ini hanya dapat diakses oleh user dengan role Admin.")
+    
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# --- LAINNYA ---
 elif st.session_state.page_view == "tentang_pk":
-    st.title("🎓 Pendidikan Khusus")
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🎓 Pendidikan Khusus Sumatera Utara</p>', unsafe_allow_html=True)
+    st.divider()
+    st.info("Kebijakan Pendidikan Khusus Sumatera Utara.")
 
 elif st.session_state.page_view == "tentang_dashboard":
-    st.title("ℹ️ Tentang Dashboard")
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI</p>', unsafe_allow_html=True)
+    st.divider()
+    st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
