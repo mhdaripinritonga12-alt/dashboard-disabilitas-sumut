@@ -199,15 +199,38 @@ if st.session_state.page_view == "dashboard":
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
-            # INSIGHT BOX
-             # KOTAK INSIGHT DASHBOARD
+           # --- LOGIKA PESAN DINAMIS (CUSTOM INSIGHT) ---
+            ats_value = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
+            
+            if kab_pilih == "Semua":
+                pesan_insight = f"Secara keseluruhan di Sumatera Utara, terdapat <b>{v_a}</b> ATS. Diperlukan koordinasi lintas sektor untuk pemetaan yang lebih akurat."
+                tindakan = "Gunakan filter wilayah untuk melihat detail per Kabupaten/Kota."
+            
+            elif ats_value == 0:
+                # Pesan khusus jika ATS NOL (Contoh: Deli Serdang)
+                pesan_insight = f"Luar biasa! <b>{kab_pilih}</b> mencatat <b>0 (Nol)</b> Anak Tidak Sekolah berdasarkan data saat ini."
+                tindakan = "<b>Tindakan:</b> Pertahankan status ini dengan penguatan sistem deteksi dini potensi putus sekolah di tingkat desa/kelurahan."
+            
+            elif ats_value > 100:
+                # Pesan jika ATS Tinggi
+                pesan_insight = f"Perhatian! Jumlah ATS di <b>{kab_pilih}</b> cukup tinggi yaitu <b>{v_a}</b> jiwa."
+                tindakan = "<b>Tindakan:</b> Segera lakukan validasi <i>by name by address</i> dan prioritaskan jangkauan layanan pendidikan khusus di wilayah ini."
+            
+            else:
+                # Pesan standar jika ATS rendah (1-100)
+                pesan_insight = f"Wilayah <b>{kab_pilih}</b> memiliki <b>{v_a}</b> ATS dengan angka partisipasi <b>{v_aps}</b>."
+                tindakan = "<b>Tindakan:</b> Lakukan pendampingan personal kepada keluarga disabilitas untuk mengembalikan anak ke bangku sekolah."
+
+            # TAMPILKAN KOTAK INSIGHT
             st.markdown(f"""
                 <div class="insight-box">
-                    <div class="insight-title">💡 Insight Dashboard</div>
+                    <div class="insight-title">💡 Insight & Rekomendasi: {kab_pilih}</div>
                     <p class="insight-text">
-                        Berdasarkan data <b>{kab_pilih}</b>, tercatat sebanyak <b>{v_a}</b> Anak Tidak Sekolah. 
-                        Tingkat partisipasi pendidikan saat ini berada di angka <b>{v_aps}</b>. 
-                        Langkah strategis diperlukan untuk meningkatkan jangkauan pendidikan bagi disabilitas.
+                        {pesan_insight}
+                    </p>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd;">
+                    <p class="insight-text" style="font-size: 12px; font-style: italic; color: #0d47a1;">
+                        {tindakan}
                     </p>
                 </div>
             """, unsafe_allow_html=True)
