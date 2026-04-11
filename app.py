@@ -49,14 +49,14 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-    /* --- SIDEBAR ADMIN BUTTON (BIRU BULAT) --- */
+    /* --- SIDEBAR ADMIN BUTTON (TRANSPARAN DENGAN BORDER) --- */
     div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"] {
-        background-color: rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(0, 0, 0, 0) !important; /* Latar belakang transparan */
         color: white !important;
         border-radius: 50px !important;
         padding: 8px 20px !important;
         font-weight: 700 !important;
-        border: 1px solid white !important;
+        border: 1px solid white !important; /* Tetap mempertahankan border */
         margin-bottom: 10px;
     }
     div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"]:hover {
@@ -156,7 +156,7 @@ with st.sidebar:
     if logo_b64:
         st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:10px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
-    # TOMBOL USER ADMIN PINDAH KE SINI
+    # TOMBOL USER ADMIN
     if st.button("👤 USER ADMIN", key="admin_sidebar_btn", use_container_width=True):
         st.session_state.page_view = "admin_profile"
         st.rerun()
@@ -186,7 +186,7 @@ with st.sidebar:
 # Bagian 5: MAIN CONTENT
 # ==================================
 
-# HEADER UTAMA (Sisi Header jadi lebih simple)
+# HEADER UTAMA
 st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800; margin-top:5px;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
 st.divider()
 
@@ -230,7 +230,7 @@ if st.session_state.page_view == "dashboard":
         st.subheader("📊 Statistik")
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
 
-# 2. PROFIL ADMIN (MUNCUL SAAT TOMBOL DI SIDEBAR DIKLIK)
+# 2. PROFIL ADMIN
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Data Administrator")
     with st.container(border=True):
