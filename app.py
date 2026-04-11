@@ -55,8 +55,14 @@ st.markdown("""
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
     }
-/* TULISAN HITAM PADA FILTER */
+/* --- FIX WARNA TEKS FILTER SIDEBAR --- */
+/* Menargetkan teks di dalam kotak putih selectbox */
 div[data-testid="stSidebar"] div[data-baseweb="select"] * {
+    color: black !important;
+}
+
+/* Memastikan teks saat opsi dipilih tetap hitam */
+div[data-testid="stSidebar"] [data-testid="stSelectbox"] div {
     color: black !important;
 }
     /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
@@ -83,13 +89,34 @@ div[data-testid="stSidebar"] div[data-baseweb="select"] * {
         width: 50%;
         opacity: 0.3;
     }
-/* --- STYLE UNTUK EXPANDER TABEL (HIJAU GRADASI) --- */
-.streamlit-expanderHeader {
+/* --- FIX: EXPANDER HIJAU GRADASI --- */
+/* Menargetkan kotak utama expander */
+div[data-testid="stExpander"] details summary {
     background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
     color: white !important;
     border-radius: 10px !important;
+    padding: 10px 15px !important;
     border: none !important;
-    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+/* Menargetkan teks di dalam expander agar putih tebal */
+div[data-testid="stExpander"] details summary span p {
+    color: white !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+}
+
+/* Mengubah warna icon panah menjadi putih */
+div[data-testid="stExpander"] details summary svg {
+    fill: white !important;
+    color: white !important;
+}
+
+/* Efek hover agar lebih interaktif */
+div[data-testid="stExpander"] details summary:hover {
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    opacity: 0.9;
 }
 
 /* Memastikan teks "Lihat & Download Data Tabel" berwarna putih */
@@ -293,11 +320,11 @@ st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 
 st.markdown("""
     <div class="header-balloon-card">
-        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 1.4rem;'>
+        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>
             DASHBOARD UTAMA SI-PANDAI SUMUT
         </h2>
         <div class="gradient-line-inner"></div>
-        <p style='color: #1565c0; font-size: 11px; font-weight: 700; margin: 0;'>
+        <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
             Sistem Informasi Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
