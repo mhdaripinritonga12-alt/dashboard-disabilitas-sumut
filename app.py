@@ -210,7 +210,21 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
 
 def draw_tile_svg(label, value, svg_icon, style_class):
     st.markdown(f'<div class="metric-tile {style_class}"><div class="tile-icon-svg">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
+/* --- FIX: TULISAN FILTER WILAYAH AGAR HITAM --- */
+/* Menargetkan teks utama yang muncul di kotak selectbox */
+div[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
+    color: black !important;
+}
 
+/* Menargetkan teks di dalam list/pilihan saat diklik */
+div[data-baseweb="popover"] li {
+    color: black !important;
+}
+
+/* Memastikan placeholder dan teks yang dipilih tetap hitam */
+div[data-testid="stSidebar"] [data-testid="stSelectbox"] * {
+    color: black !important;
+}
 # SVG Icons
 svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
 svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
