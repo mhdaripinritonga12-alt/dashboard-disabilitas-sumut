@@ -84,7 +84,7 @@ st.markdown("""
         /* --- 4. SIDEBAR DESIGN --- */
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0d47a1 0%, #1565c0 100%) !important;
+        background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
 
