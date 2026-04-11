@@ -180,9 +180,66 @@ if st.session_state.page_view == "dashboard":
 
     st.divider()
     cv1, cv2 = st.columns([1.5, 1])
-    with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS")
-        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
+   with cv1:
+        st.subheader("🗺️ Peta Sebaran ATS (Warna-Warni)")
+        if not df_f.empty:
+            # Ambil nama kolom ATS secara otomatis (kolom ke-4)
+            ats_col_name = df_f.columns[3]
+            
+            # Membuat Peta
+            fig_map = px.scatter_mapbox(
+                df_f, 
+                lat="lat", 
+                lon="lon", 
+                size=ats_col_name,
+                color=ats_col_name,
+                color_continuous_scale="RdYlGn_r", # Skala: Hijau-Kuning-Merah
+                hover_name=col_kab, 
+                hover_data={ats_col_name: True, "lat": False, "lon": False},
+                zoom=7, 
+                height=450
+            )
+            
+            fig_map.update_layout(
+                mapbox_style="open-street-map",
+                margin={"r":0,"t":0,"l":0,"b":0},
+                coloraxis_showscale=False # Kita sembunyikan bar asli agar lebih rapi
+            )
+            
+            # Tampilkan Peta
+            st.plotly_chart(fig_map, use_container_width=True)
+            
+            # --- LEGENDA CUSTOM DI BAWAH KIRI PETA ---
+            st.markdown("""
+                <div style="
+                    display: flex; 
+                    gap: 15px; 
+                    margin-top: -50px; 
+                    margin-left: 10px;
+                    position: relative; 
+                    z-index: 999; 
+                    background: rgba(255,255,255,0.9); 
+                    padding: 8px 12px; 
+                    border-radius: 8px; 
+                    width: fit-content; 
+                    border: 1px solid #ddd;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                ">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div>
+                        <span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div>
+                        <span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div>
+                        <span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;"></div>
+            """, unsafe_allow_html=True)
     
     with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
