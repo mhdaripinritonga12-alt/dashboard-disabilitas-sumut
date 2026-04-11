@@ -65,6 +65,13 @@ st.markdown("""
     align-items: center;
     margin-top: 4px; /* ini bikin sedikit turun */
 }
+.tile-icon-svg svg {
+    width: 100%;
+    height: 100%;
+    fill: white !important;
+    stroke: white !important;
+    stroke-width: 2.5;
+}
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
