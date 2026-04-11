@@ -344,7 +344,7 @@ def ubah_halaman():
     elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
     elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
 
-st.sidebar.header("📌 Menu Utama")
+st.sidebar.header("⊞ Menu Utama")
 st.sidebar.radio(
     "Navigasi:", 
     ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
@@ -373,7 +373,7 @@ st.markdown("""
         </h2>
         <div class="gradient-line-inner"></div>
         <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
-            Sistem Informasi Anak Tidak Sekolah Disabilitas Sumatera Utara
+            Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
