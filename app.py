@@ -53,7 +53,7 @@ st.markdown("""
     div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"] {
         background-color: transparent !important;
         background: transparent !important;
-        color: white !important;
+        color: none !important;
         border-radius: 12px !important;
         padding: 10px 15px !important;
         font-weight: 700 !important;
