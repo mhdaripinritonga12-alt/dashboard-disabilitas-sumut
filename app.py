@@ -55,11 +55,20 @@ st.markdown("""
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
     }
-/* --- FIX WARNA TEKS FILTER SIDEBAR --- */
-/* Menargetkan teks di dalam kotak putih selectbox */
-div[data-testid="stSidebar"] div[data-baseweb="select"] * {
-    color: black !important;
-}
+/* --- FIX: TULISAN HITAM DI KOTAK FILTER (SIDEBAR) --- */
+    /* Target khusus teks yang dipilih (label utama) */
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div {
+        color: black !important;
+    }
+    /* Target teks di dalam list/dropdown saat diklik */
+    div[data-baseweb="popover"] li, 
+    div[data-baseweb="popover"] span {
+        color: black !important;
+    }
+    /* Target khusus placeholder atau value */
+    div[data-testid="stSidebar"] [data-testid="stSelectbox"] div[role="button"] {
+        color: black !important;
+    }
 
 /* PAKSA TULISAN FILTER JADI HITAM */
     div[data-testid="stSidebar"] div[data-baseweb="select"] * { color: black !important; }
