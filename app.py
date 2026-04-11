@@ -49,25 +49,42 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-   /* --- KUNCI KODING: HAPUS KOTAK PUTIH ADMIN --- */
-    .admin-role-container .stButton button {
+   /* --- KUNCI KODING: TOMBOL SIDEBAR POLOS (TRANSPARAN) --- */
+    /* Targetkan semua tombol di dalam sidebar agar polos */
+    section[data-testid="stSidebar"] .stButton button {
         background-color: transparent !important;
         background: transparent !important;
         color: white !important;
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.4) !important;
-        width: auto !important;
-        font-size: 13px !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Border tipis transparan */
+        border-radius: 12px !important;
         box-shadow: none !important;
-        transition: 0.3s;
-        padding: 5px 10px !important;
+        outline: none !important;
+        transition: 0.3s !important;
+        width: 100% !important;
+        text-align: left !important;
+        padding: 10px 15px !important;
     }
 
-    .admin-role-container .stButton button:hover {
+    /* Efek Hover (sedikit terang saat disentuh) */
+    section[data-testid="stSidebar"] .stButton button:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid white !important;
+        color: white !important;
     }
 
+    /* Efek saat diklik (tetap transparan, jangan jadi putih) */
+    section[data-testid="stSidebar"] .stButton button:active, 
+    section[data-testid="stSidebar"] .stButton button:focus {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        background: transparent !important;
+        color: white !important;
+        box-shadow: none !important;
+    }
+
+    /* Khusus untuk tombol Logout agar bordernya sedikit kemerahan tapi tetap polos */
+    section[data-testid="stSidebar"] .stButton button[key="logout_btn"] {
+        border: 1px solid rgba(255, 112, 67, 0.5) !important;
+    }
     /* --- MENU NAVIGASI (SIDEBAR CARDS) --- */
     div[data-testid="stSidebar"] div.stRadio > div { gap: 8px !important; }
     div[data-testid="stSidebar"] div.stRadio label {
