@@ -49,18 +49,24 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-   /* --- PERBAIKAN TOMBOL ADMIN (HAPUS KOTAK PUTIH) --- */
+   /* --- PERBAIKAN TOMBOL ADMIN (TRANSPARAN TOTAL) --- */
     div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"] {
-        background-color: transparent !important; /* Menghilangkan warna putih */
-        background: transparent !important;       /* Memastikan tidak ada background */
+        background-color: transparent !important;
+        background: transparent !important;
         color: white !important;
         border-radius: 12px !important;
         padding: 10px 15px !important;
         font-weight: 700 !important;
-        border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Hanya garis pinggir tipis */
+        border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Hanya border tipis */
         width: 100% !important;
         text-align: left !important;
-        transition: 0.3s;
+        box-shadow: none !important; /* Hilangkan bayangan yang bikin kelihatan putih */
+    }
+
+    /* Efek hover lembut agar tetap kerasa bisa diklik */
+    div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"]:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid white !important;
     }
 
     /* Efek saat kursor menempel (sedikit terang saja) */
