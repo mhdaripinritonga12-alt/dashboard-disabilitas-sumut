@@ -34,69 +34,58 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (MODERN SIDEBAR & HEADER UI)
+# Bagian 1: CSS CUSTOM (SIDEBAR & HEADER)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* --- SIDEBAR BACKGROUND GRADIENT --- */
+    /* --- SIDEBAR GRADIENT --- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important;
-        background-attachment: fixed !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-    /* --- TOP HEADER CONTENT --- */
-    .top-header-container {
-        background-color: white !important;
-        padding: 15px 25px !important;
-        border-radius: 15px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-        margin-bottom: 25px !important;
-        border: 1px solid #f0f0f0 !important;
+    /* --- HEADER AREA (PUTIH) --- */
+    .custom-header {
+        background-color: white;
+        padding: 15px 20px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+        border: 1px solid #eee;
     }
 
-    /* Styling tombol admin di header agar bulat biru */
-    div.stButton > button[key="header_admin_btn"] {
+    /* Styling Tombol Admin di Header */
+    div.stButton > button[key="admin_header_btn"] {
         background-color: #0d47a1 !important;
         color: white !important;
-        border-radius: 30px !important;
-        padding: 10px 20px !important;
+        border-radius: 50px !important;
+        padding: 8px 20px !important;
         font-weight: 700 !important;
         border: none !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        transition: 0.3s !important;
-    }
-    div.stButton > button[key="header_admin_btn"]:hover {
-        background-color: #1565c0 !important;
-        transform: scale(1.05);
     }
 
-    /* --- MENU UTAMA (SIDEBAR CARDS) --- */
+    /* --- MENU UTAMA (SIDEBAR BUTTONS) --- */
     div[data-testid="stSidebar"] div.stRadio > div { gap: 10px !important; }
     div[data-testid="stSidebar"] div.stRadio label {
         background: rgba(255, 255, 255, 0.15) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 12px !important;
         padding: 12px 15px !important;
-        transition: 0.3s !important;
-        width: 100% !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        transition: 0.3s;
     }
     div[data-testid="stSidebar"] div.stRadio label[data-selected="true"] {
         background: rgba(255, 255, 255, 0.35) !important;
         border: 1px solid white !important;
-        font-weight: 700 !important;
     }
 
-    /* --- LOGOUT BUTTON (ORANGE) --- */
+    /* --- TOMBOL LOGOUT (ORANGE) --- */
     div[data-testid="stSidebar"] .stButton button[key="logout_btn"] {
         background: linear-gradient(90deg, #ff8a65 0%, #f4511e 100%) !important;
         color: white !important;
@@ -104,10 +93,9 @@ st.markdown("""
         font-weight: 700 !important;
         height: 50px !important;
         border: none !important;
-        margin-top: 20px !important;
     }
 
-    /* --- METRIC TILES --- */
+    /* --- TILES DASHBOARD --- */
     .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
@@ -117,16 +105,11 @@ st.markdown("""
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
-    /* --- SCHOOL BUTTONS --- */
+    /* TOMBOL BALON SEKOLAH */
     div.stButton > button[key^="btn_"] {
         background: linear-gradient(90deg, #0d47a1 0%, #1976d2 100%) !important;
-        color: white !important; border-radius: 20px !important; font-size: 13px !important; font-weight: 700 !important; width: 100% !important;
+        color: white !important; border-radius: 20px !important; font-size: 13px !important; width: 100% !important;
     }
-    .source-box-ui { background-color: #e3f2fd !important; padding: 15px; border-radius: 10px; border-left: 6px solid #0d47a1; margin-bottom: 25px; }
-    .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
-    .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
-    .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
-    .aman { background-color: #dcfce7 !important; color: #15803d !important; border-left: 5px solid #22c55e !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -161,15 +144,15 @@ if not st.session_state.login:
     _, col_card, _ = st.columns([1.5, 2, 1.5])
     with col_card:
         with st.container(border=True):
-            if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png", use_container_width=True)
-            st.markdown("<h3 style='text-align:center; color:#0d47a1;'>LOGIN USER</h3>", unsafe_allow_html=True)
-            u = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
-            p = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
-            if st.button("MASUK KE DASHBOARD", use_container_width=True):
+            if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png")
+            st.markdown("<h3 style='text-align:center;'>LOGIN</h3>", unsafe_allow_html=True)
+            u = st.text_input("Username")
+            p = st.text_input("Password", type="password")
+            if st.button("MASUK", use_container_width=True):
                 if u == "admin" and p == "admin": 
                     st.session_state.login = True
                     st.rerun()
-                else: st.error("Login Gagal")
+                else: st.error("Gagal")
     st.stop()
 
 # ==================================
@@ -178,47 +161,46 @@ if not st.session_state.login:
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
-        st.markdown(f'<div style="display: flex; align-items: center; gap: 12px; padding-bottom: 20px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size: 18px; font-weight: 800; color: white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
-
-    st.write(f"👤 Role: **ADMIN**")
+        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:20px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
+    
+    st.write("👤 Role: **ADMIN**")
     st.divider()
 
-    def ubah_halaman():
-        pilih = st.session_state.nav_radio
-        if "Dashboard" in pilih: st.session_state.page_view = "dashboard"
-        elif "Pendidikan" in pilih: st.session_state.page_view = "tentang_pk"
+    def nav_change():
+        p = st.session_state.nav_radio
+        if "Dashboard" in p: st.session_state.page_view = "dashboard"
+        elif "Pendidikan" in p: st.session_state.page_view = "tentang_pk"
         else: st.session_state.page_view = "tentang_dashboard"
 
     st.sidebar.header("📌 Menu Utama")
-    st.sidebar.radio("Navigasi:", ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"], key="nav_radio", on_change=ubah_halaman)
+    st.sidebar.radio("Navigasi:", ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"], key="nav_radio", on_change=nav_change)
 
     st.divider()
-    st.sidebar.header("🔎 Filter Wilayah")
+    st.sidebar.header("🔎 Filter")
     col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
     opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
-    kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
+    kab_pilih = st.sidebar.selectbox("Pilih Wilayah", opsi, key="selected_kab")
 
     st.divider()
     st.button("Logout 🚪", key="logout_btn", on_click=proses_logout, use_container_width=True)
 
 # ==================================
-# Bagian 5: HEADER & MAIN CONTENT
+# Bagian 5: HEADER & ISI KONTEN
 # ==================================
 
-# --- HEADER PUTIH (Selalu Muncul) ---
+# HEADER PUTIH DENGAN ICON ADMIN KLIKABEL
 h_col1, h_col2 = st.columns([1, 4])
 with h_col1:
-    # Tombol Admin yang bisa diklik (kembali ke dashboard)
-    if st.button("👤 USER ADMIN", key="header_admin_btn"):
+    if st.button("👤 USER ADMIN", key="admin_header_btn"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
 with h_col2:
-    st.markdown("<h2 style='text-align:right; color:#0d47a1; margin-top:5px; font-weight:800;'>DASHBOARD UTAMA SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
 
 st.divider()
 
-# --- LOGIKA HALAMAN ---
+# LOGIKA HALAMAN
 if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
@@ -237,41 +219,34 @@ if st.session_state.page_view == "dashboard":
 
     if kab_pilih != "Semua":
         st.divider()
-        st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
+        st.subheader(f"🏫 Sekolah di {kab_pilih}")
         sch_wil = data_sekolah[data_sekolah[col_kab] == kab_pilih] if not data_sekolah.empty else pd.DataFrame()
         if not sch_wil.empty:
             cols = st.columns(3)
             for i, row in enumerate(sch_wil.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
-                            st.markdown("<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
-                        elif getattr(row, 'rusak_berat', 0) > 0:
-                            st.markdown("<div class='rec-box rehab'>🛠️ PRIORITAS REHAB</div>", unsafe_allow_html=True)
-                        else: st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
-                        
-                        if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
-                            st.session_state.selected_school_data = row._asdict()
-                            st.session_state.page_view = "detail"
-                            st.rerun()
-                        st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
+                        st.button(row.nama_sekolah.upper(), key=f"btn_{i}")
+                        st.caption(f"NPSN: {row.npsn}")
 
     st.divider()
-    cv1, cv2 = st.columns([1.5, 1])
-    with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS")
-        if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon")
-    with cv2:
-        st.subheader("📊 Grafik ATS Wilayah")
+    c1, c2 = st.columns([1.5, 1])
+    with c1:
+        st.subheader("🗺️ Peta Wilayah")
+        if not df_f.empty: st.map(df_f)
+    with c2:
+        st.subheader("📊 Statistik")
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
 
-# --- HALAMAN DETAIL ---
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data
-    if st.button("⬅️ Kembali ke Dashboard"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-    
     st.markdown(f"### 🏫 {sch['nama_sekolah'].upper()}")
-    query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
-    map_url = f"
+    st.button("⬅️ Kembali", on_click=lambda: setattr(st.session_state, 'page_view', 'dashboard'))
+
+elif st.session_state.page_view == "tentang_pk":
+    st.title("🎓 Pendidikan Khusus")
+    st.write("Konten Pendidikan Khusus.")
+
+elif st.session_state.page_view == "tentang_dashboard":
+    st.title("ℹ️ Tentang SI-PANDAI")
+    st.write("Sistem Informasi Analitik.")
