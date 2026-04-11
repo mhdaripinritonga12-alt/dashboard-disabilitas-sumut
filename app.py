@@ -325,8 +325,8 @@ with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
         st.markdown(f'''
-            <div style="display:flex;align-items:center;gap:20px;padding-bottom:23px;">
-                <img src="data:image/png;base64,{logo_b64}" width="40">
+            <div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;">
+                <img src="data:image/png;base64,{logo_b64}" width="60">
                 <span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
             </div>
         ''', unsafe_allow_html=True)
