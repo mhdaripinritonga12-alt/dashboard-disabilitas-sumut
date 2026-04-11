@@ -58,7 +58,7 @@ st.markdown("""
 
     /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
     .header-balloon-card {
-        background: linear-gradient(90deg, #1e88e5 0%, #0d47a1 100%) !important; /* Biru sangat muda/tipis */
+        background: linear-gradient(90deg, #1e88e5 0%, #d1e9ff 100%) !important; /* Biru sangat muda/tipis */
         border-radius: 0px 0px 15px 15px; /* Membulat hanya di bawah */
         padding: 5px 0px; /* Sangat tipis vertikal */
         border-bottom: 2px solid rgba(13, 71, 161, 0.1);
