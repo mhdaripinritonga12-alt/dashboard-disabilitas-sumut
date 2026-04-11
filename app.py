@@ -7,8 +7,6 @@ import streamlit.components.v1 as components
 
 # ==================================
 # Bagian 0: KONFIGURASI HALAMAN
-masih ada bulatannya
-
 # ==================================
 st.set_page_config(
     page_title="SI-PANDAI SUMUT",
