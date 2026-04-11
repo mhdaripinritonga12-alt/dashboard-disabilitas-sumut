@@ -181,25 +181,38 @@ if st.session_state.page_view == "dashboard":
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
     
-    with cv2:
+  with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
-            ats_col = df_f.columns[3]
-            df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
+            # 1. LOGIKA MENGAMBIL TOP 5 (Gunakan df_f, bukan 'data')
+            nama_kolom_ats = df_f.columns[3]
+            df_top5 = df_f.sort_values(by=nama_kolom_ats, ascending=False).head(5)
             
-            # --- FIX: LOGIKA GRAFIK SLIM & WARNA KUSTOM ---
-            custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
-            fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h',
-                         color=col_kab, color_discrete_sequence=custom_colors,
-                         text=ats_col)
+            # 2. WARNA KUSTOM: Maron, Hijau, Orens Gelap, Biru Gelap, Biru Muda
+            warna_kustom = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
+            
+            # 3. GRAFIK SLIM (Gunakan variabel yang benar: df_top5 dan col_kab)
+            fig = px.bar(df_top5, 
+                         x=nama_kolom_ats, 
+                         y=col_kab, 
+                         orientation='h',
+                         color=col_kab, 
+                         color_discrete_sequence=warna_kustom,
+                         text=nama_kolom_ats)
 
-            fig.update_layout(height=300, margin=dict(l=20, r=20, t=30, b=20),
-                              bargap=0.3, xaxis_title=None, yaxis_title=None,
-                              showlegend=False, plot_bgcolor='rgba(0,0,0,0)')
-            fig.update_traces(textposition='outside')
+            fig.update_layout(
+                height=300, 
+                margin=dict(l=10, r=50, t=30, b=10),
+                bargap=0.4, # Membuat bar terlihat lebih Slim
+                xaxis_title=None, 
+                yaxis_title=None,
+                showlegend=False, 
+                plot_bgcolor='rgba(0,0,0,0)'
+            )
+            fig.update_traces(textposition='outside', textfont_size=12, texttemplate='%{text:,}')
             st.plotly_chart(fig, use_container_width=True)
             
-     # --- LOGIKA INSIGHT DINAMIS ---
+            # --- 4. KOTAK INSIGHT DINAMIS ---
             # Hitung jumlah sekolah di wilayah terpilih
             if kab_pilih == "Semua":
                 jml_sekolah = len(data_sekolah)
@@ -208,7 +221,7 @@ if st.session_state.page_view == "dashboard":
 
             # Tentukan Pesan & Warna Box
             if kab_pilih != "Semua" and v_a_val > 0 and jml_sekolah == 0:
-                p_insight = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a_val:,}</b> ATS, namun <b>BELUM ADA</b> Satuan Pendidikan (SLB/Sekolah Khusus) di wilayah ini."
+                p_insight = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a_val:,}</b> ATS, namun <b>BELUM ADA</b> SLB/Sekolah Khusus di wilayah ini."
                 p_tindakan = "<b>Tindakan:</b> Mendesak untuk pembukaan Unit Sekolah Baru atau Kelas Filial."
                 warna_box = "#b71c1c" # Merah Tua
             elif v_a_val == 0:
@@ -224,7 +237,7 @@ if st.session_state.page_view == "dashboard":
                 p_tindakan = "<b>Tindakan:</b> Optimalkan sekolah terdekat untuk proses penjangkauan."
                 warna_box = "#0d47a1" # Biru
 
-            # Tampilkan Insight Box
+            # Tampilkan Kotak Insight
             st.markdown(f"""
                 <div class="insight-box" style="border-left: 6px solid {warna_box};">
                     <div class="insight-title" style="color: {warna_box}; font-size: 14px; font-weight: 800; margin-bottom: 5px;">
