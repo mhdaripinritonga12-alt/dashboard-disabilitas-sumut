@@ -88,7 +88,12 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
     padding: 10px !important;
     background-color: #f1f8e9 !important; /* Latar belakang hijau sangat tipis */
 }
- /* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
+ /* --- 4. SIDEBAR & FIX TEXT HITAM --- */
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
+   [data-testid="stSidebar"] * { color: white !important; }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
+
+/* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
     div[data-baseweb="popover"] li {
