@@ -78,9 +78,7 @@ st.markdown("""
 
     /* --- TOMBOL LOGOUT (ORANGE GRADIENT) --- */
     div[data-testid="stSidebar"] .stButton button[key="logout_btn"] {
-        background: linear-gradient(90deg, #ff7043 0%, #ff5722 100%) !important;
-        color: white !important;
-        border-radius: 12px !important;
+                border-radius: 12px !important;
         font-weight: 700 !important;
         height: 50px !important;
         border: none !important;
