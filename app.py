@@ -33,61 +33,73 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (FINAL PREMIUM DESIGN)
+# Bagian 1: CSS CUSTOM (PREMIUM GLASS UI)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* 1. BALON GRADASI FULL HALAMAN (DI PALING ATAS) */
+    /* 1. BALON GRADASI FULL PALING ATAS */
     .top-gradient-bar {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 10px;
+        top: 0; left: 0; width: 100%; height: 8px;
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* 2. MENAIKKAN HEADER AGAR MENEMPEL KE BAR */
+    /* 2. MENAIKKAN HEADER & HAPUS PADDING STANDAR */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 1.5rem !important;
         padding-bottom: 0rem !important;
     }
     [data-testid="stHeader"] { display: none !important; }
 
-    /* 3. SIDEBAR DEEP BLUE GRADIENT */
+    /* 3. HEADER KOTAK BALON TRANSPARAN (CARD UI) */
+    .header-balloon-card {
+        background: rgba(255, 255, 255, 0.7) !important;
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 20px 30px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+
+    /* 4. GARIS GRADASI DI DALAM BALON */
+    .gradient-line-inner {
+        height: 3px;
+        background: linear-gradient(90deg, #0d47a1 0%, #42a5f5 50%, #0d47a1 100%);
+        border-radius: 2px;
+        margin: 10px auto;
+        width: 60%;
+    }
+
+    /* 5. SIDEBAR DESIGN */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 45%, #1976d2 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
 
-    /* 4. TOMBOL SIDEBAR POLOS (ROLE ADMIN & LOGOUT) */
+    /* 6. TOMBOL SIDEBAR POLOS (ROLE & LOGOUT) */
     section[data-testid="stSidebar"] .stButton button {
         background-color: transparent !important;
-        background: transparent !important;
         color: white !important;
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
         border-radius: 10px !important;
         box-shadow: none !important;
         width: 100% !important;
-        transition: 0.3s !important;
         text-align: left !important;
     }
     section[data-testid="stSidebar"] .stButton button:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid white !important;
     }
-    section[data-testid="stSidebar"] .stButton button:focus, 
-    section[data-testid="stSidebar"] .stButton button:active {
-        background: transparent !important;
-        box-shadow: none !important;
-    }
 
-    /* 5. MENU NAVIGASI SIDEBAR */
+    /* 7. NAVIGASI RADIO */
     div[data-testid="stSidebar"] div.stRadio label {
         background: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -100,19 +112,17 @@ st.markdown("""
         border: 1px solid white !important;
     }
 
-    /* 6. METRIC TILES STYLE */
-    .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+    /* 8. TILES DASHBOARD */
+    .metric-tile { padding: 20px; border-radius: 15px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
     .tile-navy { background: linear-gradient(135deg, #3f51b5 0%, #1a237e 100%); }
     .tile-green { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
-    .tile-label { font-size: 13px; font-weight: 800; text-transform: uppercase; }
-    .tile-value { font-size: 24px; font-weight: 800; }
 </style>
 """, unsafe_allow_html=True)
 
 def draw_tile_svg(label, value, svg_icon, style_class):
-    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:42px;height:42px;">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:42px;height:42px;">{svg_icon}</div><div><div class="tile-label" style="font-size:13px; font-weight:800;">{label}</div><div class="tile-value" style="font-size:24px; font-weight:800;">{value}</div></div></div>', unsafe_allow_html=True)
 
 # SVG Icons
 svg_people = '<svg viewBox="0 0 16 16" fill="white"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
@@ -145,7 +155,7 @@ if not st.session_state.login:
             p = st.text_input("Password", type="password")
             if st.button("MASUK", use_container_width=True):
                 if u == "admin" and p == "admin": st.session_state.login = True; st.rerun()
-                else: st.error("Login Gagal")
+                else: st.error("Gagal")
     st.stop()
 
 # ==================================
@@ -180,15 +190,17 @@ with st.sidebar:
     st.button("Logout 🚪", key="logout_btn", on_click=proses_logout, use_container_width=True)
 
 # ==================================
-# Bagian 5: MAIN CONTENT (HEADER & TOP BALON)
+# Bagian 5: HEADER DALAM KOTAK BALON
 # ==================================
-# INI ADALAH BALON GRADASI YANG MEMBENTANG FULL
+# 1. Bar Gradasi Paling Atas
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 
+# 2. Kotak Balon Header
 st.markdown("""
-    <div style="text-align: center; margin-top: 10px;">
-        <h1 style='color:#0d47a1; font-weight:800; margin-bottom: 0px;'>OVERVIEW SI-PANDAI SUMUT</h1>
-        <p style='color:#1565c0; font-size: 15px; font-weight: 700; margin-top: 5px;'>
+    <div class="header-balloon-card">
+        <h1 style='color:#0d47a1; font-weight:800; margin: 0; font-size: 2.2rem;'>DASHBOARD UTAMA SI-PANDAI SUMUT</h1>
+        <div class="gradient-line-inner"></div>
+        <p style='color:#1565c0; font-size: 15px; font-weight: 700; margin: 0;'>
             Sistem Informasi Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
@@ -196,28 +208,28 @@ st.markdown("""
 
 # --- LOGIKA HALAMAN ---
 if st.session_state.page_view == "dashboard":
-    st.divider()
-    # Matriks
+    # Dashboard Tiles
     m1, m2, m3, m4 = st.columns(4)
-    with m1: draw_tile_svg("Penduduk Disabilitas", "110,876", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", "14,561", svg_cap, "tile-blue")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", "67,231", svg_warning, "tile-navy")
-    with m4: draw_tile_svg("Angka Partisipasi", "65.71%", svg_chart, "tile-green")
+    with m1: draw_tile_svg("PENDUDUK DISABILITAS", "110,876", svg_people, "tile-orange")
+    with m2: draw_tile_svg("SISWA BELAJAR", "14,561", svg_cap, "tile-blue")
+    with m3: draw_tile_svg("ATS", "67,231", svg_warning, "tile-navy")
+    with m4: draw_tile_svg("ANGKA PARTISIPASI", "65.71%", svg_chart, "tile-green")
 
     st.divider()
     c1, c2 = st.columns([1.5, 1])
     with c1:
-        st.subheader("🗺️ Peta Lokasi ATS")
-        st.info("Peta Sebaran Wilayah Sumatera Utara")
+        st.markdown("<h4 style='color:#0d47a1;'>🗺️ Peta Lokasi ATS</h4>", unsafe_allow_html=True)
+        st.info("Visualisasi Peta Sebaran Wilayah")
     with c2:
-        st.subheader("📊 Statistik ATS Wilayah")
-        st.write("Grafik perbandingan data per Kabupaten/Kota")
+        st.markdown("<h4 style='color:#0d47a1;'>📊 Statistik ATS Wilayah</h4>", unsafe_allow_html=True)
+        st.write("Grafik perbandingan data")
 
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
-    with st.container(border=True):
-        st.write("### Super Admin SI-PANDAI")
-        st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
-    if st.button("⬅️ Kembali"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
+    st.button("⬅️ Kembali", on_click=lambda: setattr(st.session_state, 'page_view', 'dashboard'))
+
+elif st.session_state.page_view == "tentang_pk":
+    st.title("🎓 Pendidikan Khusus")
+
+elif st.session_state.page_view == "tentang_dashboard":
+    st.title("ℹ️ Tentang SI-PANDAI")
