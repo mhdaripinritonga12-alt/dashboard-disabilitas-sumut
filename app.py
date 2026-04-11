@@ -19,7 +19,6 @@ st.set_page_config(
 if "login" not in st.session_state: st.session_state.login = False
 if "page_view" not in st.session_state: st.session_state.page_view = "dashboard"
 if "selected_kab" not in st.session_state: st.session_state.selected_kab = "Semua"
-if "selected_school_data" not in st.session_state: st.session_state.selected_school_data = None
 
 def proses_logout():
     st.session_state.selected_kab = "Semua"
@@ -34,7 +33,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM
+# Bagian 1: CSS CUSTOM (HIJAU MUDA INSIGHT)
 # ==================================
 st.markdown("""
 <style>
@@ -50,36 +49,31 @@ st.markdown("""
         z-index: 999999;
     }
 
+    /* SIDEBAR STYLING */
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
+    [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div { color: black !important; }
     div[data-baseweb="popover"] li { color: black !important; }
 
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
-    [data-testid="stSidebar"] * { color: white !important; }
-
-    section[data-testid="stSidebar"] .stButton button {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 8px !important; width: 100% !important;
-        font-weight: 600 !important; text-align: left !important;
-        padding: 2px 15px !important; font-size: 13px !important;
-    }
-
-    .header-balloon-card {
-        background: linear-gradient(90deg, #f0f7ff 0%, #d1e9ff 100%) !important;
-        border-radius: 0px 0px 15px 15px; padding: 5px 0px; text-align: center; margin-bottom: 20px; width: 100% !important; display: block;
-    }
-
+    /* TILES METRIC */
     .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
     .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
     .tile-green-light { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
     
-    .insight-box { background-color: #e3f2fd !important; border-radius: 10px; border-left: 5px solid #0d47a1; padding: 15px; margin-top: 15px; }
-    .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
+    /* KOTAK INSIGHT (HIJAU MUDA) */
+    .insight-box { 
+        background-color: #e8f5e9 !important; 
+        border-radius: 10px; 
+        padding: 15px; 
+        margin-top: 15px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .insight-title { font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
-    
-    .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; margin-bottom: 0px; display: block !important; }
+
+    .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; margin-bottom: 0px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -114,8 +108,8 @@ if not st.session_state.login:
     with col_card:
         with st.container(border=True):
             st.markdown("<h3 style='color:#0d47a1; text-align:center;'>LOGIN USER</h3>", unsafe_allow_html=True)
-            u = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
-            p = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
+            u = st.text_input("Username", placeholder="Username")
+            p = st.text_input("Password", type="password", placeholder="Password")
             if st.button("MASUK KE DASHBOARD", use_container_width=True):
                 if u == "admin" and p == "admin": 
                     st.session_state.login = True
@@ -132,11 +126,11 @@ with st.sidebar:
         st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;"><img src="data:image/png;base64,{logo_b64}" width="80"><span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
     if st.button("👤 Role: Admin", key="role_admin_btn", use_container_width=True):
-        st.session_state.page_view = "admin_profile"
-        st.rerun()
+        st.session_state.page_view = "admin_profile"; st.rerun()
     st.divider()
 
     st.header("⊞ Menu Utama")
+    # PERBAIKAN: Gunakan radio tanpa key duplikat
     nav = st.radio("Navigasi:", ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"], label_visibility="collapsed")
     if "Dashboard" in nav: st.session_state.page_view = "dashboard"
     elif "Pendidikan" in nav: st.session_state.page_view = "tentang_pk"
@@ -149,11 +143,10 @@ with st.sidebar:
     kab_pilih = st.selectbox("Kabupaten / Kota", opsi, key="selected_kab", label_visibility="collapsed")
 
     st.divider()
-    if st.button("Logout ⏻", use_container_width=True):
-        proses_logout()
+    if st.button("Logout ⏻", use_container_width=True): proses_logout()
 
 # ==================================
-# Bagian 5: DASHBOARD
+# Bagian 5: HEADER & DASHBOARD
 # ==================================
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 st.markdown("""<div class="header-balloon-card"><h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2><p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara</p></div>""", unsafe_allow_html=True)
@@ -166,13 +159,13 @@ if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # Matriks
-    m1, m2, m3, m4 = st.columns(4)
+    # Hitung Matriks
     v_p = int(df_f.iloc[:,1].sum()) if not df_f.empty else 0
     v_s = int(df_f.iloc[:,2].sum()) if not df_f.empty else 0
     v_a = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
     v_aps = f"{(v_s / v_p * 100):.2f}%" if v_p > 0 else "0%"
     
+    m1, m2, m3, m4 = st.columns(4)
     with m1: draw_tile_svg("Penduduk Disabilitas", f"{v_p:,}", svg_people, "tile-orange")
     with m2: draw_tile_svg("Siswa Belajar", f"{v_s:,}", svg_cap, "tile-blue-light")
     with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
@@ -180,111 +173,57 @@ if st.session_state.page_view == "dashboard":
 
     st.divider()
     cv1, cv2 = st.columns([1.5, 1])
-   with cv1:
+
+    with cv1:
         st.subheader("🗺️ Peta Sebaran ATS (Warna-Warni)")
         if not df_f.empty:
-            # Ambil nama kolom ATS secara otomatis (kolom ke-4)
-            ats_col_name = df_f.columns[3]
-            
-            # Membuat Peta
+            ats_col = df_f.columns[3]
             fig_map = px.scatter_mapbox(
-                df_f, 
-                lat="lat", 
-                lon="lon", 
-                size=ats_col_name,
-                color=ats_col_name,
-                color_continuous_scale="RdYlGn_r", # Skala: Hijau-Kuning-Merah
-                hover_name=col_kab, 
-                hover_data={ats_col_name: True, "lat": False, "lon": False},
-                zoom=7, 
-                height=450
+                df_f, lat="lat", lon="lon", size=ats_col, color=ats_col,
+                color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
+                hover_data={ats_col: True, "lat": False, "lon": False},
+                zoom=7, height=450
             )
-            
-            fig_map.update_layout(
-                mapbox_style="open-street-map",
-                margin={"r":0,"t":0,"l":0,"b":0},
-                coloraxis_showscale=False # Kita sembunyikan bar asli agar lebih rapi
-            )
-            
-            # Tampilkan Peta
+            fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
             st.plotly_chart(fig_map, use_container_width=True)
             
             # --- LEGENDA CUSTOM DI BAWAH KIRI PETA ---
             st.markdown("""
-                <div style="
-                    display: flex; 
-                    gap: 15px; 
-                    margin-top: -50px; 
-                    margin-left: 10px;
-                    position: relative; 
-                    z-index: 999; 
-                    background: rgba(255,255,255,0.9); 
-                    padding: 8px 12px; 
-                    border-radius: 8px; 
-                    width: fit-content; 
-                    border: 1px solid #ddd;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                ">
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div>
-                        <span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div>
-                        <span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div>
-                        <span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span>
-                    </div>
+                <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
+                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
+                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span></div>
+                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span></div>
                 </div>
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-    
+
     with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
-            ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            
-            # Grafik Slim & Berwarna
             custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
-            fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h',
-                         color=col_kab, color_discrete_sequence=custom_colors,
-                         text=ats_col)
-
-            fig.update_layout(height=300, margin=dict(l=10, r=50, t=30, b=10),
-                              bargap=0.4, xaxis_title=None, yaxis_title=None,
-                              showlegend=False, plot_bgcolor='rgba(0,0,0,0)')
-            fig.update_traces(textposition='outside')
-            st.plotly_chart(fig, use_container_width=True)
+            fig_bar = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=col_kab, color_discrete_sequence=custom_colors, text=ats_col)
+            fig_bar.update_layout(height=300, margin=dict(l=10, r=50, t=30, b=10), bargap=0.4, xaxis_title=None, yaxis_title=None, showlegend=False, plot_bgcolor='rgba(0,0,0,0)')
+            fig_bar.update_traces(textposition='outside')
+            st.plotly_chart(fig_bar, use_container_width=True)
             
-            # --- INSIGHT DINAMIS ---
+            # INSIGHT DINAMIS
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
-            
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
-                p_insight = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a:,}</b> ATS, namun <b>BELUM ADA</b> SLB di wilayah ini."
-                p_tindakan = "Mendesak untuk pembukaan Unit Sekolah Baru atau Kelas Filial."
-                warna_box = "#b71c1c"
+                p_insight, p_tindakan, warna_aksen = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a:,}</b> ATS, namun <b>BELUM ADA</b> SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
             elif v_a == 0:
-                p_insight = f"✅ <b>{kab_pilih}</b> saat ini bersih dari Anak Tidak Sekolah (ATS)."
-                p_tindakan = "Pertahankan status ini dengan penguatan sistem deteksi dini."
-                warna_box = "#4caf50"
+                p_insight, p_tindakan, warna_aksen = f"✅ <b>{kab_pilih}</b> saat ini bersih dari Anak Tidak Sekolah (ATS).", "Pertahankan status ini dengan deteksi dini.", "#2e7d32"
             elif v_a > 100:
-                p_insight = f"⚠️ Jumlah ATS di <b>{kab_pilih}</b> sangat tinggi (<b>{v_a:,}</b> jiwa)."
-                p_tindakan = "Segera lakukan validasi lapangan dan prioritaskan bantuan."
-                warna_box = "#ef4444"
+                p_insight, p_tindakan, warna_aksen = f"⚠️ Jumlah ATS di <b>{kab_pilih}</b> sangat tinggi (<b>{v_a:,}</b> jiwa).", "Segera lakukan validasi lapangan.", "#ef4444"
             else:
-                p_insight = f"💡 Wilayah <b>{kab_pilih}</b> memiliki <b>{v_a:,}</b> ATS dengan partisipasi <b>{v_aps}</b>."
-                p_tindakan = "Optimalkan sekolah terdekat untuk proses penjangkauan."
-                warna_box = "#0d47a1"
+                p_insight, p_tindakan, warna_aksen = f"💡 Wilayah <b>{kab_pilih}</b> memiliki <b>{v_a:,}</b> ATS.", "Optimalkan sekolah terdekat.", "#0d47a1"
 
             st.markdown(f"""
-                <div class="insight-box" style="border-left: 6px solid {warna_box};">
-                    <div class="insight-title" style="color: {warna_box};">💡 Insight & Rekomendasi: {kab_pilih}</div>
+                <div class="insight-box" style="border-left: 6px solid {warna_aksen};">
+                    <div class="insight-title" style="color: {warna_aksen};">💡 Insight & Rekomendasi: {kab_pilih}</div>
                     <p class="insight-text">{p_insight}</p>
-                    <hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd; opacity: 0.3;">
-                    <p class="insight-text" style="font-size: 12px; font-weight: 700; color: {warna_box};"><b>Tindakan:</b> {p_tindakan}</p>
+                    <hr style="margin: 8px 0; border: 0; border-top: 1px solid {warna_aksen}; opacity: 0.2;">
+                    <p class="insight-text" style="font-size: 12px; font-weight: 700; color: {warna_aksen};"><b>Tindakan:</b> {p_tindakan}</p>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -297,7 +236,3 @@ if st.session_state.page_view == "dashboard":
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
     if st.button("⬅️ Kembali ke Dashboard"): st.session_state.page_view = "dashboard"; st.rerun()
-elif st.session_state.page_view == "tentang_pk":
-    st.title("🎓 Pendidikan Khusus Sumatera Utara")
-elif st.session_state.page_view == "tentang_dashboard":
-    st.title("ℹ️ Tentang SI-PANDAI")
