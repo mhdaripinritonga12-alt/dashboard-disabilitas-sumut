@@ -199,37 +199,42 @@ if st.session_state.page_view == "dashboard":
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
-           # --- LOGIKA PESAN DINAMIS (CUSTOM INSIGHT) ---
-            ats_value = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
-            
+        # --- LOGIKA PESAN DINAMIS (DENGAN CEK AKSES SEKOLAH) ---
             if kab_pilih == "Semua":
-                pesan_insight = f"Secara keseluruhan di Sumatera Utara, terdapat <b>{v_a}</b> ATS. Diperlukan koordinasi lintas sektor untuk pemetaan yang lebih akurat."
+                pesan_insight = f"Secara keseluruhan di Sumatera Utara, terdapat <b>{v_a}</b> ATS. Diperlukan koordinasi lintas sektor."
                 tindakan = "Gunakan filter wilayah untuk melihat detail per Kabupaten/Kota."
-            
-            elif ats_value == 0:
-                # Pesan khusus jika ATS NOL (Contoh: Deli Serdang)
-                pesan_insight = f"Luar biasa! <b>{kab_pilih}</b> mencatat <b>0 (Nol)</b> Anak Tidak Sekolah berdasarkan data saat ini."
-                tindakan = "<b>Tindakan:</b> Pertahankan status ini dengan penguatan sistem deteksi dini potensi putus sekolah di tingkat desa/kelurahan."
-            
-            elif ats_value > 100:
-                # Pesan jika ATS Tinggi
-                pesan_insight = f"Perhatian! Jumlah ATS di <b>{kab_pilih}</b> cukup tinggi yaitu <b>{v_a}</b> jiwa."
-                tindakan = "<b>Tindakan:</b> Segera lakukan validasi <i>by name by address</i> dan prioritaskan jangkauan layanan pendidikan khusus di wilayah ini."
-            
-            else:
-                # Pesan standar jika ATS rendah (1-100)
-                pesan_insight = f"Wilayah <b>{kab_pilih}</b> memiliki <b>{v_a}</b> ATS dengan angka partisipasi <b>{v_aps}</b>."
-                tindakan = "<b>Tindakan:</b> Lakukan pendampingan personal kepada keluarga disabilitas untuk mengembalikan anak ke bangku sekolah."
+                warna_garis = "#0d47a1" # Biru
 
-            # TAMPILKAN KOTAK INSIGHT
+            elif ats_value > 0 and jumlah_sekolah_wilayah == 0:
+                # KONDISI KRITIS: ADA ANAK, TAPI TIDAK ADA SEKOLAH
+                pesan_insight = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a}</b> ATS, namun <b>BELUM ADA</b> Satuan Pendidikan Khusus yang terdaftar di wilayah ini."
+                tindakan = "<b>Tindakan Mendesak:</b> Lakukan studi kelayakan pembangunan Unit Sekolah Baru (USB) atau pembukaan Kelas Jauh/Filial untuk menjamin hak pendidikan mereka."
+                warna_garis = "#b71c1c" # Merah Tua (Bahaya)
+
+            elif ats_value == 0:
+                pesan_insight = f"Luar biasa! <b>{kab_pilih}</b> mencatat <b>0 (Nol)</b> Anak Tidak Sekolah."
+                tindakan = "<b>Tindakan:</b> Pertahankan status ini dengan deteksi dini potensi putus sekolah."
+                warna_garis = "#4caf50" # Hijau
+
+            elif ats_value > 100:
+                pesan_insight = f"Perhatian! Jumlah ATS di <b>{kab_pilih}</b> cukup tinggi yaitu <b>{v_a}</b> jiwa."
+                tindakan = "<b>Tindakan:</b> Segera lakukan validasi lapangan dan percepat penjangkauan."
+                warna_garis = "#ef4444" # Merah Bright
+
+            else:
+                pesan_insight = f"Wilayah <b>{kab_pilih}</b> memiliki <b>{v_a}</b> ATS dengan partisipasi <b>{v_aps}</b>."
+                tindakan = "<b>Tindakan:</b> Optimalkan peran sekolah yang ada untuk menjemput bola."
+                warna_garis = "#0d47a1" # Biru
+
+            # TAMPILKAN KOTAK INSIGHT DENGAN WARNA DINAMIS
             st.markdown(f"""
-                <div class="insight-box">
-                    <div class="insight-title">💡 Insight & Rekomendasi: {kab_pilih}</div>
+                <div class="insight-box" style="border-left: 6px solid {warna_garis};">
+                    <div class="insight-title" style="color: {warna_garis};">💡 Insight & Rekomendasi: {kab_pilih}</div>
                     <p class="insight-text">
                         {pesan_insight}
                     </p>
-                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd;">
-                    <p class="insight-text" style="font-size: 12px; font-style: italic; color: #0d47a1;">
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd; opacity: 0.3;">
+                    <p class="insight-text" style="font-size: 12px; font-weight: 700; color: {warna_garis};">
                         {tindakan}
                     </p>
                 </div>
