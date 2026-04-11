@@ -61,8 +61,7 @@ st.markdown("""
         width: auto !important;
         font-size: 13px !important;
         box-shadow: none !important;
-        transition: 0.3s;
-    }
+           }
     div[data-testid="stSidebar"] div.stButton > button[key="role_admin_btn"]:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid white !important;
