@@ -49,20 +49,21 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-    /* --- TOMBOL ROLE ADMIN (TRANSPARAN + BORDER) --- */
-    div[data-testid="stSidebar"] div.stButton > button[key="role_admin_btn"] {
+   /* --- KUNCI KODING: HAPUS KOTAK PUTIH ADMIN --- */
+    .admin-role-container .stButton button {
         background-color: transparent !important;
         background: transparent !important;
         color: white !important;
         border-radius: 10px !important;
-        padding: 5px 10px !important;
-        font-weight: 700 !important;
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
         width: auto !important;
         font-size: 13px !important;
         box-shadow: none !important;
-           }
-    div[data-testid="stSidebar"] div.stButton > button[key="role_admin_btn"]:hover {
+        transition: 0.3s;
+        padding: 5px 10px !important;
+    }
+
+    .admin-role-container .stButton button:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid white !important;
     }
@@ -155,12 +156,14 @@ with st.sidebar:
         st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
     # TOMBOL ROLE ADMIN KLIKABEL (TANPA KOTAK PUTIH)
-    if st.button("👤 Role: ADMIN", key="role_admin_btn"):
+   # Bungkus tombol dalam div khusus untuk menghilangkan kotak putih
+    st.markdown('<div class="admin-role-container">', unsafe_allow_html=True)
+    if st.button("👤 Role: ADMIN"):
         st.session_state.page_view = "admin_profile"
         st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
     
     st.divider()
-
     def nav_change():
         p = st.session_state.nav_radio
         if "Dashboard" in p: st.session_state.page_view = "dashboard"
