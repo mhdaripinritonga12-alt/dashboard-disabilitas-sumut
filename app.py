@@ -199,7 +199,10 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
         font-size: 13px !important; font-weight: 700 !important;
         padding: 8px 15px !important; width: 100% !important; border: none !important;
     }
-
+/* PAKSA TULISAN FILTER JADI HITAM */
+    div[data-testid="stSidebar"] div[data-baseweb="select"] * { color: black !important; }
+    div[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div { color: black !important; }
+    div[data-baseweb="popover"] li { color: black !important; }
     .source-box-ui { background-color: #e3f2fd !important; padding: 15px; border-radius: 10px; border-left: 6px solid #0d47a1; margin-bottom: 25px; }
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
     .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
