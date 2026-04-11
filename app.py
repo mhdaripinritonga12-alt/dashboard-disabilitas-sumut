@@ -33,27 +33,39 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (FULL UI DESIGN)
+# Bagian 1: CSS CUSTOM (FINAL PREMIUM DESIGN)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* 1. MENAIKKAN HEADER (HAPUS PADDING BAWAAN) */
+    /* 1. BALON GRADASI FULL HALAMAN (DI PALING ATAS) */
+    .top-gradient-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10px;
+        background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
+        z-index: 999999;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* 2. MENAIKKAN HEADER AGAR MENEMPEL KE BAR */
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 2rem !important;
         padding-bottom: 0rem !important;
     }
     [data-testid="stHeader"] { display: none !important; }
 
-    /* 2. SIDEBAR DEEP BLUE GRADIENT */
+    /* 3. SIDEBAR DEEP BLUE GRADIENT */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 45%, #1976d2 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
 
-    /* 3. TOMBOL SIDEBAR POLOS (ROLE ADMIN & LOGOUT) */
+    /* 4. TOMBOL SIDEBAR POLOS (ROLE ADMIN & LOGOUT) */
     section[data-testid="stSidebar"] .stButton button {
         background-color: transparent !important;
         background: transparent !important;
@@ -75,15 +87,6 @@ st.markdown("""
         box-shadow: none !important;
     }
 
-    /* 4. GARIS GRADASI HEADER */
-    .gradient-line {
-        height: 4px;
-        background: linear-gradient(90deg, #0d47a1 0%, #42a5f5 50%, #0d47a1 100%);
-        border-radius: 2px;
-        margin: 10px auto 15px auto;
-        width: 80%;
-    }
-
     /* 5. MENU NAVIGASI SIDEBAR */
     div[data-testid="stSidebar"] div.stRadio label {
         background: rgba(255, 255, 255, 0.1) !important;
@@ -98,12 +101,12 @@ st.markdown("""
     }
 
     /* 6. METRIC TILES STYLE */
-    .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
     .tile-navy { background: linear-gradient(135deg, #3f51b5 0%, #1a237e 100%); }
     .tile-green { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
-    .tile-label { font-size: 13px; font-weight: 800; text-transform: uppercase; opacity: 0.9; }
+    .tile-label { font-size: 13px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 24px; font-weight: 800; }
 </style>
 """, unsafe_allow_html=True)
@@ -111,7 +114,7 @@ st.markdown("""
 def draw_tile_svg(label, value, svg_icon, style_class):
     st.markdown(f'<div class="metric-tile {style_class}"><div style="width:42px;height:42px;">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
 
-# Icons SVG
+# SVG Icons
 svg_people = '<svg viewBox="0 0 16 16" fill="white"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
 svg_cap = '<svg viewBox="0 0 16 16" fill="white"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
 svg_warning = '<svg viewBox="0 0 16 16" fill="white"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
@@ -146,7 +149,7 @@ if not st.session_state.login:
     st.stop()
 
 # ==================================
-# Bagian 4: SIDEBAR (POLOS & CLEAN)
+# Bagian 4: SIDEBAR
 # ==================================
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
@@ -177,13 +180,15 @@ with st.sidebar:
     st.button("Logout 🚪", key="logout_btn", on_click=proses_logout, use_container_width=True)
 
 # ==================================
-# Bagian 5: MAIN CONTENT (HEADER & LINE)
+# Bagian 5: MAIN CONTENT (HEADER & TOP BALON)
 # ==================================
+# INI ADALAH BALON GRADASI YANG MEMBENTANG FULL
+st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
+
 st.markdown("""
-    <div style="text-align: center; margin-top: -15px;">
+    <div style="text-align: center; margin-top: 10px;">
         <h1 style='color:#0d47a1; font-weight:800; margin-bottom: 0px;'>OVERVIEW SI-PANDAI SUMUT</h1>
-        <div class="gradient-line"></div>
-        <p style='color:#1565c0; font-size: 15px; font-weight: 700; margin-top: -5px;'>
+        <p style='color:#1565c0; font-size: 15px; font-weight: 700; margin-top: 5px;'>
             Sistem Informasi Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
@@ -191,6 +196,7 @@ st.markdown("""
 
 # --- LOGIKA HALAMAN ---
 if st.session_state.page_view == "dashboard":
+    st.divider()
     # Matriks
     m1, m2, m3, m4 = st.columns(4)
     with m1: draw_tile_svg("Penduduk Disabilitas", "110,876", svg_people, "tile-orange")
@@ -202,7 +208,7 @@ if st.session_state.page_view == "dashboard":
     c1, c2 = st.columns([1.5, 1])
     with c1:
         st.subheader("🗺️ Peta Lokasi ATS")
-        st.info("Visualisasi Peta Sebaran Wilayah Sumatera Utara")
+        st.info("Peta Sebaran Wilayah Sumatera Utara")
     with c2:
         st.subheader("📊 Statistik ATS Wilayah")
         st.write("Grafik perbandingan data per Kabupaten/Kota")
@@ -212,7 +218,6 @@ elif st.session_state.page_view == "admin_profile":
     with st.container(border=True):
         st.write("### Super Admin SI-PANDAI")
         st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
-        st.caption("Akses Level: Full Access")
     if st.button("⬅️ Kembali"):
         st.session_state.page_view = "dashboard"
         st.rerun()
