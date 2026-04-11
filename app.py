@@ -223,7 +223,7 @@ if st.session_state.page_view == "dashboard":
     with m1: draw_tile_svg("Penduduk Disabilitas", val_p, svg_people, "tile-orange")
     with m2: draw_tile_svg("Siswa Belajar", val_s, svg_cap, "tile-blue-light")
     with m3: draw_tile_svg("Anak Tidak Sekolah", val_a, svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Angka Partisipasi", val_APS, svg_cap, "tile-green-light")
+    with m4: draw_tile_svg("Angka Partisipasi", val_APS, svg_chart, "tile-green-light")
 
     if kab_pilih != "Semua":
         st.divider()
