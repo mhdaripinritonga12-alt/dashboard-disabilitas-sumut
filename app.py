@@ -199,37 +199,38 @@ if st.session_state.page_view == "dashboard":
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
-      # --- LOGIKA INSIGHT DINAMIS (CEK SEKOLAH) ---
-            # Cek berapa banyak sekolah di wilayah terpilih
+     # --- LOGIKA INSIGHT DINAMIS ---
+            # Hitung jumlah sekolah di wilayah terpilih
             if kab_pilih == "Semua":
                 jml_sekolah = len(data_sekolah)
             else:
                 jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih])
 
-            # Penentuan Pesan & Warna
+            # Tentukan Pesan & Warna Box
             if kab_pilih != "Semua" and v_a_val > 0 and jml_sekolah == 0:
-                # KONDISI: ADA ANAK, TAPI TIDAK ADA SEKOLAH
-                p_insight = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a_val:,}</b> ATS, namun <b>BELUM ADA</b> SLB/Sekolah Khusus di wilayah ini."
-                p_tindakan = "<b>Rekomendasi:</b> Mendesak untuk pembukaan Unit Sekolah Baru (USB) atau Kelas Filial."
+                p_insight = f"🚨 <b>PERINGATAN KRITIS:</b> Di <b>{kab_pilih}</b> terdapat <b>{v_a_val:,}</b> ATS, namun <b>BELUM ADA</b> Satuan Pendidikan (SLB/Sekolah Khusus) di wilayah ini."
+                p_tindakan = "<b>Tindakan:</b> Mendesak untuk pembukaan Unit Sekolah Baru atau Kelas Filial."
                 warna_box = "#b71c1c" # Merah Tua
             elif v_a_val == 0:
-                p_insight = f"✅ <b>{kab_pilih}</b> saat ini mencatat <b>0</b> Anak Tidak Sekolah."
-                p_tindakan = "<b>Rekomendasi:</b> Terus lakukan pemantauan agar tidak ada potensi putus sekolah baru."
+                p_insight = f"✅ <b>{kab_pilih}</b> saat ini bersih dari Anak Tidak Sekolah (ATS)."
+                p_tindakan = "<b>Tindakan:</b> Pertahankan status ini dengan penguatan sistem deteksi dini."
                 warna_box = "#4caf50" # Hijau
             elif v_a_val > 100:
-                p_insight = f"⚠️ Wilayah <b>{kab_pilih}</b> memiliki jumlah ATS yang tinggi (<b>{v_a_val:,}</b> jiwa)."
-                p_tindakan = "<b>Rekomendasi:</b> Segera validasi alamat dan percepat bantuan pendidikan."
+                p_insight = f"⚠️ Jumlah ATS di <b>{kab_pilih}</b> sangat tinggi (<b>{v_a_val:,}</b> jiwa)."
+                p_tindakan = "<b>Tindakan:</b> Segera lakukan validasi lapangan dan prioritaskan bantuan."
                 warna_box = "#ef4444" # Merah
             else:
                 p_insight = f"💡 Wilayah <b>{kab_pilih}</b> memiliki <b>{v_a_val:,}</b> ATS dengan partisipasi <b>{v_aps_str}</b>."
-                p_tindakan = "<b>Rekomendasi:</b> Optimalkan sekolah terdekat untuk penjangkauan."
+                p_tindakan = "<b>Tindakan:</b> Optimalkan sekolah terdekat untuk proses penjangkauan."
                 warna_box = "#0d47a1" # Biru
 
-            # Tampilkan Kotak Insight
+            # Tampilkan Insight Box
             st.markdown(f"""
                 <div class="insight-box" style="border-left: 6px solid {warna_box};">
-                    <div class="insight-title" style="color: {warna_box};">💡 Insight & Rekomendasi: {kab_pilih}</div>
-                    <p class="insight-text">{p_insight}</p>
+                    <div class="insight-title" style="color: {warna_box}; font-size: 14px; font-weight: 800; margin-bottom: 5px;">
+                        💡 Insight & Rekomendasi: {kab_pilih}
+                    </div>
+                    <p class="insight-text" style="color: #333; font-size: 13px; line-height: 1.5;">{p_insight}</p>
                     <hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd; opacity: 0.3;">
                     <p class="insight-text" style="font-size: 12px; font-weight: 700; color: {warna_box};">{p_tindakan}</p>
                 </div>
