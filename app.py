@@ -289,7 +289,7 @@ if st.session_state.page_view == "dashboard":
     st.divider()
     cv1, cv2 = st.columns([1.5, 1])
     with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS (Warna-Warni)")
+        st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
             ats_col_name = df_f.columns[3]
             fig_map = px.scatter_mapbox(
@@ -317,7 +317,7 @@ if st.session_state.page_view == "dashboard":
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
             fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=col_kab, color_discrete_sequence=custom_colors, text=ats_col)
-            fig.update_layout(height=300, margin=dict(l=10, r=50, t=30, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
+            fig.update_layout(height=300, margin=dict(l=10, r=50, t=20, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
