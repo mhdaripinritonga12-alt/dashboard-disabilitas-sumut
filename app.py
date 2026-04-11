@@ -381,6 +381,20 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
+# 2. PROFIL ADMIN (HALAMAN BARU)
+elif st.session_state.page_view == "admin_profile":
+    st.markdown("### 👤 Profil Administrator")
+    with st.container(border=True):
+        st.write("### Super Admin SI-PANDAI")
+        st.write("**Username:** admin")
+        st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
+        st.write("**Bidang:** Pendidikan Khusus (PK)")
+        st.write("**Status:** Aktif")
+        st.caption("Data ini hanya dapat diakses oleh user dengan role Admin.")
+    
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
 
 # --- LAINNYA ---
 elif st.session_state.page_view == "tentang_pk":
