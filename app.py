@@ -1,8 +1,3 @@
-Maaf atas kendala teknisnya. Error tersebut terjadi karena ada kesalahan **indentasi (spasi)** pada bagian tombol kembali di halaman detail sekolah.
-
-Berikut adalah kode yang sudah saya perbaiki **hanya pada bagian yang error** tanpa mengubah gaya atau fitur lainnya:
-
-```python
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -39,14 +34,13 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (ULTRA SLIM & SOFT DESIGN)
+# Bagian 1: CSS CUSTOM (PREMIUM UI)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* --- 1. POSISI PALING ATAS (ZERO MARGIN) --- */
     .block-container {
         padding-top: 0rem !important;
         padding-left: 1rem !important;
@@ -54,7 +48,6 @@ st.markdown("""
     }
     [data-testid="stHeader"] { display: none !important; }
 
-    /* --- 2. BAR PELANGI TIPIS --- */
     .top-gradient-bar {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 10px;
@@ -62,14 +55,11 @@ st.markdown("""
         z-index: 999999;
     }
 
-    /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
     .header-balloon-card {
         background: linear-gradient(50deg, #d0f7ff 0%, #d1e1ff 50%,#1a237e 100%) !important;
         border-radius: 0px 0px 15px 15px;
         padding: 5px 0px;
         border-bottom: 2px solid rgba(13, 71, 161, 0.1);
-        border-left: 0px solid rgba(13, 71, 161, 0.05);
-        border-right: 0px solid rgba(13, 71, 161, 0.05);
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         text-align: center;
         margin-top: 0px;
@@ -77,8 +67,10 @@ st.markdown("""
         width: 100% !important;
         display: block;
     }
-
-    /* GARIS BIRU LEMBUT DI DALAM BALON */
+/* Tambahkan ini di dalam tag <style> Bagian 1 */
+div[data-testid="stSidebar"] div[data-baseweb="select"] * {
+    color: black !important;
+}
     .gradient-line-inner {
         height: 2px;
         background: linear-gradient(90deg, transparent, #0d47a1, transparent);
@@ -87,13 +79,11 @@ st.markdown("""
         opacity: 0.3;
     }
 
-    /* --- 4. SIDEBAR DESIGN --- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
 
-    /* TOMBOL SIDEBAR TRANSPARAN TOTAL */
     section[data-testid="stSidebar"] .stButton button {
         background-color: transparent !important;
         color: white !important;
@@ -101,30 +91,21 @@ st.markdown("""
         border-radius: 8px !important;
         width: 100% !important;
         text-align: left !important;
-        box-shadow: none !important;
-    }
-    section[data-testid="stSidebar"] .stButton button:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* TOMBOL UTAMA */
     div.stButton > button:not([key^="btn_"]) {
         background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
         color: white !important; border-radius: 10px !important; 
         font-weight: 700 !important; height: 48px; width: 100%;
     }
 
-    /* --- TILES DASHBOARD --- */
     .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
     .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
     .tile-green-light { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
     .tile-icon-svg { width: 42px; height: 42px; fill: white !important; }
-    .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
-    .tile-value { font-size: 22px; font-weight: 800; }
 
-    /* BALON NAMA SEKOLAH (BIRU KEMBALI) */
     div.stButton > button[key^="btn_"] {
         background: linear-gradient(90deg, #0d47a1 0%, #1976d2 100%) !important;
         color: white !important; border-radius: 20px !important; 
@@ -141,7 +122,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def draw_tile_svg(label, value, svg_icon, style_class):
-    st.markdown(f'<div class="metric-tile {style_class}"><div class="tile-icon-svg">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-tile {style_class}"><div class="tile-icon-svg">{svg_icon}</div><div><div class="tile-label" style="font-size: 14px; font-weight: 800; text-transform: uppercase;">{label}</div><div class="tile-value" style="font-size: 22px; font-weight: 800;">{value}</div></div></div>', unsafe_allow_html=True)
 
 # SVG Icons
 svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
@@ -207,28 +188,28 @@ with st.sidebar:
         
     st.divider()
 
-def ubah_halaman():
-    pilihan = st.session_state.nav_radio
-    if "Dashboard Utama" in pilihan: st.session_state.page_view = "dashboard"
-    elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
-    elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
+    def ubah_halaman():
+        pilihan = st.session_state.nav_radio
+        if "Dashboard Utama" in pilihan: st.session_state.page_view = "dashboard"
+        elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
+        elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
 
-st.sidebar.header("📌 Menu Utama")
-st.sidebar.radio(
-    "Navigasi:", 
-    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
-    key="nav_radio",
-    on_change=ubah_halaman
-)
+    st.header("📌 Menu Utama")
+    st.radio(
+        "Navigasi:", 
+        ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
+        key="nav_radio",
+        on_change=ubah_halaman
+    )
 
-st.sidebar.divider()
-st.sidebar.header("🔎 Filter Wilayah")
-col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
-opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
-kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
+    st.divider()
+    st.header("🔎 Filter Wilayah")
+    col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
+    opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
+    kab_pilih = st.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
 
-st.sidebar.divider()
-st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
+    st.divider()
+    st.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
 
 # ==================================
 # Bagian 5: HEADER & LOGIKA HALAMAN
@@ -242,7 +223,7 @@ st.markdown("""
         </h2>
         <div class="gradient-line-inner"></div>
         <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
-            Sistem Informasi Pemataan Anak Tidak Sekolah Disabilitas Sumatera Utara
+            Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
@@ -297,17 +278,6 @@ if st.session_state.page_view == "dashboard":
         st.subheader("📊 Grafik ATS Wilayah")
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
 
-    st.divider()
-    with st.expander("📋 Lihat & Download Data Tabel"):
-        st.dataframe(df_f, use_container_width=True)
-        csv = df_f.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="Download Data sebagai CSV 📥",
-            data=csv,
-            file_name=f'data_ats_{kab_pilih}.csv',
-            mime='text/csv',
-        )
-
 # --- B. HALAMAN DETAIL SEKOLAH ---
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data      
@@ -338,9 +308,8 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
-    
+
     st.divider()
-    # Tombol Kembali di paling bawah (Sekarang sudah di-indent dengan benar)
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
         st.rerun()
@@ -360,7 +329,7 @@ elif st.session_state.page_view == "admin_profile":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-# --- LAINNYA ---
+# --- D. LAINNYA ---
 elif st.session_state.page_view == "tentang_pk":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">🎓 Pendidikan Khusus Sumatera Utara</p>', unsafe_allow_html=True)
     st.divider()
@@ -370,4 +339,3 @@ elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI</p>', unsafe_allow_html=True)
     st.divider()
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
-```
