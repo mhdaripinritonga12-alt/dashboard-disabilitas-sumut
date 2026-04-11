@@ -223,7 +223,7 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
         padding: 8px 15px !important; width: 100% !important; border: none !important;
     }
 
-   .source-box-ui {background-color: #fff3e0 !important; /* Warna Orens sangat muda */ padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; */margin-bottom: 60px; display: block !important; width: fit-content;}
+   .source-box-ui {background-color: #fff3e0 !important; /* Warna Orens sangat muda */ padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; */margin-bottom: 0px; display: block !important;}
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
     .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
     .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
