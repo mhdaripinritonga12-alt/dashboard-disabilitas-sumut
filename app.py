@@ -61,18 +61,6 @@ st.markdown("""
         
     }
 
-    /* Efek hover lembut agar tetap kerasa bisa diklik */
-    div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"]:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid white !important;
-    }
-
-    /* Efek saat kursor menempel (sedikit terang saja) */
-    div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"]:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important; 
-        border: 1px white !important;
-    }
-
     /* --- MENU NAVIGASI (SIDEBAR CARDS) --- */
     div[data-testid="stSidebar"] div.stRadio > div { gap: 10px !important; }
     div[data-testid="stSidebar"] div.stRadio label {
