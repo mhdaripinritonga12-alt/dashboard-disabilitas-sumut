@@ -65,7 +65,7 @@ st.markdown("""
     align-items: center;
     margin-top: 4px; /* ini bikin sedikit turun */
 }
-    .tile-label { font-size: 20px; font-weight: 800; text-transform: uppercase; }
+    .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
     /* BALON NAMA SEKOLAH (BIRU KEMBALI) */
