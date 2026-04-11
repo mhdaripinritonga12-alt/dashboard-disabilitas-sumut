@@ -61,10 +61,11 @@ div[data-testid="stSidebar"] div[data-baseweb="select"] * {
     color: black !important;
 }
 
-/* Memastikan teks saat opsi dipilih tetap hitam */
-div[data-testid="stSidebar"] [data-testid="stSelectbox"] div {
-    color: black !important;
-}
+/* PAKSA TULISAN FILTER JADI HITAM */
+    div[data-testid="stSidebar"] div[data-baseweb="select"] * { color: black !important; }
+    div[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div { color: black !important; }
+    div[data-baseweb="popover"] li { color: black !important; }
+    
     /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
     .header-balloon-card {
         background: linear-gradient(90deg, #f0f7ff 0%, #d1e9ff 100%) !important; /* Biru sangat muda/tipis */
