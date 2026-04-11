@@ -224,15 +224,23 @@ if not st.session_state.login:
 # ==================================
 # Bagian 4: SIDEBAR & NAVIGASI
 # ==================================
-logo_b64 = get_base64_image("logo_sumut.png")
-if logo_b64:
-    st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;"><img src="data:image/png;base64,{logo_b64}" width="40"><span style="font-size:16px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
+with st.sidebar:
+    # 1. LOGO & JUDUL (Sekarang di dalam sidebar)
+    logo_b64 = get_base64_image("logo_sumut.png")
+    if logo_b64:
+        st.markdown(f'''
+            <div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;">
+                <img src="data:image/png;base64,{logo_b64}" width="40">
+                <span style="font-size:16px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
+            </div>
+        ''', unsafe_allow_html=True)
     
+    # 2. TOMBOL ROLE ADMIN (Sekarang di dalam sidebar)
     if st.button("👤 Role: ADMIN", key="role_admin_btn"):
         st.session_state.page_view = "admin_profile"
         st.rerun()
-    
-st.sidebar.divider()
+        
+    st.divider()
 
 def ubah_halaman():
     pilihan = st.session_state.nav_radio
