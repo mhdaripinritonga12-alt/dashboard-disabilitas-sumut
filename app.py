@@ -287,9 +287,6 @@ st.sidebar.divider()
 st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
 
 # ==================================
-# Bagian 5: LOGIKA HALAMAN
-# ==================================
-# ==================================
 # Bagian 5: HEADER (ULTRA SLIM & SOFT)
 # ==================================
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
