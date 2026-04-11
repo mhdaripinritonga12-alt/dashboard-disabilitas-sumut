@@ -200,7 +200,17 @@ if st.session_state.page_view == "dashboard":
             st.plotly_chart(fig, use_container_width=True)
             
             # INSIGHT BOX
-            st.markdown(f"""<div class="insight-box"><div class="insight-title">💡 Insight Dashboard</div><p class="insight-text">Berdasarkan data <b>{kab_pilih}</b>, tercatat <b>{v_a:,}</b> ATS. Partisipasi pendidikan: <b>{v_aps}</b>. Diperlukan jangkauan lebih luas.</p></div>""", unsafe_allow_html=True)
+             # KOTAK INSIGHT DASHBOARD
+            st.markdown(f"""
+                <div class="insight-box">
+                    <div class="insight-title">💡 Insight Dashboard</div>
+                    <p class="insight-text">
+                        Berdasarkan data <b>{kab_pilih}</b>, tercatat sebanyak <b>{v_a}</b> Anak Tidak Sekolah. 
+                        Tingkat partisipasi pendidikan saat ini berada di angka <b>{v_aps}</b>. 
+                        Langkah strategis diperlukan untuk meningkatkan jangkauan pendidikan bagi disabilitas.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
 
     st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
