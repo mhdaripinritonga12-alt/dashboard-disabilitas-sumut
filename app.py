@@ -58,7 +58,7 @@ st.markdown("""
 
     /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
     .header-balloon-card {
-        background: linear-gradient(70deg, #d0f7ff 0%, #d1e1ff 100%) !important; /* Biru sangat muda/tipis */
+        background: linear-gradient(50deg, #d0f7ff 0%, #d1e1ff 50%,#1a237e 100%) !important; /* Biru sangat muda/tipis */
         border-radius: 0px 0px 15px 15px; /* Membulat hanya di bawah */
         padding: 5px 0px; /* Sangat tipis vertikal */
         border-bottom: 2px solid rgba(13, 71, 161, 0.1);
@@ -275,12 +275,12 @@ st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 
 st.markdown("""
     <div class="header-balloon-card">
-        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 1.4rem;'>
-            DASHBOARD UTAMA SI-PANDAI SUMUT
+        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2.4rem;'>
+            DASHBOARD SI-PANDAI SUMUT
         </h2>
         <div class="gradient-line-inner"></div>
-        <p style='color: #1565c0; font-size: 11px; font-weight: 700; margin: 0;'>
-            Sistem Informasi Anak Tidak Sekolah Disabilitas Sumatera Utara
+        <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
+            Sistem Informasi Pemataan Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
@@ -378,8 +378,10 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
- if st.button("⬅️ Kembali ke Dashboard"):
-     st.session_state.page_view = "dashboard"
+st.divider()
+    # Tombol Kembali di paling bawah
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
         st.rerun()
 # 2. PROFIL ADMIN (HALAMAN BARU)
 elif st.session_state.page_view == "admin_profile":
