@@ -270,7 +270,7 @@ if st.session_state.page_view == "dashboard":
     st.divider()
     cv1, cv2 = st.columns([1.5, 1])
     with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS (Warna-Warni)")
+        st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
             ats_col_name = df_f.columns[3]
             fig_map = px.scatter_mapbox(
