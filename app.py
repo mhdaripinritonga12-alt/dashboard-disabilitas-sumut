@@ -223,7 +223,7 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
         padding: 8px 15px !important; width: 100% !important; border: none !important;
     }
 
-    .source-box-ui { background-color: #e3f2fd !important; padding: 15px; border-radius: 10px; border-left: 6px solid #0d47a1; margin-bottom: 25px; }
+   .source-box-ui {background-color: #fff3e0 !important; /* Warna Orens sangat muda */padding: 15px; border-radius: 10px; border-left: 6px solid #ff9800; */margin-bottom: 25px;}
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
     .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
     .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
@@ -382,7 +382,7 @@ st.markdown("""
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">📌 Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     st.divider()
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 13px; color: #0d47a1; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 13px; color: #e65100; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
 
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
