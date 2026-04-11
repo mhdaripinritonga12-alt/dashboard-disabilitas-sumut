@@ -69,8 +69,7 @@ st.markdown("""
     width: 100%;
     height: 100%;
     fill: white !important;
-    stroke: white !important;
-    }
+       }
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
