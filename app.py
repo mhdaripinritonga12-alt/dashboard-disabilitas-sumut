@@ -346,25 +346,23 @@ with st.sidebar:
         ''', unsafe_allow_html=True)
     
     # 2. TOMBOL ROLE ADMIN (Sekarang di dalam sidebar)
-    if st.button("👤 Role: Admin", key="role_admin_btn"):
+  if st.button("👤 Role: ADMIN", key="role_btn", use_container_width=True):
         st.session_state.page_view = "admin_profile"
         st.rerun()
         
     st.divider()
 
-def ubah_halaman():
-    pilihan = st.session_state.nav_radio
-    if "Dashboard Utama" in pilihan: st.session_state.page_view = "dashboard"
-    elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
-    elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
-
-st.sidebar.header("⊞ Menu Utama")
-st.sidebar.radio(
-    "Navigasi:", 
-    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
-    key="nav_radio",
-    on_change=ubah_halaman
-)
+    st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="color:#ff9800;font-size:20px;">⊞</span><span style="font-weight:700;font-size:1rem;">Menu Utama</span></div>', unsafe_allow_html=True)
+    
+    if st.button("🚀 Dashboard Utama", key="nav_dash", use_container_width=True):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+    if st.button("🎓 Pendidikan Khusus", key="nav_pk", use_container_width=True):
+        st.session_state.page_view = "tentang_pk"
+        st.rerun()
+    if st.button("ℹ️ Tentang Dashboard", key="nav_about", use_container_width=True):
+        st.session_state.page_view = "tentang_dashboard"
+        st.rerun()
 
 st.sidebar.divider()
 st.sidebar.header("🔎 Filter Wilayah")
