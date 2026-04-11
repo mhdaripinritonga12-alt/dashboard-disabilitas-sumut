@@ -380,19 +380,19 @@ st.markdown("""
 
 # --- A. HALAMAN DASHBOARD ---
 if st.session_state.page_view == "dashboard":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">📌 Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
  
     # KOTAK SUMBER DATA ORENS (SLIM & LEBAR)
     st.markdown("""
         <div class="source-box-ui">
             <p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;">
-                <b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025
+            <b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, Data LPPD Disdik & Data TIKP Provsu 2025
             </p>
         </div>
     """, unsafe_allow_html=True)
 
     # SPACER MANUAL AGAR TIDAK NEMPEL
-    st.markdown("<div style='margin-bottom: 40px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
    
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
