@@ -70,10 +70,16 @@ st.markdown("""
         color: black !important;
     }
 
-/* PAKSA TULISAN FILTER JADI HITAM */
-    div[data-testid="stSidebar"] div[data-baseweb="select"] * { color: black !important; }
-    div[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div { color: black !important; }
-    div[data-baseweb="popover"] li { color: black !important; }
+/* --- 4. SIDEBAR & FIX TEXT HITAM --- */
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
+    [data-testid="stSidebar"] * { color: white !important; }
+
+    /* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
+    div[data-baseweb="popover"] li {
+        color: black !important;
+    }
     
     /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
     .header-balloon-card {
