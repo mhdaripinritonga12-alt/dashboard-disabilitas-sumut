@@ -51,7 +51,7 @@ st.markdown("""
     /* --- 2. BAR PELANGI TIPIS --- */
     .top-gradient-bar {
         position: fixed;
-        top: 0; left: 0; width: 100%; height: 5px;
+        top: 0; left: 0.5; width: 100%; height: 5px;
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
     }
