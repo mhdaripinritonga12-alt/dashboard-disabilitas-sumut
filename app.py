@@ -332,7 +332,7 @@ with st.sidebar:
         ''', unsafe_allow_html=True)
     
     # 2. TOMBOL ROLE ADMIN (Sekarang di dalam sidebar)
-    if st.button("👤 Role: ADMIN", key="role_admin_btn"):
+    if st.button("👤 Role: Admin", key="role_admin_btn"):
         st.session_state.page_view = "admin_profile"
         st.rerun()
         
