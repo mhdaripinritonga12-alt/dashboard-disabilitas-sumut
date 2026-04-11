@@ -445,7 +445,7 @@ if st.session_state.page_view == "dashboard":
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
    
-    st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h2>", unsafe_allow_html=True)
     st.markdown(f"<p style='color:gray;'>Wilayah: {sch['kab_kota']} | NPSN: {sch['npsn']}</p>", unsafe_allow_html=True)
     
     query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
