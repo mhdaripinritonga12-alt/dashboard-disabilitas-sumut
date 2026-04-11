@@ -46,7 +46,7 @@ st.markdown("""
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 45%, #1976d2 100%) !important;
         background-attachment: fixed !important;
     }
-    [data-testid="stSidebar"] * { color: none !important; }
+    [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
    /* --- PERBAIKAN TOMBOL ADMIN (TRANSPARAN TOTAL) --- */
