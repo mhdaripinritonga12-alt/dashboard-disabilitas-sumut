@@ -435,10 +435,32 @@ if st.session_state.page_view == "dashboard":
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty: st.map(df_f, latitude="lat", longitude="lon", use_container_width=True)
-    with cv2:
+  with cv2:
         st.subheader("📊 Grafik ATS Wilayah")
-        if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
-
+        if not df_f.empty:
+            # MEMBUAT GRAFIK WARNA-WARNI (MENGGUNAKAN color)
+            fig = px.bar(
+                df_f.head(10), 
+                x=df_f.columns[3], 
+                y=col_kab, 
+                orientation='h',
+                color=col_kab, # Warna berbeda setiap bar
+                color_discrete_sequence=px.colors.qualitative.Pastel # Palet warna modern
+            )
+            fig.update_layout(showlegend=False, height=350, margin=dict(t=10, b=10, l=10, r=10))
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # KOTAK INSIGHT DASHBOARD (PENAMBAHAN BARU)
+            st.markdown(f"""
+                <div class="insight-box">
+                    <div class="insight-title">💡 Insight Dashboard</div>
+                    <p class="insight-text">
+                        Berdasarkan data <b>{kab_pilih}</b>, terdapat sebanyak <b>{v_a}</b> Anak Tidak Sekolah. 
+                        Tingkat partisipasi pendidikan saat ini berada di angka <b>{v_aps}</b>. 
+                        Perlu penguatan program penjangkauan disabilitas di wilayah ini.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
     # --- FITUR TABEL DOWNLOAD ---
     st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
