@@ -55,33 +55,21 @@ st.markdown("""
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
     }
-/* --- 3. HEADER "ISTIMEWA" (ROYAL BLUE SLIM CARD) --- */
-    .header-special-card {
-        background: linear-gradient(90deg, #0d47a1 0%, #1a237e 50%, #0d47a1 100%) !important;
-        padding: 10px 0px;
+
+    /* --- 3. BALON HEADER SOFT BLUE (ULTRA WIDE & SLIM) --- */
+    .header-balloon-card {
+        background: linear-gradient(90deg, #f0f7ff 0%, #d1e9ff 100%) !important; /* Biru sangat muda/tipis */
+        border-radius: 0px 0px 15px 15px; /* Membulat hanya di bawah */
+        padding: 5px 0px; /* Sangat tipis vertikal */
+        border-bottom: 2px solid rgba(13, 71, 161, 0.1);
+        border-left: 1px solid rgba(13, 71, 161, 0.05);
+        border-right: 1px solid rgba(13, 71, 161, 0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         text-align: center;
-        margin-top: 6px; /* Di bawah bar pelangi */
-        width: 100% !important;
-        border-bottom: 3px solid #00d2ff; /* Aksen Biru Muda Menyala */
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    .header-special-card h1 {
-        color: white !important;
-        font-weight: 800 !important;
-        font-size: 1.8rem !important;
-        margin: 0 !important;
-        letter-spacing: 2px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .header-special-card p {
-        color: rgba(255, 255, 255, 0.8) !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        margin: 5px 0 0 0 !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        margin-top: 5px; /* Pas di bawah bar pelangi */
+        margin-bottom: 20px;
+        width: 100% !important; /* Mentok kiri kanan */
+        display: block;
     }
 
     /* GARIS BIRU LEMBUT DI DALAM BALON */
