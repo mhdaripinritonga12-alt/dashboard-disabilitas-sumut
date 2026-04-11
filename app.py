@@ -127,7 +127,8 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
-    .insight-box { background-color: #e3f2fd !important; border-radius: 10px; border-left: 5px solid #0d47a1; padding: 15px; margin-top: 15px; }
+    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
     .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
     .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; }
