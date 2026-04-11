@@ -34,7 +34,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (MODERN UI)
+# Bagian 1: CSS CUSTOM (MODERN SIDEBAR & HEADER)
 # ==================================
 st.markdown("""
 <style>
@@ -49,15 +49,19 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-    /* --- HEADER AREA (PUTIH) --- */
-    div.stButton > button[key="admin_header_btn"] {
-        background-color: #0d47a1 !important;
+    /* --- SIDEBAR ADMIN BUTTON (BIRU BULAT) --- */
+    div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"] {
+        background-color: rgba(255, 255, 255, 0.2) !important;
         color: white !important;
         border-radius: 50px !important;
-        padding: 8px 25px !important;
+        padding: 8px 20px !important;
         font-weight: 700 !important;
-        border: none !important;
-        box-shadow: 0 4px 10px rgba(13, 71, 161, 0.2);
+        border: 1px solid white !important;
+        margin-bottom: 10px;
+    }
+    div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"]:hover {
+        background-color: white !important;
+        color: #0d47a1 !important;
     }
 
     /* --- MENU UTAMA (SIDEBAR BUTTONS) --- */
@@ -150,9 +154,14 @@ if not st.session_state.login:
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
-        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:20px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:10px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
-    st.write("👤 Role: **ADMIN**")
+    # TOMBOL USER ADMIN PINDAH KE SINI
+    if st.button("👤 USER ADMIN", key="admin_sidebar_btn", use_container_width=True):
+        st.session_state.page_view = "admin_profile"
+        st.rerun()
+    
+    st.write("Role: **Administrator**")
     st.divider()
 
     def nav_change():
@@ -174,25 +183,16 @@ with st.sidebar:
     st.button("Logout 🚪", key="logout_btn", on_click=proses_logout, use_container_width=True)
 
 # ==================================
-# Bagian 5: HEADER & ISI KONTEN
+# Bagian 5: MAIN CONTENT
 # ==================================
 
-# HEADER PUTIH DENGAN ICON ADMIN KLIKABEL
-h_col1, h_col2 = st.columns([1, 4])
-with h_col1:
-    # KLIK ICON INI UNTUK MELIHAT DATA ADMIN
-    if st.button("👤 USER ADMIN", key="admin_header_btn"):
-        st.session_state.page_view = "admin_profile"
-        st.rerun()
-
-with h_col2:
-    st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800; margin-top:5px;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
-
+# HEADER UTAMA (Sisi Header jadi lebih simple)
+st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800; margin-top:5px;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
 st.divider()
 
 # --- LOGIKA HALAMAN ---
 
-# 1. HALAMAN DASHBOARD UTAMA
+# 1. DASHBOARD
 if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
@@ -230,34 +230,21 @@ if st.session_state.page_view == "dashboard":
         st.subheader("📊 Statistik")
         if not df_f.empty: st.plotly_chart(px.bar(df_f.head(10), x=df_f.columns[3], y=col_kab, orientation='h'), use_container_width=True)
 
-# 2. HALAMAN DATA ADMIN (MUNCUL SAAT HEADER DIKLIK)
+# 2. PROFIL ADMIN (MUNCUL SAAT TOMBOL DI SIDEBAR DIKLIK)
 elif st.session_state.page_view == "admin_profile":
-    st.markdown("### 👤 Data Akun Administrator")
+    st.markdown("### 👤 Data Administrator")
     with st.container(border=True):
-        col_img, col_txt = st.columns([1, 3])
-        with col_img:
-            st.markdown("<h1 style='text-align:center; font-size:100px;'>👤</h1>", unsafe_allow_html=True)
-        with col_txt:
-            st.write("### Admin SI-PANDAI PROVSU")
-            st.write("**ID Pegawai:** 198807012010121001")
-            st.write("**Role:** Super Administrator (Bidang PK)")
-            st.write("**Email:** admin.pk@sumutprov.go.id")
-            st.write("**Status:** Aktif")
-            st.caption("Data ini dikelola oleh Bidang TIKP & PK Dinas Pendidikan Sumut.")
+        st.write("### Super Admin SI-PANDAI")
+        st.write("**NIP:** 198807012010121001")
+        st.write("**Instansi:** Bidang Pendidikan Khusus Provsu")
+        st.write("**Email:** admin.pk@sumutprov.go.id")
+        st.caption("Akses Level: Full Access (Dashboard, Data Wilayah, Sarpras)")
     
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-# 3. HALAMAN DETAIL SEKOLAH
-elif st.session_state.page_view == "detail":
-    sch = st.session_state.selected_school_data
-    st.markdown(f"### 🏫 {sch['nama_sekolah'].upper()}")
-    if st.button("⬅️ Kembali"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-
-# 4. HALAMAN LAINNYA
+# 3. HALAMAN LAINNYA
 elif st.session_state.page_view == "tentang_pk":
     st.title("🎓 Pendidikan Khusus")
     st.write("Informasi mengenai Pendidikan Khusus Sumatera Utara.")
