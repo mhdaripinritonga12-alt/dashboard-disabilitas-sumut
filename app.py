@@ -124,7 +124,32 @@ div[data-testid="stExpander"] details summary:hover {
     color: white !important;
     font-weight: 700 !important;
 }
+/* --- STYLE TOMBOL DOWNLOAD CSV (HIJAU GRADASI) --- */
+div.stDownloadButton > button {
+    background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    border: none !important;
+    font-weight: 700 !important;
+    width: 100% !important; /* Tombol jadi panjang penuh */
+    height: 45px !important;
+    transition: 0.3s !important;
+    margin-top: 10px !important;
+}
 
+div.stDownloadButton > button:hover {
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4) !important;
+    opacity: 0.9 !important;
+}
+
+/* --- STYLE AREA TABEL (PEMBERIAN BORDER HIJAU) --- */
+/* Karena tabel dataframe menggunakan canvas, kita beri bingkai agar bertema hijau */
+div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
+    border: 2px solid #4caf50 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    background-color: #f1f8e9 !important; /* Latar belakang hijau sangat tipis */
+}
 /* Mengubah warna icon panah expander menjadi putih agar senada */
 .streamlit-expanderHeader svg {
     fill: white !important;
@@ -321,7 +346,7 @@ st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 st.markdown("""
     <div class="header-balloon-card">
         <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>
-            DASHBOARD UTAMA SI-PANDAI SUMUT
+            DASHBOARD SI-PANDAI SUMUT
         </h2>
         <div class="gradient-line-inner"></div>
         <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
