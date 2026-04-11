@@ -359,7 +359,7 @@ opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_w
 kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
 
 st.sidebar.divider()
-st.sidebar.button("Logout 🚪", use_container_width=True, on_click=proses_logout)
+st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
 # ==================================
 # Bagian 5: HEADER (ULTRA SLIM & SOFT)
