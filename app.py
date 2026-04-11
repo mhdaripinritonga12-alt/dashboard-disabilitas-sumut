@@ -202,7 +202,7 @@ with st.sidebar:
 # ==================================
 # Bagian 5: MAIN CONTENT
 # ==================================
-st.markdown("<h2 style='text-align:right; color:#0d47a1; font-weight:800; margin-top:5px;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align:center; color:#0d47a1; font-weight:800; margin-top:2px;'>OVERVIEW SI-PANDAI SUMUT</h2>", unsafe_allow_html=True)
 st.divider()
 
 # 1. DASHBOARD
