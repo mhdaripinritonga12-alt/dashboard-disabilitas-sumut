@@ -49,21 +49,23 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-    /* --- TOMBOL USER ADMIN (TRANSPARAN / CARD STYLE) --- */
+   /* --- PERBAIKAN TOMBOL ADMIN (HAPUS KOTAK PUTIH) --- */
     div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"] {
-        background: rgba(255, 255, 255, 0.15) !important;
+        background-color: transparent !important; /* Menghilangkan warna putih */
+        background: transparent !important;       /* Memastikan tidak ada background */
         color: white !important;
         border-radius: 12px !important;
         padding: 10px 15px !important;
-        border: 1px solid rgba(255, 255, 255, 0.25) !important;
         font-weight: 700 !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Hanya garis pinggir tipis */
         width: 100% !important;
         text-align: left !important;
         transition: 0.3s;
-        margin-bottom: 15px;
     }
+
+    /* Efek saat kursor menempel (sedikit terang saja) */
     div[data-testid="stSidebar"] div.stButton > button[key="admin_sidebar_btn"]:hover {
-        background: rgba(255, 255, 255, 0.25) !important;
+        background-color: rgba(255, 255, 255, 0.1) !important; 
         border: 1px solid white !important;
     }
 
@@ -165,11 +167,18 @@ with st.sidebar:
     st.write("Role: **Administrator**")
     
     # TOMBOL USER ADMIN (Styled as Card)
+    with st.sidebar:
+    # ... bagian logo ...
+    
+    st.write("Role: **Administrator**")
+    
+    # Tombol Admin Tanpa Kotak Putih
     if st.button("👤 USER ADMIN", key="admin_sidebar_btn", use_container_width=True):
         st.session_state.page_view = "admin_profile"
         st.rerun()
     
     st.divider()
+    # ... navigasi menu lainnya ...
 
     def nav_change():
         p = st.session_state.nav_radio
