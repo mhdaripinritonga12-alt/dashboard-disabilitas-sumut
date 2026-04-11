@@ -165,13 +165,7 @@ with st.sidebar:
         st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;"><img src="data:image/png;base64,{logo_b64}" width="45"><span style="font-size:18px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
     st.write("Role: **Administrator**")
-    
-    # TOMBOL USER ADMIN (Styled as Card)
-    with st.sidebar:
-    # ... bagian logo ...
-    
-    st.write("Role: **Administrator**")
-    
+  
     # Tombol Admin Tanpa Kotak Putih
     if st.button("👤 USER ADMIN", key="admin_sidebar_btn", use_container_width=True):
         st.session_state.page_view = "admin_profile"
