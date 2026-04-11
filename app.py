@@ -25,7 +25,8 @@ def proses_logout():
     st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.session_state.page_view = "dashboard"
-    st.rerun() # Ditambahkan rerun agar logout instan
+    # Tambahkan rerun agar aplikasi langsung mereset halaman
+    st.rerun()
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
@@ -184,10 +185,15 @@ with st.sidebar:
     st.divider()
 
 def ubah_halaman():
-    pilihan = st.session_state.nav_radio
-    if "Dashboard Utama" in pilihan: st.session_state.page_view = "dashboard"
-    elif "Pendidikan Khusus" in pilihan: st.session_state.page_view = "tentang_pk"
-    elif "Tentang Dashboard" in pilihan: st.session_state.page_view = "tentang_dashboard"
+    # Tambahkan pengecekan ini agar tidak error saat logout
+    if "nav_radio" in st.session_state:
+        pilihan = st.session_state.nav_radio
+        if "Dashboard Utama" in pilihan: 
+            st.session_state.page_view = "dashboard"
+        elif "Pendidikan Khusus" in pilihan: 
+            st.session_state.page_view = "tentang_pk"
+        elif "Tentang Dashboard" in pilihan: 
+            st.session_state.page_view = "tentang_dashboard"
 
 st.sidebar.header("⊞ Menu Utama")
 st.sidebar.radio(
