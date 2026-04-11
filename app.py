@@ -83,7 +83,25 @@ div[data-testid="stSidebar"] div[data-baseweb="select"] * {
         width: 50%;
         opacity: 0.3;
     }
+/* --- STYLE UNTUK EXPANDER TABEL (HIJAU GRADASI) --- */
+.streamlit-expanderHeader {
+    background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    border: none !important;
+    margin-bottom: 5px;
+}
 
+/* Memastikan teks "Lihat & Download Data Tabel" berwarna putih */
+.streamlit-expanderHeader p {
+    color: white !important;
+    font-weight: 700 !important;
+}
+
+/* Mengubah warna icon panah expander menjadi putih agar senada */
+.streamlit-expanderHeader svg {
+    fill: white !important;
+}
         /* --- 4. SIDEBAR DESIGN --- */
 
     [data-testid="stSidebar"] {
@@ -353,11 +371,8 @@ if st.session_state.page_view == "dashboard":
 
 # --- B. HALAMAN DETAIL SEKOLAH ---
 elif st.session_state.page_view == "detail":
-    sch = st.session_state.selected_school_data
-    if st.button("⬅️ Kembali ke Dashboard"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-    
+    sch = st.session_state.selected_school_data   
+   
     st.markdown(f"<h1 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='color:gray;'>Wilayah: {sch['kab_kota']} | NPSN: {sch['npsn']}</p>", unsafe_allow_html=True)
     
@@ -384,6 +399,10 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
+    st.divider()
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
 # 2. PROFIL ADMIN (HALAMAN BARU)
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
