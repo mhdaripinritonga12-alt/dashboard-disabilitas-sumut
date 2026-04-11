@@ -34,14 +34,13 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# 2. SEMUA CSS (KONSOLIDASI FIX)
+# 2. CSS CUSTOM (ULTRA SLIM & TIGHT)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* Layout & Header */
     .block-container { padding-top: 0rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
     [data-testid="stHeader"] { display: none !important; }
     
@@ -51,25 +50,30 @@ st.markdown("""
         z-index: 999999;
     }
 
-    /* Balon Header Biru Slim */
+    /* Balon Header Biru Ultra Slim */
     .header-balloon-card {
         background: linear-gradient(90deg, #f0f7ff 0%, #d1e1ff 50%, #1a237e 100%) !important;
         border-radius: 0px 0px 15px 15px;
         padding: 2px 0px !important;
-        text-align: center; margin-bottom: 15px;
-        width: 100% !important; display: block; line-height: 1.1;
+        text-align: center; margin-bottom: 10px;
+        width: 100% !important; display: block; line-height: 1;
     }
 
     /* Balon Sumber Data Orens Slim */
     .source-box-ui { 
-        background-color: #fff3e0 !important; padding: 5px 15px !important; 
+        background-color: #fff3e0 !important; padding: 3px 15px !important; 
         border-radius: 8px; border-left: 6px solid #ff9800; 
         width: 100% !important; display: block !important; box-sizing: border-box;
     }
 
-    /* Sidebar Design */
+    /* --- SIDEBAR DESIGN (ULTRA SLIM & TIGHT) --- */
     [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
     [data-testid="stSidebar"] * { color: white !important; }
+
+    /* Merapatkan jarak antar elemen di sidebar */
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+        gap: 0.1rem !important; 
+    }
 
     /* Fix Teks Filter Hitam */
     div[data-testid="stSidebar"] [data-testid="stSelectbox"] div[data-baseweb="select"] > div {
@@ -77,27 +81,27 @@ st.markdown("""
     }
     div[data-baseweb="popover"] li { color: black !important; }
 
-    /* Gaya Tombol Sidebar (Balon) */
+    /* Gaya Tombol Sidebar (ULTRA SLIM) */
     section[data-testid="stSidebar"] .stButton button {
         background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important; border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        border-radius: 10px !important; width: 100% !important;
-        font-weight: 700 !important; text-align: left !important;
-        padding: 8px 15px !important; transition: 0.3s;
+        color: white !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 8px !important; width: 100% !important;
+        font-weight: 600 !important; text-align: left !important;
+        padding: 2px 15px !important; /* RAMPING BANGET */
+        font-size: 13px !important;
+        transition: 0.2s;
+        margin-bottom: 0px !important;
+        min-height: unset !important;
     }
     section[data-testid="stSidebar"] .stButton button:hover {
         background-color: rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* Tombol Navigasi Slim */
-    .slim-btn section[data-testid="stSidebar"] .stButton button {
-        padding: 4px 15px !important; font-size: 13px !important;
-    }
-
-    /* Tombol Logout Merah */
+    /* Tombol Logout Merah Slim */
     .logout-btn section[data-testid="stSidebar"] .stButton button {
         background: linear-gradient(90deg, #ef5350, #b71c1c) !important;
         border: none !important; text-align: center !important;
+        padding: 4px 15px !important;
     }
 
     /* Expander & Download Hijau */
@@ -111,7 +115,7 @@ st.markdown("""
     }
 
     /* Matriks Tiles */
-    .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+    .metric-tile { padding: 15px; border-radius: 12px; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800, #f57c00); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4, #0288d1); }
     .tile-red-dark { background: linear-gradient(135deg, #ff4b2b, #ff416c); }
@@ -158,55 +162,48 @@ if not st.session_state.login:
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
-        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:15px;"><img src="data:image/png;base64,{logo_b64}" width="40"><span style="font-size:16px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="display:flex;align-items:center;gap:12px;padding-bottom:10px;"><img src="data:image/png;base64,{logo_b64}" width="35"><span style="font-size:15px;font-weight:800;color:white;">SI-PANDAI SUMUT</span></div>', unsafe_allow_html=True)
     
-    # Tombol Role (Panjang Mentok)
     if st.button("👤 Role: ADMIN", key="role_btn", use_container_width=True):
         st.session_state.page_view = "admin_profile"
         st.rerun()
         
     st.divider()
 
-    # Menu Utama
-    st.markdown('<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="color:#ff9800;font-size:24px;">⊞</span><span style="font-weight:700;font-size:1.2rem;">Menu Utama</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="color:#ff9800;font-size:20px;">⊞</span><span style="font-weight:700;font-size:1rem;">Menu Utama</span></div>', unsafe_allow_html=True)
     
-    # Navigasi Slim Buttons
-    st.markdown('<div class="slim-btn">', unsafe_allow_html=True)
-    if st.button("🚀 Dashboard Utama", use_container_width=True):
+    if st.button("🚀 Dashboard Utama", key="nav_dash", use_container_width=True):
         st.session_state.page_view = "dashboard"
         st.rerun()
-    if st.button("🎓 Pendidikan Khusus", use_container_width=True):
+    if st.button("🎓 Pendidikan Khusus", key="nav_pk", use_container_width=True):
         st.session_state.page_view = "tentang_pk"
         st.rerun()
-    if st.button("ℹ️ Tentang Dashboard", use_container_width=True):
+    if st.button("ℹ️ Tentang Dashboard", key="nav_about", use_container_width=True):
         st.session_state.page_view = "tentang_dashboard"
         st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
 
     st.divider()
 
-    # Filter Wilayah
-    st.markdown('<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="color:#00e5ff;font-size:24px;">⌕</span><span style="font-weight:700;font-size:1.2rem;">Filter Wilayah</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="color:#00e5ff;font-size:20px;">⌕</span><span style="font-weight:700;font-size:1rem;">Filter Wilayah</span></div>', unsafe_allow_html=True)
     col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0] if not data_wilayah.empty else ""
     opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
     kab_pilih = st.selectbox("Pilih Wilayah", opsi, key="selected_kab", label_visibility="collapsed")
 
     st.divider()
     
-    # Logout (Merah)
     st.markdown('<div class="logout-btn">', unsafe_allow_html=True)
-    if st.button("Logout 🚪", use_container_width=True):
+    if st.button("Logout 🚪", key="logout_btn", use_container_width=True):
         proses_logout()
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================================
-# 6. HEADER UTAMA (SLIM)
+# 6. HEADER UTAMA (ULTRA SLIM)
 # ==================================
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 st.markdown("""
     <div class="header-balloon-card">
-        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2.2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
-        <div class="gradient-line-inner"></div>
+        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
+        <div style="height: 1px; background: linear-gradient(90deg, transparent, #0d47a1, transparent); margin: 2px auto; width: 40%; opacity: 0.3;"></div>
         <p style='color: #1565c0; font-size: 13px; font-weight: 700; margin: 0;'>
             Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
@@ -217,25 +214,22 @@ st.markdown("""
 # 7. ROUTING HALAMAN
 # ==================================
 def draw_tile_svg(label, value, svg_icon, style_class):
-    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:42px;height:42px;fill:white;">{svg_icon}</div><div><div style="font-size:14px;font-weight:800;text-transform:uppercase;">{label}</div><div style="font-size:22px;font-weight:800;">{value}</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:35px;height:35px;fill:white;">{svg_icon}</div><div><div style="font-size:12px;font-weight:800;text-transform:uppercase;">{label}</div><div style="font-size:20px;font-weight:800;">{value}</div></div></div>', unsafe_allow_html=True)
 
-# Icons
 svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
 svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
 svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
 svg_chart = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>'
 
 if st.session_state.page_view == "dashboard":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">📌 Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:22px; font-weight:800; color:#0d47a1; margin-bottom: 5px;">📌 Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     
-    # Balon Sumber Data (Slim, Orens, Full)
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
-    st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 11px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom: 15px;'></div>", unsafe_allow_html=True)
 
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # Matriks Tiles
     m1, m2, m3, m4 = st.columns(4)
     if not df_f.empty:
         v_p = f"{int(df_f.iloc[:,1].sum()):,}"; v_s = f"{int(df_f.iloc[:,2].sum()):,}"
