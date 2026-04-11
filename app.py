@@ -75,7 +75,7 @@ st.markdown("""
     .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
     .tile-green-light { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
     
-    .insight-box { background-color: #fff3e0 !important; border-radius: 10px; border-left: 5px solid #0d47a1; padding: 15px; margin-top: 15px; }
+    .insight-box { background-color: #fce4ec !important; border-radius: 10px; border-left: 5px solid #0d47a1; padding: 15px; margin-top: 15px; }
     .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
     
