@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inisialisasi State agar tidak error saat pindah halaman
+# Inisialisasi State
 if "login" not in st.session_state: st.session_state.login = False
 if "page_view" not in st.session_state: st.session_state.page_view = "dashboard"
 if "selected_kab" not in st.session_state: st.session_state.selected_kab = "Semua"
@@ -33,66 +33,65 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (PREMIUM DESIGN)
+# Bagian 1: CSS CUSTOM (BRIGHT BLUE GRADIENT BALOON)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* --- 1. MENAIKKAN POSISI (ZERO PADDING) --- */
+    /* --- 1. POSISI PALING ATAS --- */
     .block-container {
         padding-top: 0.5rem !important;
         padding-bottom: 0rem !important;
     }
     [data-testid="stHeader"] { display: none !important; }
 
-    /* --- 2. BAR GRADASI PELANGI PALING ATAS --- */
+    /* --- 2. BAR PELANGI PALING ATAS --- */
     .top-gradient-bar {
         position: fixed;
-        top: 0; left: 0; width: 100%; height: 8px;
+        top: 0; left: 0; width: 100%; height: 6px;
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
     }
 
-    /* --- 3. HEADER BALON TRANSPARAN (SLIM & PANJANG) --- */
+    /* --- 3. BALON HEADER GRADASI BIRU TERANG (SLIM & WIDE) --- */
     .header-balloon-card {
-        background: rgba(255, 255, 255, 0.8) !important;
+        background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%) !important; /* Biru Terang ke Biru Solid */
         backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 8px 20px; /* Padding kecil agar slim/tidak lebar ke bawah */
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        padding: 6px 15px; /* Padding tipis agar ramping */
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         text-align: center;
-        margin-top: -10px; /* Menempel ke atas */
-        margin-bottom: 20px;
-        width: 99%; /* Sangat panjang secara horizontal */
+        margin-top: -15px; /* Naik mepet ke atas */
+        margin-bottom: 15px;
+        width: 99.5%; /* Sangat panjang ke kiri dan kanan */
         margin-left: auto;
         margin-right: auto;
     }
 
+    /* GARIS PUTIH TRANSPARAN DI DALAM BALON */
     .gradient-line-inner {
-        height: 3px;
-        background: linear-gradient(90deg, #0d47a1 0%, #42a5f5 50%, #0d47a1 100%);
+        height: 2px;
+        background: rgba(255, 255, 255, 0.4);
         border-radius: 2px;
-        margin: 5px auto;
+        margin: 4px auto;
         width: 40%;
     }
 
-    /* --- 4. SIDEBAR GRADIENT --- */
+    /* --- 4. SIDEBAR DESIGN --- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d47a1 0%, #1565c0 45%, #1976d2 100%) !important;
     }
     [data-testid="stSidebar"] * { color: white !important; }
 
-    /* --- 5. TOMBOL SIDEBAR POLOS (TRANSPARAN) --- */
+    /* TOMBOL SIDEBAR TRANSPARAN */
     section[data-testid="stSidebar"] .stButton button {
         background-color: transparent !important;
-        background: transparent !important;
         color: white !important;
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
         border-radius: 10px !important;
-        box-shadow: none !important;
         width: 100% !important;
         text-align: left !important;
         transition: 0.3s;
@@ -101,13 +100,9 @@ st.markdown("""
         background-color: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid white !important;
     }
-    section[data-testid="stSidebar"] .stButton button:focus {
-        background: transparent !important;
-        box-shadow: none !important;
-    }
 
-    /* --- 6. DASHBOARD TILES --- */
-    .metric-tile { padding: 18px; border-radius: 15px; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+    /* --- 5. DASHBOARD TILES --- */
+    .metric-tile { padding: 15px; border-radius: 15px; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
     .tile-navy { background: linear-gradient(135deg, #3f51b5 0%, #1a237e 100%); }
@@ -116,9 +111,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def draw_tile_svg(label, value, svg_icon, style_class):
-    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:42px;height:42px;">{svg_icon}</div><div><div style="font-size:12px;font-weight:800;text-transform:uppercase;opacity:0.9;">{label}</div><div style="font-size:22px;font-weight:800;">{value}</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-tile {style_class}"><div style="width:40px;height:40px;">{svg_icon}</div><div><div style="font-size:11px; font-weight:800; text-transform:uppercase;">{label}</div><div style="font-size:22px; font-weight:800;">{value}</div></div></div>', unsafe_allow_html=True)
 
-# Icons SVG
+# SVG Icons
 svg_people = '<svg viewBox="0 0 16 16" fill="white"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
 svg_cap = '<svg viewBox="0 0 16 16" fill="white"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
 svg_warning = '<svg viewBox="0 0 16 16" fill="white"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
@@ -149,7 +144,7 @@ if not st.session_state.login:
             p = st.text_input("Password", type="password")
             if st.button("MASUK", use_container_width=True):
                 if u == "admin" and p == "admin": st.session_state.login = True; st.rerun()
-                else: st.error("Gagal")
+                else: st.error("Login Gagal")
     st.stop()
 
 # ==================================
@@ -165,7 +160,6 @@ with st.sidebar:
         st.rerun()
     
     st.divider()
-
     def nav_change():
         p = st.session_state.nav_radio
         if "Dashboard" in p: st.session_state.page_view = "dashboard"
@@ -183,15 +177,19 @@ with st.sidebar:
     st.button("Logout 🚪", key="logout_btn", on_click=proses_logout, use_container_width=True)
 
 # ==================================
-# Bagian 5: HEADER SLIM CARD
+# Bagian 5: HEADER (SLIM BLUE BALOON)
 # ==================================
+# 1. Bar Gradasi Pelangi
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 
+# 2. Kotak Balon Header (Warna Gradasi Biru Terang)
 st.markdown("""
     <div class="header-balloon-card">
-        <h2 style='color:#0d47a1; font-weight:800; margin: 0; font-size: 1.6rem;'>DASHBOARD UTAMA SI-PANDAI SUMUT</h2>
+        <h2 style='color: white; font-weight:800; margin: 0; font-size: 1.5rem; letter-spacing: 1px;'>
+            DASHBOARD UTAMA SI-PANDAI SUMUT
+        </h2>
         <div class="gradient-line-inner"></div>
-        <p style='color:#1565c0; font-size: 13px; font-weight: 700; margin: 0;'>
+        <p style='color: rgba(255, 255, 255, 0.9); font-size: 12px; font-weight: 700; margin: 0;'>
             Sistem Informasi Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
@@ -209,10 +207,10 @@ if st.session_state.page_view == "dashboard":
     st.divider()
     c1, c2 = st.columns([1.5, 1])
     with c1:
-        st.subheader("🗺️ Peta Lokasi ATS")
-        st.info("Visualisasi Peta Sebaran")
+        st.markdown("<h4 style='color:#0d47a1;'>🗺️ Peta Lokasi ATS</h4>", unsafe_allow_html=True)
+        st.info("Visualisasi Peta Sebaran Wilayah")
     with c2:
-        st.subheader("📊 Statistik Wilayah")
+        st.markdown("<h4 style='color:#0d47a1;'>📊 Statistik ATS Wilayah</h4>", unsafe_allow_html=True)
         st.write("Grafik perbandingan data")
 
 elif st.session_state.page_view == "admin_profile":
