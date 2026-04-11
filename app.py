@@ -207,6 +207,10 @@ st.divider()
 
 # 1. DASHBOARD
 if st.session_state.page_view == "dashboard":
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">📌 Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
+    st.divider()
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 13px; color: #0d47a1; margin: 0;"><b>ℹ️ Sumber Data:</b> Bidang PK - LPPD & TIKP Provsu 2025</p></div>""", unsafe_allow_html=True)
+if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
