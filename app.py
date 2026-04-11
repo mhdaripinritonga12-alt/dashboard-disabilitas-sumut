@@ -75,7 +75,7 @@ div[data-testid="stSidebar"] [data-testid="stSelectbox"] div {
         border-right: 1px solid rgba(13, 71, 161, 0.05);
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         text-align: center;
-        margin-top: 5px; /* Pas di bawah bar pelangi */
+        margin-top: 2px; /* Pas di bawah bar pelangi */
         margin-bottom: 20px;
         width: 100% !important; /* Mentok kiri kanan */
         display: block;
