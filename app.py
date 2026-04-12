@@ -15,15 +15,13 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inisialisasi State agar navigasi stabil
+# Inisialisasi State
 if "login" not in st.session_state: st.session_state.login = False
 if "selected_kab" not in st.session_state: st.session_state.selected_kab = "Semua"
 if "selected_school_data" not in st.session_state: st.session_state.selected_school_data = None
-if "page_view" not in st.session_state: st.session_state.page_view = "dashboard"
 
 def proses_logout():
     st.session_state.login = False
-    st.session_state.page_view = "dashboard"
     st.rerun()
 
 def get_base64_image(image_path):
@@ -33,7 +31,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (BALON & HEADER)
+# Bagian 1: CSS CUSTOM
 # ==================================
 st.markdown("""
 <style>
@@ -46,13 +44,12 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: white !important; }
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div { color: black !important; }
     .header-balloon-card { background: linear-gradient(90deg, #f0f7ff 0%, #d1e9ff 100%) !important; border-radius: 0px 0px 15px 15px; padding: 15px 0px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path { rx: 18px !important; ry: 18px !important; }
     .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
     .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
     .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
     .tile-green-light { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
-    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 12px; margin-top: 10px; }
+    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path { rx: 18px !important; ry: 18px !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -65,7 +62,7 @@ svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.
 svg_chart = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>'
 
 # ==================================
-# Bagian 2: LOAD DATA
+# Bagian 2: DATA LOADING
 # ==================================
 @st.cache_data
 def load_all_data():
@@ -89,39 +86,30 @@ if not st.session_state.login:
     with col_card:
         with st.container(border=True):
             st.markdown("<h3 style='text-align:center; color:#0d47a1;'>LOGIN USER</h3>", unsafe_allow_html=True)
-            u = st.text_input("Username", placeholder="admin")
-            p = st.text_input("Password", type="password", placeholder="admin")
-            if st.button("MASUK KE DASHBOARD", use_container_width=True):
+            u = st.text_input("Username")
+            p = st.text_input("Password", type="password")
+            if st.button("MASUK"):
                 if u == "admin" and p == "admin": 
                     st.session_state.login = True
                     st.rerun()
-                else: st.error("Gagal")
     st.stop()
 
 # ==================================
-# Bagian 4: SIDEBAR & NAVIGASI
+# Bagian 4: SIDEBAR
 # ==================================
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
         st.markdown(f'<center><img src="data:image/png;base64,{logo_b64}" width="80"><br><b>SI-PANDAI SUMUT</b></center>', unsafe_allow_html=True)
     
-    if st.button("👤 Role: Admin", key="admin_btn"):
-        st.session_state.page_view = "admin_profile"
-        st.rerun()
     st.divider()
-
-    menu = st.sidebar.radio(
-        "Menu Utama:", 
+    # VARIABLE NAVIGASI UTAMA
+    menu_pilihan = st.sidebar.radio(
+        "Pilih Halaman:", 
         ["🚀 Dashboard", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
         key="nav_radio"
     )
-
-    # Logika perpindahan halaman dinamis
-    if "Dashboard" in menu: st.session_state.page_view = "dashboard"
-    elif "Pendidikan Khusus" in menu: st.session_state.page_view = "tentang_pk"
-    elif "Tentang Dashboard" in menu: st.session_state.page_view = "tentang_dashboard"
-
+    
     st.sidebar.divider()
     col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
     opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
@@ -129,31 +117,28 @@ with st.sidebar:
     st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
 # ==================================
-# Bagian 5: HEADER & MAIN CONTENT (PENTING!)
+# Bagian 5: HEADER & MAIN CONTENT (THE REAL FIX)
 # ==================================
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 
-# --- HEADER ABADI (Muncul di semua halaman) ---
+# HEADER INI ADA DI LUAR IF - MAKA MUNCUL TERUS
 st.markdown("""
     <div class="header-balloon-card">
-        <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
-        <div class="gradient-line-inner"></div>
+        <h2 style='color: #0d47a1; font-weight:800; margin: 0;'>DASHBOARD SI-PANDAI SUMUT</h2>
         <p style='color: #1565c0; font-size: 15px; font-weight: 700; margin: 0;'>
-            Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas Sumatera Utara
+            Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
 
-# --- SISTEM NAVIGASI ---
-
-# 1. HALAMAN DASHBOARD
-if st.session_state.page_view == "dashboard":
+# LOGIKA PEMILIHAN KONTEN
+if menu_pilihan == "🚀 Dashboard":
     st.markdown('<p style="font-size:24px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # Tiles
+    # Matriks Tiles
     m1, m2, m3, m4 = st.columns(4)
     v_a = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
     with m1: draw_tile_svg("Disabilitas", f"{int(df_f.iloc[:,1].sum()):,}", svg_people, "tile-orange")
@@ -166,27 +151,23 @@ if st.session_state.page_view == "dashboard":
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
-            fig_map = px.scatter_mapbox(df_f, lat="lat", lon="lon", size=df_f.columns[3], color=df_f.columns[3],
-                                        color_continuous_scale="RdYlGn_r", zoom=8.5, height=450)
+            fig_map = px.scatter_mapbox(df_f, lat="lat", lon="lon", size=df_f.columns[3], color=df_f.columns[3], color_continuous_scale="RdYlGn_r", zoom=8.5, height=450)
             fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
             st.plotly_chart(fig_map, use_container_width=True)
-
     with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             max_val = df_top5[ats_col].max()
-            fig_bar = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=ats_col,
-                             color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], text=ats_col)
+            fig_bar = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=ats_col, color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], text=ats_col)
             fig_bar.update_traces(textposition='outside', textfont=dict(color='black', weight="bold"), width=0.8)
             fig_bar.update_layout(height=350, bargap=0, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', coloraxis_showscale=False)
             fig_bar.update_xaxes(range=[0, max_val * 1.4], showgrid=False, showticklabels=False)
             st.plotly_chart(fig_bar, use_container_width=True)
 
-# 2. HALAMAN TENTANG DASHBOARD
-elif st.session_state.page_view == "tentang_dashboard":
-    st.markdown('<p style="font-size:28px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+elif menu_pilihan == "ℹ️ Tentang Dashboard":
+    st.markdown('<p style="font-size:28px; font-weight:800; color:#0d47a1; margin-top:20px;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
     with st.container(border=True):
         st.markdown("""
         ### 🖥️ Deskripsi Sistem
@@ -202,26 +183,9 @@ elif st.session_state.page_view == "tentang_dashboard":
         * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
         """)
         st.divider()
-        if st.button("⬅️ KEMBALI KE DASHBOARD", use_container_width=True):
-            st.session_state.page_view = "dashboard"
+        if st.button("⬅️ KEMBALI KE DASHBOARD"):
             st.rerun()
 
-# 3. HALAMAN PROFIL ADMIN
-elif st.session_state.page_view == "admin_profile":
-    st.markdown("### 👤 Profil Administrator")
-    with st.container(border=True):
-        st.write("### Ima Safitri Sianipar")
-        st.write("**NIP:** 199511232025042004")
-        st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
-    if st.button("⬅️ Kembali ke Dashboard"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-
-# 4. HALAMAN DETAIL SEKOLAH
-elif st.session_state.page_view == "detail":
-    sch = st.session_state.selected_school_data
-    st.markdown(f"### 🏫 {sch['nama_sekolah'].upper()}")
-    st.write(f"Daya Listrik: {sch.get('daya_listrik', '-')}")
-    if st.button("⬅️ Kembali"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
+elif menu_pilihan == "🎓 Pendidikan Khusus":
+    st.markdown('### 🎓 Kebijakan Pendidikan Khusus')
+    st.info("Informasi seputar program kerja Bidang Pembinaan PK Sumatera Utara.")
