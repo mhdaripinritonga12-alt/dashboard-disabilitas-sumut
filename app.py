@@ -285,7 +285,7 @@ if st.session_state.page_view == "dashboard":
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
     st.divider()
-    cv1, cv2 = st.columns([1.2, 1.1])
+    cv1, cv2 = st.columns([1.4, 1.1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
@@ -294,7 +294,7 @@ if st.session_state.page_view == "dashboard":
                 df_f, lat="lat", lon="lon", size=ats_col_name, color=ats_col_name,
                 color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
                 hover_data={ats_col_name: True, "lat": False, "lon": False},
-                zoom=6, height=400
+                zoom=8, height=400
             )
             fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
             st.plotly_chart(fig_map, use_container_width=True)
@@ -308,35 +308,54 @@ if st.session_state.page_view == "dashboard":
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
 
-    with cv2:
+  with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
-            fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=col_kab, color_discrete_sequence=custom_colors, text=ats_col)
-            # --- PENGATURAN GRAFIK HITAM & TEBAL ---
+            
+            # Cari nilai tertinggi untuk setting ruang angka agar tidak terpotong
+            max_val = df_top5[ats_col].max()
+
+            # Membuat Grafik dengan Gradasi Warna
+            fig = px.bar(
+                df_top5, 
+                x=ats_col, 
+                y=col_kab, 
+                orientation='h',
+                color=ats_col,                # Warna berdasarkan nilai (Gradasi)
+                color_continuous_scale='Blues', # Pilihan: 'Blues', 'Viridis', 'GnBu'
+                text=ats_col
+            )
+
             fig.update_layout(
-                height=300, 
-                margin=dict(l=10, r=50, t=20, b=10), 
-                bargap=0.15, 
+                height=350, 
+                # Margin kanan (r) diperbesar ke 80 agar angka tidak terpotong layar
+                margin=dict(l=10, r=80, t=20, b=10), 
+                # BARGAP diperbesar (0.5 - 0.6) agar bar menjadi lebih RAMPING/TIPIS
+                bargap=0.5, 
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
                 yaxis_title=None,
-                # Mengatur Tulisan Kabupaten (Y) dan Angka Sumbu (X) jadi Hitam Tebal
-                yaxis=dict(tickfont=dict(color='black', size=12, family='Arial Black')),
-                xaxis=dict(tickfont=dict(color='black', size=12, family='Arial Black'))
+                coloraxis_showscale=False, # Sembunyikan bar warna gradasinya
+                # Tulisan Kabupaten (Hitam Tebal)
+                yaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black')),
+                # Angka Sumbu & Setting Range (Hitam Tebal)
+                xaxis=dict(
+                    tickfont=dict(color='black', size=11, family='Arial Black'),
+                    range=[0, max_val * 1.2] # Paksa sumbu X lebih lebar 20% dari angka max
+                )
             )
 
             fig.update_traces(
                 textposition='outside',
-                # Mengatur Angka di ujung batang jadi Hitam Tebal
-                textfont=dict(color='black', size=12, family='Arial Black')
+                textfont=dict(color='black', size=12, family='Arial Black'),
+                cliponaxis=False # Memastikan angka di luar garis tetap digambar
             )
             
             st.plotly_chart(fig, use_container_width=True)
-            jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
+           jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
             elif v_a == 0:
