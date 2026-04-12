@@ -318,7 +318,7 @@ if st.session_state.page_view == "dashboard":
                 y=col_kab, 
                 orientation='h', 
                 color=ats_col, # Diatur berdasarkan nilai untuk memicu colorscale
-                color_continuous_scale=[[0, '#ADD8E6'], [0.25, '#00008B'], [0.5, '#FF8C00'], [0.75, '#008000'], [1, '#800000']], # Manual Gradient Map
+                color_continuous_scale=[[0, '#800000'], [0.25, '#008000'], [0.5, '#FF8C00'], [0.75, '#00008B'], [1, '#ADD8E6']], # Manual Gradient Map
                 text=ats_col
             )
             
