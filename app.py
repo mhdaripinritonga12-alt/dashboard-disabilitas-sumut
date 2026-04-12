@@ -387,7 +387,7 @@ elif st.session_state.page_view == "detail":
     query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
     map_url = f"https://www.google.com/maps?q={query}&output=embed"
     components.html(f'<iframe width="100%" height="400" src="{map_url}" style="border-radius:15px; border:1px solid #ddd;"></iframe>', height=420)
-      st.divider()
+    st.divider()
     c1, c2 = st.columns(2)
     with c1:
         with st.container(border=True):
