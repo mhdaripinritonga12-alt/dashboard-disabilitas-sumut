@@ -334,7 +334,7 @@ if st.session_state.page_view == "dashboard":
             fig.update_layout(
                 height=350, 
                 margin=dict(l=10, r=120, t=20, b=10),
-                bargap=0.5, # Jarak antar batang sangat dekat (Rapat)
+                bargap=0.01, # Jarak antar batang sangat dekat (Rapat)
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
