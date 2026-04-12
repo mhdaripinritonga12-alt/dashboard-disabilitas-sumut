@@ -433,7 +433,7 @@ elif st.session_state.page_view == "tentang_pk":
 elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
-     with st.container(border=True):
+    with st.container(border=True):
         st.markdown("""
         ### 🖥️ Deskripsi Sistem
         **SI-PANDAI SUMUT** (Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas) adalah platform analitik digital yang dirancang untuk mengintegrasikan data anak tidak sekolah dengan kebutuhan sarana prasarana pendidikan khusus di Provinsi Sumatera Utara.
