@@ -33,7 +33,7 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM & BALOON FIX
+# Bagian 1: CSS CUSTOM
 # ==================================
 st.markdown("""
 <style>
@@ -52,20 +52,6 @@ st.markdown("""
         top: 0; left: 0; width: 100%; height: 10px;
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
         z-index: 999999;
-    }
-
-    /* --- 1. CSS FIX UNTUK BENTUK BALON/PILS --- */
-    /* Kami memaksa elemen path SVG di dalam plot untuk memiliki border-radius membulat */
-    /* Selector ini menargetkan batang grafik bar Plotly */
-    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath {
-        stroke-linecap: round !important;
-        stroke-linejoin: round !important;
-    }
-    
-    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path {
-        rx: 15px !important; /* Membuat ujung membulat sempurna */
-        ry: 15px !important;
-        stroke-width: 0px !important; /* Hilangkan stroke agar rounded terlihat bersih */
     }
 
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div { color: black !important; }
@@ -323,7 +309,7 @@ if st.session_state.page_view == "dashboard":
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             
-            # --- MODIFIKASI GRAFIK BAR GRADASI & ROUNDED ---
+            # --- MODIFIKASI GRAFIK BAR GRADASI & RAPAT ---
             max_val = df_top5[ats_col].max() if not df_top5.empty else 100
 
             fig = px.bar(
@@ -332,7 +318,7 @@ if st.session_state.page_view == "dashboard":
                 y=col_kab, 
                 orientation='h', 
                 color=ats_col, # Diatur berdasarkan nilai untuk memicu colorscale
-                color_continuous_scale=[[0, '#00c6ff'], [1, '#0072ff']], # Manual Gradient Map (Biru Cerah)
+                color_continuous_scale=[[0, '#ADD8E6'], [0.25, '#00008B'], [0.5, '#FF8C00'], [0.75, '#008000'], [1, '#800000']], # Manual Gradient Map
                 text=ats_col
             )
             
@@ -347,7 +333,7 @@ if st.session_state.page_view == "dashboard":
 
             fig.update_layout(
                 height=350, 
-                margin=dict(l=10, r=120, t=20, b=10), # Margin kanan diperlebar maksimal agar angka aman
+                margin=dict(l=10, r=120, t=20, b=10),
                 bargap=0.05, # Jarak antar batang sangat dekat (Rapat)
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
@@ -356,10 +342,8 @@ if st.session_state.page_view == "dashboard":
                 coloraxis_showscale=False # Sembunyikan colorbar di samping
             )
 
-            # Sumbu X: Range diperluas agar angka labels tidak terpotong
             fig.update_xaxes(range=[0, max_val * 1.3], showticklabels=False, showgrid=False)
 
-            # Sumbu Y: Nama Wilayah warna Hitam
             fig.update_yaxes(
                 tickfont=dict(color='black', size=12, family="Inter"),
                 categoryorder='total ascending'
