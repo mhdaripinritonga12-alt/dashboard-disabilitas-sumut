@@ -324,7 +324,7 @@ if st.session_state.page_view == "dashboard":
             
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
-                p_insight, p_tindakan, warna_box = f"🚨 PERINGATAN KRITIS: Di {kab_pilih} terdapat {v_a:,} ATS, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
+                p_insight, p_tindakan, warna_box = f"🚨 PERINGATAN KRITIS: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
             elif v_a == 0:
                 p_insight, p_tindakan, warna_box = f"✅ {kab_pilih} saat ini bersih dari ATS.", "Pertahankan status ini dengan penguatan sistem deteksi dini.", "#4caf50"
             elif v_a > 100:
