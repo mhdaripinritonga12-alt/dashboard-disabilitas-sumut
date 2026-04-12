@@ -307,51 +307,31 @@ if st.session_state.page_view == "dashboard":
                 </div>
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-    with cv2:
+   with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            
-            # Cari nilai tertinggi untuk setting ruang angka agar tidak terpotong
             max_val = df_top5[ats_col].max()
 
-            # Membuat Grafik dengan Gradasi Warna
+            # Grafik Batang Ramping & Gradasi
             fig = px.bar(
-                df_top5, 
-                x=ats_col, 
-                y=col_kab, 
-                orientation='h',
-                color=ats_col,                # Warna berdasarkan nilai (Gradasi)
-                color_continuous_scale='Blues', # Pilihan: 'Blues', 'Viridis', 'GnBu'
-                text=ats_col
+                df_top5, x=ats_col, y=col_kab, orientation='h',
+                color=ats_col, color_continuous_scale='Blues', text=ats_col
             )
 
             fig.update_layout(
-                height=350, 
-                # Margin kanan (r) diperbesar ke 80 agar angka tidak terpotong layar
-                margin=dict(l=10, r=80, t=20, b=10), 
-                # BARGAP diperbesar (0.5 - 0.6) agar bar menjadi lebih RAMPING/TIPIS
-                bargap=0.5, 
-                showlegend=False, 
-                plot_bgcolor='rgba(0,0,0,0)', 
-                xaxis_title=None, 
-                yaxis_title=None,
-                coloraxis_showscale=False, # Sembunyikan bar warna gradasinya
-                # Tulisan Kabupaten (Hitam Tebal)
+                height=350, margin=dict(l=10, r=100, t=20, b=10),
+                bargap=0.6, showlegend=False, plot_bgcolor='rgba(0,0,0,0)',
+                xaxis_title=None, yaxis_title=None, coloraxis_showscale=False,
                 yaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black')),
-                # Angka Sumbu & Setting Range (Hitam Tebal)
-                xaxis=dict(
-                    tickfont=dict(color='black', size=11, family='Arial Black'),
-                    range=[0, max_val * 1.2] # Paksa sumbu X lebih lebar 20% dari angka max)
+                xaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black'), range=[0, max_val * 1.3])
             )
 
             fig.update_traces(
-                textposition='outside',
-                textfont=dict(color='black', size=12, family='Arial Black'),
-                cliponaxis=False # Memastikan angka di luar garis tetap digambar
+                textposition='outside', cliponaxis=False,
+                textfont=dict(color='black', size=12, family='Arial Black')
             )
-            
             st.plotly_chart(fig, use_container_width=True)
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
