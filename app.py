@@ -547,6 +547,15 @@ elif st.session_state.page_view == "tentang_dashboard":
             * **Analitik Satuan Pendidikan:** Informasi detail kondisi sarana prasarana sekolah untuk pendukung bantuan infrastruktur.
             * **Top 5 Ranking:** Identifikasi wilayah dengan tingkat ATS tertinggi untuk prioritas penanganan.
             """)
+        # Petunjuk Penggunaan (Balon Hijau Baru)
+        with st.expander("📖 Petunjuk Penggunaan Dashboard"):
+            st.markdown("""
+            1. **Filter Wilayah:** Gunakan dropdown di sidebar kiri untuk memfilter data berdasarkan Kabupaten/Kota.
+            2. **Eksplorasi Peta:** Klik atau arahkan kursor pada titik di peta untuk melihat detail koordinat dan jumlah ATS.
+            3. **Analisis Grafik:** Pantau grafik batang untuk melihat 5 wilayah dengan prioritas penanganan tertinggi.
+            4. **Detail Sekolah:** Pada filter wilayah tertentu, klik tombol nama sekolah untuk melihat sarana prasarana sekolah tersebut.
+            5. **Download Data:** Gunakan fitur 'Lihat & Download Data Tabel' di bagian bawah dashboard untuk mengunduh laporan format CSV.
+            """)
 
     with col_info2:
         # Peran Dashboard
