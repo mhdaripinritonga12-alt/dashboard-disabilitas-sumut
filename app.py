@@ -184,7 +184,7 @@ if not st.session_state.login:
     st.stop()
 
 # ==================================
-# Bagian 4: SIDEBAR & NAVIGASI
+# Bagian 4: SIDEBAR & NAVIGASI (VERSI STABIL)
 # ==================================
 with st.sidebar:
     logo_b64 = get_base64_image("logo_sumut.png")
@@ -201,34 +201,37 @@ with st.sidebar:
         st.rerun()
     st.divider()
 
-def ubah_halaman():
-    if "nav_radio" in st.session_state:
-        pilihan = st.session_state.nav_radio
-        if "Dashboard" in pilihan: 
-            st.session_state.page_view = "dashboard"
-            # Paksa filter kembali ke "Semua" saat menu Dashboard diklik
-            st.session_state.selected_kab = "Semua" 
-        elif "Pendidikan Khusus" in pilihan: 
-            st.session_state.page_view = "tentang_pk"
-        elif "Tentang Dashboard" in pilihan: 
-            st.session_state.page_view = "tentang_dashboard"
+    st.sidebar.header("⊞ Menu Utama")
+    
+    # Langsung ambil pilihan dari radio button tanpa fungsi perantara
+    menu = st.sidebar.radio(
+        "Navigasi:", 
+        ["🚀 Dashboard", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
+        key="nav_radio"
+    )
 
-st.sidebar.header("⊞ Menu Utama")
-st.sidebar.radio(
-    "Navigasi:", 
-    ["🚀 Dashboard", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
-    key="nav_radio",
-    on_change=ubah_halaman
-)
+    # Logika perpindahan halaman berdasarkan pilihan menu
+    if "Dashboard" in menu:
+        st.session_state.page_view = "dashboard"
+    elif "Pendidikan Khusus" in menu:
+        st.session_state.page_view = "tentang_pk"
+    elif "Tentang Dashboard" in menu:
+        st.session_state.page_view = "tentang_dashboard"
 
-st.sidebar.divider()
-st.sidebar.header("🔎 Filter Wilayah")
-col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
-opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
-kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
+    st.sidebar.divider()
+    st.sidebar.header("🔎 Filter Wilayah")
+    col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
+    opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
+    
+    # Reset filter jika kembali ke dashboard lewat klik menu
+    if st.session_state.page_view == "dashboard" and st.session_state.get('reset_filter'):
+        kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, index=0, key="selected_kab")
+        st.session_state.reset_filter = False
+    else:
+        kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
 
-st.sidebar.divider()
-st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
+    st.sidebar.divider()
+    st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
 # ==================================
 # Bagian 5: HEADER & MAIN CONTENT
