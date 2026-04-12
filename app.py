@@ -319,7 +319,7 @@ if st.session_state.page_view == "dashboard":
             fig.update_layout(
                 height=300, 
                 margin=dict(l=10, r=50, t=20, b=10), 
-                bargap=0.4, 
+                bargap=0.15, 
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
