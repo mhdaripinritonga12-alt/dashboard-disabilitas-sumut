@@ -417,8 +417,10 @@ elif st.session_state.page_view == "detail":
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
     with st.container(border=True):
-        st.write("### Super Admin SI-PANDAI")
+        st.write("### Ima Safitri Sianipar")
         st.write("**Username:** admin")
+        st.write("**Nip:** 199511232025042004")
+         st.write("**Jabatan:** Penata Kelola Sistem dan Teknologi Informasi")
         st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
@@ -431,3 +433,36 @@ elif st.session_state.page_view == "tentang_pk":
 elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
+     with st.container(border=True):
+        st.markdown("""
+        ### 🖥️ Deskripsi Sistem
+        **SI-PANDAI SUMUT** (Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas) adalah platform analitik digital yang dirancang untuk mengintegrasikan data anak tidak sekolah dengan kebutuhan sarana prasarana pendidikan khusus di Provinsi Sumatera Utara.
+
+        ### 🎯 Tujuan Dashboard
+        1. **Memetakan Sebaran ATS:** Mengidentifikasi koordinat tepat di mana anak-anak disabilitas yang belum sekolah berada.
+        2. **Optimalisasi Kebijakan:** Memberikan rekomendasi data yang akurat bagi pengambil kebijakan di Dinas Pendidikan.
+        3. **Efisiensi Anggaran:** Memastikan bantuan RKB (Ruang Kelas Baru) atau rehabilitasi sekolah tepat sasaran.
+
+        ### 🚀 Fitur Utama
+        * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
+        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
+        * **School Analytics:** Detail kondisi sekolah (Rombel vs Ruang Kelas) untuk analisis kebutuhan infrastruktur.
+        * **Top 5 Analysis:** Ranking wilayah dengan prioritas penanganan tertinggi.
+
+        ### 💡 Manfaat
+        * Mempermudah monitoring data pendidikan khusus secara transparan.
+        * Mempercepat respon terhadap temuan anak tidak sekolah di pelosok daerah.
+        * Sinkronisasi data sarpras sekolah dengan kebutuhan riil di lapangan.
+
+        ### 📖 Cara Menggunakan Dashboard
+        1.  **Filter Wilayah:** Gunakan menu drop-down di sidebar kiri untuk memilih Kabupaten/Kota.
+        2.  **Pantau Matriks:** Lihat perubahan angka pada tile berwarna untuk mendapatkan ringkasan data.
+        3.  **Eksplorasi Peta:** Arahkan kursor ke titik peta untuk melihat detail wilayah.
+        4.  **Detail Sekolah:** Klik pada kartu nama sekolah untuk melihat detail profil dan kondisi sarpras bangunan.
+        """)
+        
+        st.divider()
+        if st.button("⬅️ KEMBALI KE DASHBOARD", use_container_width=True):
+            st.session_state.page_view = "dashboard"
+            st.session_state.nav_radio = "🚀 Dashboard" # Update label sidebar
+            st.rerun()
