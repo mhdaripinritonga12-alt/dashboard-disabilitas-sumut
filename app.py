@@ -494,7 +494,8 @@ elif st.session_state.page_view == "tentang_dashboard":
         st.divider()
         if st.button("⬅️ Kembali ke Dashboard", key="btn_back_td"):
             st.session_state.page_view = "dashboard"
-            st.rerun()elif st.session_state.page_view == "tentang_dashboard":
+            st.rerun()
+elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
     with st.container(border=True):
