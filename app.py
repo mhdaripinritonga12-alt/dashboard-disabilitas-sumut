@@ -308,8 +308,8 @@ if st.session_state.page_view == "dashboard":
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
      with cv2:
-        st.subheader("📊 5 Peringkat ATS Tertinggi")
-        if not df_f.empty:
+          st.subheader("📊 5 Peringkat ATS Tertinggi")
+          if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
