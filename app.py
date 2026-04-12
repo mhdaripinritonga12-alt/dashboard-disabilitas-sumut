@@ -324,36 +324,16 @@ if st.session_state.page_view == "dashboard":
             
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
-                p_insight, p_tindakan, warna_box = f"🚨 PERINGATAN KRITIS: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
+                p_insight, p_tindakan, warna_box = f" ⚠️ Masalah Utama: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
             elif v_a == 0:
                 p_insight, p_tindakan, warna_box = f"✅ {kab_pilih} saat ini bersih dari ATS.", "Pertahankan status ini dengan penguatan sistem deteksi dini.", "#4caf50"
             elif v_a > 100:
-                p_insight, p_tindakan, warna_box = f"⚠️ Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan dan prioritaskan bantuan.", "#ef4444"
+                p_insight, p_tindakan, warna_box = f"🚨 Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan dan prioritaskan bantuan.", "#ef4444"
             else:
                 p_insight, p_tindakan, warna_box = f"💡 Wilayah {kab_pilih} memiliki {v_a:,} ATS dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
 
             st.markdown(f'<div class="insight-box" style="border-left: 6px solid {warna_box};"><div class="insight-title" style="color:{warna_box}">💡 Insight & Rekomendasi: {kab_pilih}</div><p class="insight-text">{p_insight}</p><hr style="opacity:0.3;"><p class="insight-text" style="font-weight:700; color:{warna_box}">Tindakan: {p_tindakan}</p></div>', unsafe_allow_html=True)
-            if v_a > 0:
-                teks_masalah = f"Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa."
-            else:
-                teks_masalah = f"Tidak ditemukan masalah ATS di wilayah {kab_pilih}."
-
-            st.markdown(f"""
-            <div style="
-                background-color:#fff4e5;
-                border-left:6px solid #ff9800;
-                padding:10px 12px;
-                border-radius:8px;
-                margin-top:10px;
-            ">
-            <b style="color:#e65100;">⚠️ Masalah Utama:</b>
-            <p style="margin:5px 0; font-size:13px; color:#333;">
-            {teks_masalah}
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.divider()
+               st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
