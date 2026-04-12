@@ -294,7 +294,7 @@ if st.session_state.page_view == "dashboard":
                 df_f, lat="lat", lon="lon", size=ats_col_name, color=ats_col_name,
                 color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
                 hover_data={ats_col_name: True, "lat": False, "lon": False},
-                zoom=7, height=450
+                zoom=7, height=300
             )
             fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
             st.plotly_chart(fig_map, use_container_width=True)
