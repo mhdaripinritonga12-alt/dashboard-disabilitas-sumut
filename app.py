@@ -420,7 +420,7 @@ elif st.session_state.page_view == "admin_profile":
         st.write("### Ima Safitri Sianipar")
         st.write("**Username:** admin")
         st.write("**Nip:** 199511232025042004")
-         st.write("**Jabatan:** Penata Kelola Sistem dan Teknologi Informasi")
+        st.write("**Jabatan:** Penata Kelola Sistem dan Teknologi Informasi")
         st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
