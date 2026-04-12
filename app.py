@@ -245,6 +245,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- A. HALAMAN DASHBOARD ---
+# SEMUA KONTEN DASHBOARD SEKARANG DIBUNGKUS DI DALAM IF INI
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     st.markdown("""<div class="source-box-ui"><p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, LPPD & TIKP 2025</p></div>""", unsafe_allow_html=True)
@@ -322,7 +323,6 @@ if st.session_state.page_view == "dashboard":
                 y=col_kab, 
                 orientation='h', 
                 color=ats_col,
-                # Gradasi Biru Cerah ke Biru Royal (Sesuai contoh Balon)
                 color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], 
                 text=ats_col
             )
@@ -331,20 +331,19 @@ if st.session_state.page_view == "dashboard":
                 textposition='outside',
                 textfont=dict(color='black', size=13, family="Inter", weight="bold"),
                 marker=dict(line=dict(width=0)),
-                width=0.85 # Membuat batang gemuk/padat
+                width=0.85
             )
 
             fig.update_layout(
                 height=350, 
                 margin=dict(l=10, r=130, t=20, b=10),
-                bargap=0, # Menghilangkan jarak antar slot bar
+                bargap=0, 
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 paper_bgcolor='rgba(0,0,0,0)',
                 coloraxis_showscale=False
             )
 
-            # Sumbu X & Y (Teks Nama Wilayah Warna Hitam)
             fig.update_xaxes(range=[0, max_val * 1.4], showticklabels=False, showgrid=False)
             fig.update_yaxes(
                 tickfont=dict(color='black', size=12, family="Inter", weight="bold"),
@@ -382,6 +381,7 @@ if st.session_state.page_view == "dashboard":
         csv = df_f.to_csv(index=False).encode('utf-8')
         st.download_button("Download CSV 📥", csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')
 
+# --- B. HALAMAN DETAIL SEKOLAH ---
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
     st.markdown(f"<h3 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
@@ -406,13 +406,13 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', '0')} Ruang")
             st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
-
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
     st.divider()
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# --- C. HALAMAN PROFIL ADMIN ---
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
     with st.container(border=True):
@@ -425,6 +425,7 @@ elif st.session_state.page_view == "admin_profile":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# --- D. HALAMAN PENDIDIKAN KHUSUS ---
 elif st.session_state.page_view == "tentang_pk":
     st.markdown('### 🎓 Pendidikan Khusus Sumatera Utara')
     st.info("Kebijakan Pendidikan Khusus Sumatera Utara.")
@@ -432,9 +433,9 @@ elif st.session_state.page_view == "tentang_pk":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# --- E. HALAMAN TENTANG DASHBOARD (SINKRON!) ---
 elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('<p style="font-size:28px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
-    
     with st.container(border=True):
         st.markdown("""
         ### 🖥️ Deskripsi Sistem
@@ -462,9 +463,8 @@ elif st.session_state.page_view == "tentang_dashboard":
         3.  **Eksplorasi Peta:** Arahkan kursor ke titik peta untuk melihat detail wilayah.
         4.  **Detail Sekolah:** Klik pada kartu nama sekolah untuk melihat detail profil dan kondisi sarpras bangunan.
         """)
-        
         st.divider()
         if st.button("⬅️ KEMBALI KE DASHBOARD", use_container_width=True):
             st.session_state.page_view = "dashboard"
-            st.session_state.nav_radio = "🚀 Dashboard" # Update label sidebar
+            st.session_state.nav_radio = "🚀 Dashboard"
             st.rerun()
