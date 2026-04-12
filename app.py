@@ -284,7 +284,7 @@ if st.session_state.page_view == "dashboard":
                             st.rerun()
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
-    st.divider()
+st.divider()
     cv1, cv2 = st.columns([1.4, 1.1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
@@ -307,9 +307,10 @@ if st.session_state.page_view == "dashboard":
                 </div>
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-     with cv2:
-          st.subheader("📊 5 Peringkat ATS Tertinggi")
-          if not df_f.empty:
+
+    with cv2:
+        st.subheader("📊 5 Peringkat ATS Tertinggi")
+        if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
@@ -318,7 +319,6 @@ if st.session_state.page_view == "dashboard":
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
-
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
@@ -328,6 +328,7 @@ if st.session_state.page_view == "dashboard":
                 p_insight, p_tindakan, warna_box = f"🚨 Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan dan prioritaskan bantuan.", "#ef4444"
             else:
                 p_insight, p_tindakan, warna_box = f"💡 Di Wilayah {kab_pilih} jumlah Anak Tidak Sekolah (ATS) Disabilitas sebanyak {v_a:,} jiwa dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
+            
             st.markdown(f"""
                 <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 8px 12px;">
                     <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 14px;">
@@ -342,11 +343,11 @@ if st.session_state.page_view == "dashboard":
                 </div>
             """, unsafe_allow_html=True)
             st.divider()
+
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
         st.download_button("Download CSV 📥", csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')
-
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
     st.markdown(f"<h3 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
