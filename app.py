@@ -310,40 +310,48 @@ if st.session_state.page_view == "dashboard":
 with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
-            # 1. Data & Max Value
+            # 1. Menyiapkan Data & Nilai Maksimum
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             max_val = df_top5[ats_col].max()
 
-            # 2. Grafik Gradasi & Slim
+            # 2. Membuat Grafik (Pastikan kurung px.bar tertutup rapi)
             fig = px.bar(
-                df_top5, x=ats_col, y=col_kab, orientation='h',
-                color=ats_col, color_continuous_scale='Blues', text=ats_col
-            )
+                df_top5, 
+                x=ats_col, 
+                y=col_kab, 
+                orientation='h',
+                color=ats_col,                # Mengaktifkan Gradasi
+                color_continuous_scale='Blues', # Skala Warna Biru Gradasi
+                text=ats_col
+            ) 
 
-            # 3. Layout: Hitam Tebal & Space Samping
+            # 3. Pengaturan Tampilan (Ramping & Teks Hitam Tebal)
             fig.update_layout(
                 height=350, 
-                margin=dict(l=10, r=120, t=20, b=10), 
-                bargap=0.6, 
+                margin=dict(l=10, r=120, t=20, b=10), # r=120 agar angka tidak terpotong
+                bargap=0.6,                   # Batang Grafik Jadi Slim/Ramping
                 showlegend=False, 
-                plot_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
-                yaxis_title=None, 
+                yaxis_title=None,
                 coloraxis_showscale=False,
+                # Teks Kabupaten (Hitam Tebal Arial Black)
                 yaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black')),
+                # Teks Sumbu X (Hitam Tebal Arial Black)
                 xaxis=dict(
                     tickfont=dict(color='black', size=11, family='Arial Black'),
-                    range=[0, max_val * 1.4] # Ruang 40% agar label kotak muncul semua
+                    range=[0, max_val * 1.4] # Ruang ekstra agar angka tidak terpotong
                 )
             )
 
-            # 4. Label Angka "Balon Kotak" (Hitam & Tebal Banget)
+            # 4. Angka di Ujung Batang (Hitam Tebal Seperti Kotak Label)
             fig.update_traces(
-                textposition='outside', 
-                cliponaxis=False,
-                textfont=dict(color='black', size=13, family='Arial Black')
+                textposition='outside',
+                textfont=dict(color='black', size=13, family='Arial Black'),
+                cliponaxis=False 
             )
+            
             st.plotly_chart(fig, use_container_width=True)
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
