@@ -105,7 +105,11 @@ st.markdown("""
         width: 50%;
         opacity: 0.3;
     }
-
+.img-pimpinan {
+        border-radius: 50%;
+        border: 3px solid #0d47a1;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
     div[data-testid="stExpander"] details summary {
         background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
         color: white !important;
