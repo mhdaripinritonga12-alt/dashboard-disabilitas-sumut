@@ -310,12 +310,12 @@ if st.session_state.page_view == "dashboard":
   with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
-            # 1. Menyiapkan Data & Nilai Maksimum
+            # 1. Menyiapkan Data
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             max_val = df_top5[ats_col].max()
 
-            # 2. Membuat Grafik (Kurung ditutup rapi di akhir baris text)
+            # 2. Membuat Grafik (Kurung ditutup dengan benar di akhir)
             fig = px.bar(
                 df_top5, 
                 x=ats_col, 
@@ -329,26 +329,26 @@ if st.session_state.page_view == "dashboard":
             # 3. Pengaturan Tampilan (Hitam, Tebal, & Ramping)
             fig.update_layout(
                 height=350, 
-                margin=dict(l=10, r=100, t=20, b=10), 
-                bargap=0.6,                   # Batang Grafik Jadi Ramping
+                margin=dict(l=10, r=120, t=20, b=10), # r=120 agar angka tidak terpotong
+                bargap=0.6,                   # Batang Grafik Jadi Ramping (Slim)
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
                 yaxis_title=None,
                 coloraxis_showscale=False,
-                # Nama Kabupaten (Hitam Tebal Arial Black)
+                # Nama Kabupaten (Hitam Tebal)
                 yaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black')),
-                # Angka Sumbu X (Hitam Tebal Arial Black)
+                # Angka Sumbu X (Hitam Tebal)
                 xaxis=dict(
                     tickfont=dict(color='black', size=11, family='Arial Black'),
-                    range=[0, max_val * 1.3] # Ruang 30% agar angka tidak terpotong
+                    range=[0, max_val * 1.4] # Memberi ruang luas di kanan
                 )
             )
 
-            # 4. Angka di Ujung Batang (Hitam Tebal)
+            # 4. Angka di Ujung Batang (Hitam Tebal Seperti Kotak Label)
             fig.update_traces(
                 textposition='outside',
-                textfont=dict(color='black', size=12, family='Arial Black'),
+                textfont=dict(color='black', size=13, family='Arial Black'),
                 cliponaxis=False 
             )
             
