@@ -285,7 +285,7 @@ if st.session_state.page_view == "dashboard":
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
     st.divider()
-    cv1, cv2 = st.columns([1.5, 1])
+    cv1, cv2 = st.columns([0.8, 1.2])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
