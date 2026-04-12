@@ -433,7 +433,7 @@ elif st.session_state.page_view == "admin_profile":
             # Jika foto belum ada, munculkan icon user besar
             st.markdown("""
                 <div style="background-color: #f0f7ff; border-radius: 15px; padding: 40px; text-align: center; border: 2px dashed #0d47a1;">
-                    <span style="font-size: 100px;">👤</span>
+                    <span style="font-size: 50px;">👤</span>
                     <p style="color: #0d47a1; font-weight: bold; margin-top: 10px;">Foto Admin</p>
                 </div>
             """, unsafe_allow_html=True)
