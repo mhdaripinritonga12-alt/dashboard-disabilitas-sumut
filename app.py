@@ -257,7 +257,8 @@ if menu_pilihan == "🚀 Dashboard":
             st.plotly_chart(fig_bar, use_container_width=True)
 
 elif menu_pilihan == "ℹ️ Tentang Dashboard":
-    st.markdown('<p style="font-size:28px; font-weight:800; color:#0d47a1; margin-top:20px;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:28px; font-weight:800; color:#0d47a1;">ℹ️ Tentang SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+    
     with st.container(border=True):
         st.markdown("""
         ### 🖥️ Deskripsi Sistem
@@ -271,9 +272,25 @@ elif menu_pilihan == "ℹ️ Tentang Dashboard":
         ### 🚀 Fitur Utama
         * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
         * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
+        * **School Analytics:** Detail kondisi sekolah (Rombel vs Ruang Kelas) untuk analisis kebutuhan infrastruktur.
+        * **Top 5 Analysis:** Ranking wilayah dengan prioritas penanganan tertinggi.
+
+        ### 💡 Manfaat
+        * Mempermudah monitoring data pendidikan khusus secara transparan.
+        * Mempercepat respon terhadap temuan anak tidak sekolah di pelosok daerah.
+        * Sinkronisasi data sarpras sekolah dengan kebutuhan riil di lapangan.
+
+        ### 📖 Cara Menggunakan Dashboard
+        1.  **Filter Wilayah:** Gunakan menu drop-down di sidebar kiri untuk memilih Kabupaten/Kota.
+        2.  **Pantau Matriks:** Lihat perubahan angka pada tile berwarna untuk mendapatkan ringkasan data.
+        3.  **Eksplorasi Peta:** Arahkan kursor ke titik peta untuk melihat detail wilayah.
+        4.  **Detail Sekolah:** Klik pada kartu nama sekolah untuk melihat detail profil dan kondisi sarpras bangunan.
         """)
+        
         st.divider()
-        if st.button("⬅️ KEMBALI KE DASHBOARD"):
+        if st.button("⬅️ KEMBALI KE DASHBOARD", use_container_width=True):
+            st.session_state.page_view = "dashboard"
+            st.session_state.nav_radio = "🚀 Dashboard" # Update label sidebar
             st.rerun()
 
 elif menu_pilihan == "🎓 Pendidikan Khusus":
