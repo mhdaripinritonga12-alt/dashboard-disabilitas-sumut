@@ -129,7 +129,7 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
 
     .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 3px; }
+    .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
     .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; }
     .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
@@ -332,7 +332,19 @@ if st.session_state.page_view == "dashboard":
             else:
                 p_insight, p_tindakan, warna_box = f"💡 Di Wilayah {kab_pilih} jumlah Anak Tidak Sekolah (ATS) Disabilitas sebanyak {v_a:,} jiwa dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
 
-            st.markdown(f'<div class="insight-box" style="border-left: 6px solid {warna_box};"><div class="insight-title" style="color:{warna_box}">💡 Insight & Rekomendasi: {kab_pilih}</div><p class="insight-text">{p_insight}</p><hr style="opacity:0.3;"><p class="insight-text" style="font-weight:700; color:{warna_box}">Tindakan: {p_tindakan}</p></div>', unsafe_allow_html=True)
+         st.markdown(f"""
+                <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 8px 12px;">
+                    <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 12px;">
+                        💡 Insight & Rekomendasi: {kab_pilih}
+                    </div>
+                    <p class="insight-text" style="margin: 0; line-height: 1.3; font-size: 11px;">
+                        {p_insight}
+                    </p>
+                    <div style="margin-top: 5px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 11px; font-weight: 700; color: {warna_box};">
+                        Tindakan: <span style="font-weight: 400; color: #333;">{p_tindakan}</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
             st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
