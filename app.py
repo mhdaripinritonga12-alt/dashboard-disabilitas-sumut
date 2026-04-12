@@ -31,6 +31,7 @@ def get_base64_image(image_path):
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
     return None
+
 # ==================================
 # Bagian 1: CSS CUSTOM
 # ==================================
@@ -77,20 +78,16 @@ st.markdown("""
         width: 100% !important;
         display: block;
     }
-/* --- STYLE AREA TABEL (PEMBERIAN BORDER HIJAU) --- */
-/* Karena tabel dataframe menggunakan canvas, kita beri bingkai agar bertema hijau */
-div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
-    border: 2px solid #4caf50 !important;
-    border-radius: 10px !important;
-    padding: 10px !important;
-    background-color: #f1f8e9 !important; /* Latar belakang hijau sangat tipis */
-}
- /* --- 4. SIDEBAR & FIX TEXT HITAM --- */
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
-   [data-testid="stSidebar"] * { color: white !important; }
+
+    div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
+        border: 2px solid #4caf50 !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+        background-color: #f1f8e9 !important;
+    }
+
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-/* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
     div[data-baseweb="popover"] li {
@@ -124,8 +121,7 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
-    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
+    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
     .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
     .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; }
@@ -202,7 +198,6 @@ with st.sidebar:
     st.divider()
 
 def ubah_halaman():
-    # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
         pilihan = st.session_state.nav_radio
         if "Dashboard" in pilihan: 
@@ -230,7 +225,7 @@ st.sidebar.divider()
 st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
 # ==================================
-# Bagian 5: HEADER
+# Bagian 5: HEADER & MAIN CONTENT
 # ==================================
 st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 st.markdown("""
@@ -284,7 +279,7 @@ if st.session_state.page_view == "dashboard":
                             st.rerun()
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
-st.divider()
+    st.divider()
     cv1, cv2 = st.columns([1.4, 1.1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
@@ -318,7 +313,7 @@ st.divider()
             fig.update_layout(height=300, margin=dict(l=10, r=50, t=20, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
-            
+
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
@@ -334,9 +329,7 @@ st.divider()
                     <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 14px;">
                         💡 Insight & Rekomendasi: {kab_pilih}
                     </div>
-                    <p class="insight-text" style="margin: 1; line-height: 1.3; font-size: 13px;">
-                        {p_insight}
-                    </p>
+                    <p class="insight-text" style="margin: 1; line-height: 1.3; font-size: 13px;">{p_insight}</p>
                     <div style="margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 13px; font-weight: 700; color: {warna_box};">
                         Tindakan: <span style="font-weight: 700; color: #333;">{p_tindakan}</span>
                     </div>
@@ -348,6 +341,7 @@ st.divider()
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
         st.download_button("Download CSV 📥", csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')
+
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
     st.markdown(f"<h3 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
@@ -388,7 +382,13 @@ elif st.session_state.page_view == "admin_profile":
 elif st.session_state.page_view == "tentang_pk":
     st.markdown('### 🎓 Pendidikan Khusus Sumatera Utara')
     st.info("Kebijakan Pendidikan Khusus Sumatera Utara.")
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
 
 elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
