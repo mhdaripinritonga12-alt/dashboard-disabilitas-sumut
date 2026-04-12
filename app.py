@@ -463,6 +463,6 @@ elif st.session_state.page_view == "tentang_dashboard":
         
         st.divider()
         if st.button("⬅️ Kembali ke Dashboard"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
+            st.session_state.page_view = "dashboard"
+            st.rerun()
 
