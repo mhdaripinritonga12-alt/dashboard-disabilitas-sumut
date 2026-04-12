@@ -307,52 +307,18 @@ if st.session_state.page_view == "dashboard":
                 </div>
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-with cv2:
+ with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
-            # 1. Menyiapkan Data & Nilai Maksimum
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            max_val = df_top5[ats_col].max()
-
-            # 2. Membuat Grafik (Pastikan kurung px.bar tertutup rapi)
-            fig = px.bar(
-                df_top5, 
-                x=ats_col, 
-                y=col_kab, 
-                orientation='h',
-                color=ats_col,                # Mengaktifkan Gradasi
-                color_continuous_scale='Blues', # Skala Warna Biru Gradasi
-                text=ats_col
-            ) 
-
-            # 3. Pengaturan Tampilan (Ramping & Teks Hitam Tebal)
-            fig.update_layout(
-                height=350, 
-                margin=dict(l=10, r=120, t=20, b=10), # r=120 agar angka tidak terpotong
-                bargap=0.6,                   # Batang Grafik Jadi Slim/Ramping
-                showlegend=False, 
-                plot_bgcolor='rgba(0,0,0,0)', 
-                xaxis_title=None, 
-                yaxis_title=None,
-                coloraxis_showscale=False,
-                # Teks Kabupaten (Hitam Tebal Arial Black)
-                yaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black')),
-                # Teks Sumbu X (Hitam Tebal Arial Black)
-                xaxis=dict(
-                    tickfont=dict(color='black', size=11, family='Arial Black'),
-                    range=[0, max_val * 1.4] # Ruang ekstra agar angka tidak terpotong
-                )
-            )
-
-            # 4. Angka di Ujung Batang (Hitam Tebal Seperti Kotak Label)
-            fig.update_traces(
-                textposition='outside',
-                textfont=dict(color='black', size=13, family='Arial Black'),
-                cliponaxis=False 
-            )
-            
+            custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
+            fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=col_kab, color_discrete_sequence=custom_colors, text=ats_col)
+            fig.update_layout(height=300, margin=dict(l=10, r=50, t=20, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
+            fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
+            
+
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
