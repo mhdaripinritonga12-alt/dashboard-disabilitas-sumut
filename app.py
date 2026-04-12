@@ -556,7 +556,10 @@ elif st.session_state.page_view == "tentang_dashboard":
             4. **Detail Sekolah:** Pada filter wilayah tertentu, klik tombol nama sekolah untuk melihat sarana prasarana sekolah tersebut.
             5. **Download Data:** Gunakan fitur 'Lihat & Download Data Tabel' di bagian bawah dashboard untuk mengunduh laporan format CSV.
             """)
-
+# VIDEO YOUTUBE DI SINI
+        st.markdown("##### 🎬 Video Panduan Penggunaan")
+        # Ganti link di bawah dengan link video youtube kamu
+        st.video("https://www.youtube.com/watch?v=example123")
     with col_info2:
         # Peran Dashboard
         st.markdown("##### 💡 Peran Dashboard")
