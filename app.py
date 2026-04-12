@@ -233,7 +233,7 @@ st.markdown("""
         <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
         <div class="gradient-line-inner"></div>
         <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
-            Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Bidang Pembinaan Pendiidkan Khusus Dinas Pendidikan Provinsi Sumatera Utara
+            Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Bidang Pembinaan Pendidikan Khusus Dinas Pendidikan Provinsi Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
