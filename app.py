@@ -427,9 +427,46 @@ elif st.session_state.page_view == "admin_profile":
         st.rerun()
 
 elif st.session_state.page_view == "tentang_pk":
-    st.markdown('### 🎓 Pendidikan Khusus Sumatera Utara')
-    st.info("Kebijakan Pendidikan Khusus Sumatera Utara.")
+   st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Profil Bidang Pembinaan Pendidikan Khusus</p>', unsafe_allow_html=True)
+    
+    col_teks, col_foto = st.columns([1.5, 1])
+    
+    with col_teks:
+        with st.expander("📖 Definisi & Ruang Lingkup", expanded=True):
+            st.markdown("""
+            **Pendidikan Khusus** adalah pendidikan bagi peserta didik yang memiliki tingkat kesulitan dalam mengikuti proses pembelajaran karena kelainan fisik, emosional, mental, sosial, dan/atau memiliki potensi kecerdasan dan bakat istimewa.
+            
+            **Sasaran:** Peserta didik disabilitas (Tunanetra, Tunarungu, Tunagrahita, Tunadaksa, Tunalaras, Autis) di Sumatera Utara.
+            """)
+            
+        with st.expander("⚖️ Dasar Hukum"):
+            st.markdown("""
+            * UU No. 20 Tahun 2003 (Sistem Pendidikan Nasional)
+            * UU No. 8 Tahun 2016 (Penyandang Disabilitas)
+            * Permendikbudristek No. 48 Tahun 2023
+            """)
 
+    with col_foto:
+        # MENAMPILKAN GAMBAR/FOTO PIMPINAN
+        # Pastikan file "foto_kabid.png" atau nama file gambar kamu ada di folder yang sama
+        if os.path.exists("image_58a645.png"):
+            st.image("image_58a645.png", caption="Kepala Bidang Pembinaan Pendidikan Khusus", width=250)
+        else:
+            st.warning("File gambar tidak ditemukan. Pastikan nama file sesuai.")
+
+        st.markdown(f"""
+        <div style="background-color: #f8f9fa; border-left: 5px solid #0d47a1; padding: 15px; border-radius: 8px;">
+            <p style='margin:0; font-weight:bold; color:#0d47a1;'>Pimpinan Bidang</p>
+            <p style='margin:0;'><b>Nama:</b> Fauzi Hardiansyah, S.T., M.Ak</p>
+            <p style='margin:0;'><b>NIP:</b> 198511072010011001</p>
+            <p style='margin:0;'><b>Jabatan:</b> Penata Tingkat I, III/d</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.divider()
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
 elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
