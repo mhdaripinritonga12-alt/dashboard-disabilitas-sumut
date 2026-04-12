@@ -303,15 +303,52 @@ if st.session_state.page_view == "dashboard":
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
 
-    with cv2:
+  with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
-            fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=col_kab, color_discrete_sequence=custom_colors, text=ats_col)
-            fig.update_layout(height=300, margin=dict(l=10, r=50, t=20, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
-            fig.update_traces(textposition='outside')
+            
+            # --- MODIFIKASI GRAFIK ---
+            max_val = df_top5[ats_col].max()
+            fig = px.bar(
+                df_top5, 
+                x=ats_col, 
+                y=col_kab, 
+                orientation='h', 
+                color=ats_col, 
+                color_continuous_scale='Viridis', # Gradasi
+                text=ats_col
+            )
+            
+            fig.update_traces(
+                textposition='outside', 
+                textfont=dict(color='black', size=13, family="Inter"), # Angka warna hitam
+                marker_line_color='rgb(8,48,107)', 
+                marker_line_width=1, 
+                opacity=0.9
+            )
+            
+            fig.update_layout(
+                height=350, 
+                margin=dict(l=10, r=100, t=20, b=10), # Margin kanan diperlebar agar angka tidak terpotong
+                bargap=0.3, 
+                showlegend=False, 
+                plot_bgcolor='rgba(0,0,0,0)', 
+                xaxis_title=None, 
+                yaxis_title=None,
+                coloraxis_showscale=False # Hilangkan colorbar
+            )
+            
+            # Rentang X lebih lebar dari nilai max agar label 'outside' aman
+            fig.update_xaxes(range=[0, max_val * 1.25], showticklabels=False, showgrid=False)
+            
+            # Nama Wilayah (Sumbu Y) warna hitam
+            fig.update_yaxes(
+                tickfont=dict(color='black', size=12, family="Inter"), 
+                categoryorder='total ascending'
+            )
+            
             st.plotly_chart(fig, use_container_width=True)
 
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
