@@ -571,7 +571,7 @@ elif st.session_state.page_view == "tentang_dashboard":
         
         st.divider()
         # Bingkai Segi Empat untuk Barcode Video
-        st.markdown("##### 📹 Video Petunjuk Dashboard")
+        st.markdown("##### 📹 Barcode Tutorial Video")
         with st.container(border=True):
             # Cek apakah file barcode ada
             if os.path.exists("barcode_video.png"):
