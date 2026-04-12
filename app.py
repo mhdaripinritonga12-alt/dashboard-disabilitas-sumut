@@ -309,9 +309,7 @@ if st.session_state.page_view == "dashboard":
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             
-            # --- MODIFIKASI GRAFIK BAR ---
-            # Warna awal (Maroon, Green, Orange, DeepBlue, LightBlue)
-            custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
+            # --- MODIFIKASI GRAFIK BAR GRADASI & RAPAT ---
             max_val = df_top5[ats_col].max() if not df_top5.empty else 100
 
             fig = px.bar(
@@ -319,35 +317,33 @@ if st.session_state.page_view == "dashboard":
                 x=ats_col, 
                 y=col_kab, 
                 orientation='h', 
-                color=col_kab,
-                color_discrete_sequence=custom_colors,
+                color=ats_col, # Diatur berdasarkan nilai untuk memicu colorscale
+                color_continuous_scale=[[0, '#ADD8E6'], [0.25, '#00008B'], [0.5, '#FF8C00'], [0.75, '#008000'], [1, '#800000']], # Manual Gradient Map
                 text=ats_col
             )
             
             fig.update_traces(
                 textposition='outside',
-                textfont=dict(color='black', size=13, family="Inter"), # Angka warna hitam
+                textfont=dict(color='black', size=13, family="Inter"),
                 marker=dict(
-                    line=dict(width=0), # Hilangkan garis pinggir agar gradasi bersih
+                    line=dict(width=0), # Tanpa garis pinggir agar lebih smooth
                 ),
-                width=0.4 # Batang Slim
+                width=0.6, # Batang Slim (Lebih ramping)
             )
 
             fig.update_layout(
                 height=350, 
-                margin=dict(l=10, r=120, t=20, b=10), # Margin kanan diperlebar maksimal agar angka aman
-                bargap=0.1, # Jarak antar batang dekat (rapat)
+                margin=dict(l=10, r=120, t=20, b=10),
+                bargap=0.05, # Jarak antar batang sangat dekat (Rapat)
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
                 yaxis_title=None,
-                paper_bgcolor='rgba(0,0,0,0)'
+                coloraxis_showscale=False # Sembunyikan colorbar di samping
             )
 
-            # Sumbu X: Range diperluas agar angka labels tidak terpotong
             fig.update_xaxes(range=[0, max_val * 1.3], showticklabels=False, showgrid=False)
 
-            # Sumbu Y: Nama Wilayah warna Hitam
             fig.update_yaxes(
                 tickfont=dict(color='black', size=12, family="Inter"),
                 categoryorder='total ascending'
@@ -355,6 +351,7 @@ if st.session_state.page_view == "dashboard":
 
             st.plotly_chart(fig, use_container_width=True)
 
+            # Insight Box
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
