@@ -25,15 +25,12 @@ def proses_logout():
     st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.session_state.page_view = "dashboard"
-    # Tambahkan rerun agar aplikasi langsung mereset halaman
-    st.rerun()
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
     return None
-
 # ==================================
 # Bagian 1: CSS CUSTOM
 # ==================================
@@ -208,7 +205,7 @@ def ubah_halaman():
     # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
         pilihan = st.session_state.nav_radio
-        if "Dashboard Utama" in pilihan: 
+        if "Dashboard" in pilihan: 
             st.session_state.page_view = "dashboard"
         elif "Pendidikan Khusus" in pilihan: 
             st.session_state.page_view = "tentang_pk"
