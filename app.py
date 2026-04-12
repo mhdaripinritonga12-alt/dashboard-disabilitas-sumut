@@ -475,26 +475,61 @@ elif st.session_state.page_view == "tentang_pk":
 
 # --- C. HALAMAN TENTANG DASHBOARD ---
 elif st.session_state.page_view == "tentang_dashboard":
-    st.markdown('### ℹ️ Tentang SI-PANDAI')
-    with st.container(border=True):
-        st.markdown("""
-        ### 🖥️ Deskripsi Sistem
-        **SI-PANDAI SUMUT** (Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas) adalah platform analitik digital yang dirancang untuk mengintegrasikan data anak tidak sekolah dengan kebutuhan sarana prasarana pendidikan khusus di Provinsi Sumatera Utara.
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Informasi Sistem SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+    
+    col_info1, col_info2 = st.columns([1.5, 1])
+    
+    with col_info1:
+        # Deskripsi Sistem (Balon Hijau)
+        with st.expander("🖥️ Deskripsi Sistem", expanded=True):
+            st.markdown("""
+            **SI-PANDAI SUMUT** (*Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas*) merupakan sebuah platform dashboard interaktif yang dirancang untuk mendigitalisasi data Anak Tidak Sekolah (ATS) khusus disabilitas. 
+            
+            Sistem ini mengintegrasikan data spasial (titik koordinat) dengan data atribut sekolah untuk memberikan gambaran komprehensif mengenai kondisi pendidikan khusus di Provinsi Sumatera Utara.
+            """)
+            
+        # Tujuan Dashboard (Balon Hijau)
+        with st.expander("🎯 Tujuan Dashboard"):
+            st.markdown("""
+            1. **Optimalisasi Pemetaan:** Mengidentifikasi sebaran titik lokasi Anak Tidak Sekolah (ATS) disabilitas secara akurat.
+            2. **Instrumen Kebijakan:** Menyediakan basis data yang valid bagi pimpinan dalam menentukan arah kebijakan pendidikan inklusif.
+            3. **Efisiensi Perencanaan:** Membantu Bidang Pendidikan Khusus dalam merencanakan pemenuhan sarana prasarana sekolah (RKB/Rehabilitasi) agar tepat sasaran.
+            """)
 
-        ### 🎯 Tujuan Dashboard
-        1. **Memetakan Sebaran ATS:** Mengidentifikasi koordinat tepat di mana anak-anak disabilitas yang belum sekolah berada.
-        2. **Optimalisasi Kebijakan:** Memberikan rekomendasi data yang akurat bagi pengambil kebijakan di Dinas Pendidikan.
-        3. **Efisiensi Anggaran:** Memastikan bantuan RKB (Ruang Kelas Baru) atau rehabilitasi sekolah tepat sasaran.
+        # Fitur Utama (Balon Hijau)
+        with st.expander("🚀 Fitur Utama"):
+            st.markdown("""
+            * **Peta Sebaran Interaktif:** Visualisasi titik lokasi ATS disabilitas berbasis koordinat *latitude* dan *longitude*.
+            * **Matriks Real-Time:** Ringkasan otomatis jumlah penduduk disabilitas, partisipasi sekolah, dan jumlah ATS.
+            * **Analitik Satuan Pendidikan:** Informasi detail kondisi sarana prasarana sekolah untuk pendukung bantuan infrastruktur.
+            * **Top 5 Ranking:** Identifikasi wilayah dengan tingkat ATS tertinggi untuk prioritas penanganan.
+            """)
 
-        ### 🚀 Fitur Utama
-        * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
-        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
+    with col_info2:
+        # Peran Dashboard
+        st.markdown("##### 💡 Peran Dashboard")
+        st.success("""
+        Sesuai dengan **Rancangan Aktualisasi**, dashboard ini berperan sebagai **Instrumen Pengambilan Kebijakan (Policy Tool)**. 
+        
+        Dashboard ini mengubah data manual yang tersebar menjadi informasi visual yang mudah dipahami, sehingga pimpinan dapat merespon kendala pendidikan khusus di pelosok daerah dengan lebih cepat dan transparan.
         """)
         
         st.divider()
-        if st.button("⬅️ Kembali ke Dashboard", key="btn_back_td"):
-            st.session_state.page_view = "dashboard"
-            st.rerun()
+        
+        # Informasi Inovator
+        st.markdown("##### 👤 Inovator Sistem")
+        st.markdown(f"""
+        <div style="background-color: #f8f9fa; border-left: 5px solid #2e7d32; padding: 15px; border-radius: 8px;">
+            <p style='margin:0;'><b>Nama:</b> Ima Safitri Sianipar, S.Kom</p>
+            <p style='margin:0;'><b>Instansi:</b> Dinas Pendidikan Provinsi Sumatera Utara</p>
+            <p style='margin:0;'><b>Jabatan:</b> Penata Kelola Sistem dan Teknologi Informasi</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.divider()
+    if st.button("⬅️ Kembali ke Dashboard Utama", key="btn_back_dashboard_final"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
 elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
