@@ -231,6 +231,7 @@ st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 st.markdown("""
     <div class="header-balloon-card">
         <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
+         <h4 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</h4>
         <div class="gradient-line-inner"></div>
         <p style='color: #1565c0; font-size: 14px; font-weight: 700; margin: 0;'>
             Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas Sumatera Utara
@@ -414,8 +415,10 @@ elif st.session_state.page_view == "detail":
 elif st.session_state.page_view == "admin_profile":
     st.markdown("### 👤 Profil Administrator")
     with st.container(border=True):
-        st.write("### Super Admin SI-PANDAI")
+        st.write("### Ima Safitri Sianipar")
         st.write("**Username:** admin")
+        st.write("**Nip:** 199511232025042004")
+        st.write("**Jabatan:** Penata Kelola Sistem dan Teknologi Informasi")
         st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
