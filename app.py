@@ -307,8 +307,7 @@ if st.session_state.page_view == "dashboard":
                 </div>
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-
-  with cv2:
+    with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
@@ -344,8 +343,7 @@ if st.session_state.page_view == "dashboard":
                 # Angka Sumbu & Setting Range (Hitam Tebal)
                 xaxis=dict(
                     tickfont=dict(color='black', size=11, family='Arial Black'),
-                    range=[0, max_val * 1.2] # Paksa sumbu X lebih lebar 20% dari angka max
-                )
+                    range=[0, max_val * 1.2] # Paksa sumbu X lebih lebar 20% dari angka max)
             )
 
             fig.update_traces(
