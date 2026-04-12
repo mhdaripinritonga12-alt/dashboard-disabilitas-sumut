@@ -215,7 +215,7 @@ def ubah_halaman():
 st.sidebar.header("⊞ Menu Utama")
 st.sidebar.radio(
     "Navigasi:", 
-    ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
+    ["🚀 Dashboard", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
     key="nav_radio",
     on_change=ubah_halaman
 )
@@ -355,7 +355,7 @@ if st.session_state.page_view == "dashboard":
             )
             
             st.plotly_chart(fig, use_container_width=True)
-           jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
+               jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
             elif v_a == 0:
