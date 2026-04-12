@@ -85,7 +85,11 @@ st.markdown("""
         padding: 10px !important;
         background-color: #f1f8e9 !important;
     }
-
+/* CSS Memaksa bentuk ujung batang membulat (Balon) */
+    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path {
+        rx: 18px !important;
+        ry: 18px !important;
+    }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
@@ -202,6 +206,8 @@ def ubah_halaman():
         pilihan = st.session_state.nav_radio
         if "Dashboard" in pilihan: 
             st.session_state.page_view = "dashboard"
+            # Paksa filter kembali ke "Semua" saat menu Dashboard diklik
+            st.session_state.selected_kab = "Semua" 
         elif "Pendidikan Khusus" in pilihan: 
             st.session_state.page_view = "tentang_pk"
         elif "Tentang Dashboard" in pilihan: 
@@ -304,12 +310,10 @@ if st.session_state.page_view == "dashboard":
             """, unsafe_allow_html=True)
 
     with cv2:
-        st.subheader("📊 5 Peringkat ATS Tertinggi")
+       st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            
-            # --- MODIFIKASI GRAFIK BAR GRADASI & RAPAT ---
             max_val = df_top5[ats_col].max() if not df_top5.empty else 100
 
             fig = px.bar(
@@ -317,38 +321,36 @@ if st.session_state.page_view == "dashboard":
                 x=ats_col, 
                 y=col_kab, 
                 orientation='h', 
-                color=ats_col, # Diatur berdasarkan nilai untuk memicu colorscale
-                color_continuous_scale=[[0, '#800000'], [0.25, '#008000'], [0.5, '#FF8C00'], [0.75, '#00008B'], [1, '#ADD8E6']], # Manual Gradient Map
+                color=ats_col,
+                # Gradasi Biru Cerah ke Biru Royal (Sesuai contoh Balon)
+                color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], 
                 text=ats_col
             )
             
             fig.update_traces(
                 textposition='outside',
-                textfont=dict(color='black', size=13, family="Inter"),
-                marker=dict(
-                    line=dict(width=0), # Tanpa garis pinggir agar lebih smooth
-                ),
-                width=0.6, # Batang Slim (Lebih ramping)
+                textfont=dict(color='black', size=13, family="Inter", weight="bold"),
+                marker=dict(line=dict(width=0)),
+                width=0.85 # Membuat batang gemuk/padat
             )
 
             fig.update_layout(
                 height=350, 
-                margin=dict(l=10, r=120, t=20, b=10),
-                bargap=0.01, # Jarak antar batang sangat dekat (Rapat)
+                margin=dict(l=10, r=130, t=20, b=10),
+                bargap=0, # Menghilangkan jarak antar slot bar
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
-                xaxis_title=None, 
-                yaxis_title=None,
-                coloraxis_showscale=False # Sembunyikan colorbar di samping
+                paper_bgcolor='rgba(0,0,0,0)',
+                coloraxis_showscale=False
             )
 
-            fig.update_xaxes(range=[0, max_val * 1.3], showticklabels=False, showgrid=False)
-
+            # Sumbu X & Y (Teks Nama Wilayah Warna Hitam)
+            fig.update_xaxes(range=[0, max_val * 1.4], showticklabels=False, showgrid=False)
             fig.update_yaxes(
-                tickfont=dict(color='black', size=12, family="Inter"),
+                tickfont=dict(color='black', size=12, family="Inter", weight="bold"),
                 categoryorder='total ascending'
             )
-
+            
             st.plotly_chart(fig, use_container_width=True)
 
             # Insight Box
