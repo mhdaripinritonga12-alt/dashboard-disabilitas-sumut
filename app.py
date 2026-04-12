@@ -387,7 +387,7 @@ elif st.session_state.page_view == "detail":
     query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
     map_url = f"https://www.google.com/maps?q={query}&output=embed"
     components.html(f'<iframe width="100%" height="400" src="{map_url}" style="border-radius:15px; border:1px solid #ddd;"></iframe>', height=420)
-    st.divider()
+      st.divider()
     c1, c2 = st.columns(2)
     with c1:
         with st.container(border=True):
@@ -403,6 +403,10 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
             st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', '0')} Ruang")
             st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
+            st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
+
+    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
+    st.divider()
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
         st.rerun()
