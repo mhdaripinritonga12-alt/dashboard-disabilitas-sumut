@@ -318,7 +318,10 @@ if st.session_state.page_view == "dashboard":
             fig.update_layout(height=300, margin=dict(l=10, r=50, t=20, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
             fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
-            
+            # Membuat tulisan Kabupaten & Angka di bawah jadi Hitam & Tebal
+                font=dict(color='black', weight='bold'),
+                yaxis=dict(tickfont=dict(color='black', size=12, family='Arial Black')),
+                xaxis=dict(tickfont=dict(color='black', size=12, family='Arial Black'))
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
