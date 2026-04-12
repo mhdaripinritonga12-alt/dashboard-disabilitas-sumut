@@ -302,54 +302,58 @@ if st.session_state.page_view == "dashboard":
                 </div>
                 <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-with cv2:
+
+    with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             
-            # --- MODIFIKASI GRAFIK ---
-            max_val = df_top5[ats_col].max()
+            # Mendapatkan nilai maksimum untuk mengatur range X agar angka tidak terpotong
+            max_val = df_top5[ats_col].max() if not df_top5.empty else 100
+
             fig = px.bar(
                 df_top5, 
                 x=ats_col, 
                 y=col_kab, 
                 orientation='h', 
                 color=ats_col, 
-                color_continuous_scale='Viridis', # Gradasi
+                color_continuous_scale='Viridis', # Warna Gradasi
                 text=ats_col
             )
             
+            # Styling angka di luar batang (Warna Hitam)
             fig.update_traces(
-                textposition='outside', 
-                textfont=dict(color='black', size=13, family="Inter"), # Angka warna hitam
-                marker_line_color='rgb(8,48,107)', 
-                marker_line_width=1, 
+                textposition='outside',
+                textfont=dict(color='black', size=13),
+                marker_line_color='rgb(8,48,107)',
+                marker_line_width=1.5,
                 opacity=0.9
             )
-            
+
             fig.update_layout(
                 height=350, 
-                margin=dict(l=10, r=100, t=20, b=10), # Margin kanan diperlebar agar angka tidak terpotong
+                margin=dict(l=10, r=100, t=20, b=10), # Padding kanan diperbesar agar angka aman
                 bargap=0.3, 
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
                 yaxis_title=None,
-                coloraxis_showscale=False # Hilangkan colorbar
+                coloraxis_showscale=False
             )
-            
-            # Rentang X lebih lebar dari nilai max agar label 'outside' aman
-            fig.update_xaxes(range=[0, max_val * 1.25], showticklabels=False, showgrid=False)
-            
-            # Nama Wilayah (Sumbu Y) warna hitam
+
+            # Sumbu X (Range diperluas agar angka tidak terpotong)
+            fig.update_xaxes(range=[0, max_val * 1.3], showticklabels=False, showgrid=False)
+
+            # Sumbu Y (Nama Wilayah warna Hitam)
             fig.update_yaxes(
-                tickfont=dict(color='black', size=12, family="Inter"), 
+                tickfont=dict(color='black', size=12, family="Inter, sans-serif"),
                 categoryorder='total ascending'
             )
-            
+
             st.plotly_chart(fig, use_container_width=True)
 
+            # Insight Box
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
