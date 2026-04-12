@@ -462,7 +462,7 @@ elif st.session_state.page_view == "tentang_dashboard":
         """)
         
         st.divider()
-        if st.button("⬅️ KEMBALI KE DASHBOARD", use_container_width=True):
-            st.session_state.page_view = "dashboard"
-            st.session_state.nav_radio = "🚀 Dashboard" # Update label sidebar
-            st.rerun()
+        if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+
