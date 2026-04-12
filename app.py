@@ -418,22 +418,21 @@ elif st.session_state.page_view == "detail":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-# --- D. HALAMAN PROFIL ADMINISTRATOR ---
+# --- D. HALAMAN PROFIL ADMINISTRATOR (UKURAN SERASI DENGAN KABID) ---
 elif st.session_state.page_view == "admin_profile":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">👤 Profil Administrator</p>', unsafe_allow_html=True)
     
     col_admin1, col_admin2 = st.columns([1, 1.5])
     
     with col_admin1:
-        # Menampilkan Foto Administrator
-        # Pastikan file foto kamu (misal: foto_ima.png) ada di folder yang sama
+        # Menampilkan Foto Administrator (Ukuran 250px agar sama dengan foto Kabid)
         if os.path.exists("foto_ima.png"):
-            st.image("foto_ima.png", caption="Administrator SI-PANDAI", use_container_width=True)
+            st.image("foto_ima.png", caption="Administrator SI-PANDAI", width=250)
         else:
-            # Jika foto belum ada, munculkan icon user besar
+            # Placeholder jika file tidak ditemukan
             st.markdown("""
-                <div style="background-color: #f0f7ff; border-radius: 15px; padding: 40px; text-align: center; border: 2px dashed #0d47a1;">
-                    <span style="font-size: 50px;">👤</span>
+                <div style="background-color: #f0f7ff; border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed #0d47a1; width: 250px;">
+                    <span style="font-size: 80px;">👤</span>
                     <p style="color: #0d47a1; font-weight: bold; margin-top: 10px;">Foto Admin</p>
                 </div>
             """, unsafe_allow_html=True)
