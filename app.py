@@ -284,70 +284,101 @@ if st.session_state.page_view == "dashboard":
                             st.rerun()
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
-    st.divider()
-    cv1, cv2 = st.columns([1.4, 1.1])
+  st.divider()
+    # 1. Pengaturan Kolom: Peta (0.9) dan Grafik (1.1)
+    cv1, cv2 = st.columns([0.9, 1.1])
+
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
             ats_col_name = df_f.columns[3]
             fig_map = px.scatter_mapbox(
                 df_f, lat="lat", lon="lon", size=ats_col_name, color=ats_col_name,
-                color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
-                hover_data={ats_col_name: True, "lat": False, "lon": False},
-                zoom=8, height=400
+                color_continuous_scale="RdYlGn_r", zoom=6.5, height=350
             )
             fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
             st.plotly_chart(fig_map, use_container_width=True)
             
+            # Legenda Ramping
             st.markdown("""
-                <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span></div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span></div>
+                <div style="display: flex; gap: 10px; margin-top: -45px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.85); padding: 5px 12px; border-radius: 6px; width: fit-content; border: 1px solid #ddd;">
+                    <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 10px; font-weight: 800; color:black;">RENDAH</span></div>
+                    <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 10px; font-weight: 800; color:black;">SEDANG</span></div>
+                    <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 10px; font-weight: 800; color:black;">TINGGI</span></div>
                 </div>
-                <div style="margin-bottom: 20px;"></div>
             """, unsafe_allow_html=True)
-     with cv2:
-          st.subheader("📊 5 Peringkat ATS Tertinggi")
-          if not df_f.empty:
+
+    with cv2:
+        st.subheader("📊 5 Peringkat ATS Tertinggi")
+        if not df_f.empty:
+            # -- Persiapan Data --
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            custom_colors = ['#800000', '#008000', '#FF8C00', '#00008B', '#ADD8E6']
-            fig = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=col_kab, color_discrete_sequence=custom_colors, text=ats_col)
-            fig.update_layout(height=300, margin=dict(l=10, r=50, t=20, b=10), bargap=0.4, showlegend=False, plot_bgcolor='rgba(0,0,0,0)', xaxis_title=None, yaxis_title=None)
-            fig.update_traces(textposition='outside')
-            st.plotly_chart(fig, use_container_width=True)
-            
+            max_val = df_top5[ats_col].max()
 
+            # -- Grafik Gradasi & Slim (PASTIKAN KURUNG TUTUP ADA) --
+            fig = px.bar(
+                df_top5, x=ats_col, y=col_kab, orientation='h',
+                color=ats_col, color_continuous_scale='Blues', text=ats_col
+            )
+
+            # -- Layout: Hitam Tebal & Space Samping --
+            fig.update_layout(
+                height=350, 
+                margin=dict(l=10, r=120, t=20, b=10), 
+                bargap=0.6, # Membuat Batang Ramping
+                showlegend=False, 
+                plot_bgcolor='rgba(0,0,0,0)',
+                xaxis_title=None, 
+                yaxis_title=None, 
+                coloraxis_showscale=False,
+                yaxis=dict(tickfont=dict(color='black', size=11, family='Arial Black')),
+                xaxis=dict(
+                    tickfont=dict(color='black', size=11, family='Arial Black'),
+                    range=[0, max_val * 1.4] # Ruang agar angka tidak terpotong
+                )
+            )
+
+            # -- Angka Ujung Balok (Hitam Tebal Seperti Balon/Label) --
+            fig.update_traces(
+                textposition='outside', 
+                cliponaxis=False,
+                textfont=dict(color='black', size=13, family='Arial Black')
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            # -- Logika Insight (PASTIKAN INDENTASI SEJAJAR) --
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
+            
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
-                p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
+                p_insight, p_tindakan, warna_box = f"⚠️ <b>MASALAH UTAMA:</b> Wilayah {kab_pilih} memiliki {v_a:,} ATS, namun BELUM ADA SLB.", "Mendesak pembukaan Unit Sekolah Baru.", "#b71c1c"
             elif v_a == 0:
-                p_insight, p_tindakan, warna_box = f"✅ Di wilayah {kab_pilih} saat ini bersih dari ATS.", "Pertahankan status ini dengan penguatan sistem deteksi dini.", "#4caf50"
+                p_insight, p_tindakan, warna_box = f"✅ Wilayah {kab_pilih} saat ini bersih dari ATS.", "Pertahankan status ini dengan deteksi dini.", "#4caf50"
             elif v_a > 100:
-                p_insight, p_tindakan, warna_box = f"🚨 Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan dan prioritaskan bantuan.", "#ef4444"
+                p_insight, p_tindakan, warna_box = f"🚨 Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan.", "#ef4444"
             else:
-                p_insight, p_tindakan, warna_box = f"💡 Di Wilayah {kab_pilih} jumlah Anak Tidak Sekolah (ATS) Disabilitas sebanyak {v_a:,} jiwa dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
+                p_insight, p_tindakan, warna_box = f"💡 Wilayah {kab_pilih} memiliki {v_a:,} ATS dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
+
+            # -- Insight Box Ramping & Tindakan Melekat --
             st.markdown(f"""
-                <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 8px 12px;">
+                <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 10px 15px; background-color: #f8f9fa;">
                     <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 14px;">
                         💡 Insight & Rekomendasi: {kab_pilih}
                     </div>
-                    <p class="insight-text" style="margin: 1; line-height: 1.3; font-size: 13px;">
+                    <p class="insight-text" style="margin: 0; line-height: 1.3; font-size: 13px; color: black;">
                         {p_insight}
                     </p>
-                    <div style="margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 13px; font-weight: 700; color: {warna_box};">
+                    <div style="margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 13px; font-weight: 800; color: {warna_box};">
                         Tindakan: <span style="font-weight: 700; color: #333;">{p_tindakan}</span>
                     </div>
                 </div>
             """, unsafe_allow_html=True)
-            st.divider()
+
+    # 2. Penutup Dashboard
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
-        st.download_button("Download CSV 📥", csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')
-
-elif st.session_state.page_view == "detail":
+        st.download_button("Download CSV 📥", csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
     st.markdown(f"<h3 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
     st.markdown(f"<p style='color:gray;'>Wilayah: {sch['kab_kota']} | NPSN: {sch['npsn']}</p>", unsafe_allow_html=True)
