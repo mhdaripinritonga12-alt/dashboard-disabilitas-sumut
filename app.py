@@ -332,7 +332,30 @@ if st.session_state.page_view == "dashboard":
             else:
                 p_insight, p_tindakan, warna_box = f"💡 Wilayah {kab_pilih} memiliki {v_a:,} ATS dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
 
-            st.markdown(f'<div class="insight-box" style="border-left: 6px solid {warna_box};"><div class="insight-title" style="color:{warna_box}">💡 Insight & Rekomendasi: {kab_pilih}</div><p class="insight-text">{p_insight}</p><hr style="opacity:0.3;"><p class="insight-text" style="font-weight:700; color:{warna_box}">Tindakan: {p_tindakan}</p></div>', unsafe_allow_html=True)
+           st.markdown(f'<div class="insight-box" style="border-left: 6px solid {warna_box};"><div class="insight-title" style="color:{warna_box}">💡 Insight & Rekomendasi: {kab_pilih}</div><p class="insight-text">{p_insight}</p><hr style="opacity:0.3;"><p class="insight-text" style="font-weight:700; color:{warna_box}">Tindakan: {p_tindakan}</p></div>', unsafe_allow_html=True)
+
+            # =========================
+            # 🔥 MASALAH UTAMA (FIX)
+            # =========================
+            if v_a > 0:
+                teks_masalah = f"Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa."
+            else:
+                teks_masalah = f"Tidak ditemukan masalah ATS di wilayah {kab_pilih}."
+
+            st.markdown(f"""
+            <div style="
+                background-color:#fff4e5;
+                border-left:6px solid #ff9800;
+                padding:10px 12px;
+                border-radius:8px;
+                margin-top:10px;
+            ">
+            <b style="color:#e65100;">⚠️ Masalah Utama:</b>
+            <p style="margin:5px 0; font-size:13px; color:#333;">
+            {teks_masalah}
+            </p>
+            </div>
+            """, unsafe_allow_html=True)
 
     st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
