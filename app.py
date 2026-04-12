@@ -430,8 +430,13 @@ elif st.session_state.page_view == "admin_profile":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# --- B. HALAMAN PENDIDIKAN KHUSUS ---
 elif st.session_state.page_view == "tentang_pk":
-   st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Profil Bidang Pembinaan Pendidikan Khusus</p>', unsafe_allow_html=True)col_teks, col_foto = st.columns([1.5, 1])
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Profil Bidang Pembinaan Pendidikan Khusus</p>', unsafe_allow_html=True)
+    
+    # PERBAIKAN: Ini harus di baris baru
+    col_teks, col_foto = st.columns([1.5, 1])
+    
     with col_teks:
         with st.expander("📖 Definisi & Ruang Lingkup", expanded=True):
             st.markdown("""
@@ -448,12 +453,11 @@ elif st.session_state.page_view == "tentang_pk":
             """)
 
     with col_foto:
-        # MENAMPILKAN GAMBAR/FOTO PIMPINAN
-        # Pastikan file "foto_kabid.png" atau nama file gambar kamu ada di folder yang sama
+        # Menampilkan gambar pimpinan
         if os.path.exists("image_58a645.png"):
             st.image("image_58a645.png", caption="Kepala Bidang Pembinaan Pendidikan Khusus", width=250)
         else:
-            st.warning("File gambar tidak ditemukan. Pastikan nama file sesuai.")
+            st.warning("File gambar tidak ditemukan.")
 
         st.markdown(f"""
         <div style="background-color: #f8f9fa; border-left: 5px solid #0d47a1; padding: 15px; border-radius: 8px;">
@@ -465,10 +469,32 @@ elif st.session_state.page_view == "tentang_pk":
         """, unsafe_allow_html=True)
 
     st.divider()
-    if st.button("⬅️ Kembali ke Dashboard"):
+    if st.button("⬅️ Kembali ke Dashboard", key="btn_back_pk"):
         st.session_state.page_view = "dashboard"
         st.rerun()
+
+# --- C. HALAMAN TENTANG DASHBOARD ---
 elif st.session_state.page_view == "tentang_dashboard":
+    st.markdown('### ℹ️ Tentang SI-PANDAI')
+    with st.container(border=True):
+        st.markdown("""
+        ### 🖥️ Deskripsi Sistem
+        **SI-PANDAI SUMUT** (Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas) adalah platform analitik digital yang dirancang untuk mengintegrasikan data anak tidak sekolah dengan kebutuhan sarana prasarana pendidikan khusus di Provinsi Sumatera Utara.
+
+        ### 🎯 Tujuan Dashboard
+        1. **Memetakan Sebaran ATS:** Mengidentifikasi koordinat tepat di mana anak-anak disabilitas yang belum sekolah berada.
+        2. **Optimalisasi Kebijakan:** Memberikan rekomendasi data yang akurat bagi pengambil kebijakan di Dinas Pendidikan.
+        3. **Efisiensi Anggaran:** Memastikan bantuan RKB (Ruang Kelas Baru) atau rehabilitasi sekolah tepat sasaran.
+
+        ### 🚀 Fitur Utama
+        * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
+        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
+        """)
+        
+        st.divider()
+        if st.button("⬅️ Kembali ke Dashboard", key="btn_back_td"):
+            st.session_state.page_view = "dashboard"
+            st.rerun()elif st.session_state.page_view == "tentang_dashboard":
     st.markdown('### ℹ️ Tentang SI-PANDAI')
     st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
     with st.container(border=True):
