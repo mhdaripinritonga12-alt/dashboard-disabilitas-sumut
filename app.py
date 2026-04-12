@@ -558,7 +558,23 @@ elif st.session_state.page_view == "tentang_dashboard":
         """)
         
         st.divider()
+        # Bingkai Segi Empat untuk Barcode Video
+        st.markdown("##### 📹 Video Petunjuk Dashboard")
+        with st.container(border=True):
+            # Cek apakah file barcode ada
+            if os.path.exists("barcode_video.png"):
+                st.image("barcode_video.png", caption="Scan Barcode untuk Tutorial Video", width=200)
+            else:
+                # Tampilan kotak jika file belum diupload
+                st.markdown("""
+                    <div style="border: 2px solid #2e7d32; border-radius: 10px; padding: 20px; text-align: center; background-color: #f1f8e9;">
+                        <span style="font-size: 50px;">📲</span>
+                        <p style="color: #2e7d32; font-weight: 800; margin-top: 10px;">Tempat Barcode Video</p>
+                        <p style="font-size: 11px; color: #666;">(Upload file barcode_video.png)</p>
+                    </div>
+                """, unsafe_allow_html=True)
         
+        st.divider()
         # Informasi Inovator
         st.markdown("##### 👤 Inovator Sistem")
         st.markdown(f"""
