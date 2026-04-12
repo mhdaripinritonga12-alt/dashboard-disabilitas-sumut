@@ -432,7 +432,6 @@ elif st.session_state.page_view == "admin_profile":
 
 elif st.session_state.page_view == "tentang_pk":
    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Profil Bidang Pembinaan Pendidikan Khusus</p>', unsafe_allow_html=True)col_teks, col_foto = st.columns([1.5, 1])
-    
     with col_teks:
         with st.expander("📖 Definisi & Ruang Lingkup", expanded=True):
             st.markdown("""
