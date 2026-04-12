@@ -331,8 +331,7 @@ if st.session_state.page_view == "dashboard":
                 p_insight, p_tindakan, warna_box = f"🚨 Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan dan prioritaskan bantuan.", "#ef4444"
             else:
                 p_insight, p_tindakan, warna_box = f"💡 Di Wilayah {kab_pilih} jumlah Anak Tidak Sekolah (ATS) Disabilitas sebanyak {v_a:,} jiwa dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
-
-         st.markdown(f"""
+            st.markdown(f"""
                 <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 8px 12px;">
                     <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 12px;">
                         💡 Insight & Rekomendasi: {kab_pilih}
