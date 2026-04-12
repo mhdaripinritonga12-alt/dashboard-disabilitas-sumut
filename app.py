@@ -333,7 +333,7 @@ if st.session_state.page_view == "dashboard":
                 p_insight, p_tindakan, warna_box = f"💡 Wilayah {kab_pilih} memiliki {v_a:,} ATS dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
 
             st.markdown(f'<div class="insight-box" style="border-left: 6px solid {warna_box};"><div class="insight-title" style="color:{warna_box}">💡 Insight & Rekomendasi: {kab_pilih}</div><p class="insight-text">{p_insight}</p><hr style="opacity:0.3;"><p class="insight-text" style="font-weight:700; color:{warna_box}">Tindakan: {p_tindakan}</p></div>', unsafe_allow_html=True)
-               st.divider()
+            st.divider()
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
