@@ -336,10 +336,10 @@ if st.session_state.page_view == "dashboard":
                     <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 14px;">
                         💡 Insight & Rekomendasi: {kab_pilih}
                     </div>
-                    <p class="insight-text" style="margin: 0; line-height: 1.3; font-size: 12px;">
+                    <p class="insight-text" style="margin: 1; line-height: 1.3; font-size: 13px;">
                         {p_insight}
                     </p>
-                    <div style="margin-top: 5px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 12px; font-weight: 700; color: {warna_box};">
+                    <div style="margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 13px; font-weight: 700; color: {warna_box};">
                         Tindakan: <span style="font-weight: 700; color: #333;">{p_tindakan}</span>
                     </div>
                 </div>
