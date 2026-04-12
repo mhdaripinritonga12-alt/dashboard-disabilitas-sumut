@@ -310,7 +310,7 @@ if st.session_state.page_view == "dashboard":
             """, unsafe_allow_html=True)
 
     with cv2:
-       st.subheader("📊 5 Peringkat ATS Tertinggi")
+        st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
