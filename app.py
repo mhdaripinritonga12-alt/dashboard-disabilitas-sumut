@@ -280,7 +280,7 @@ if st.session_state.page_view == "dashboard":
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
     st.divider()
-    cv1, cv2 = st.columns([1.4, 1.1])
+    cv1, cv2 = st.columns([1.5, 1.1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
@@ -334,7 +334,7 @@ if st.session_state.page_view == "dashboard":
             fig.update_layout(
                 height=350, 
                 margin=dict(l=10, r=120, t=20, b=10),
-                bargap=0.05, # Jarak antar batang sangat dekat (Rapat)
+                bargap=0.5, # Jarak antar batang sangat dekat (Rapat)
                 showlegend=False, 
                 plot_bgcolor='rgba(0,0,0,0)', 
                 xaxis_title=None, 
