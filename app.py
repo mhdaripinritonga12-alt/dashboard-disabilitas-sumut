@@ -418,15 +418,58 @@ elif st.session_state.page_view == "detail":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# --- D. HALAMAN PROFIL ADMINISTRATOR ---
 elif st.session_state.page_view == "admin_profile":
-    st.markdown("### 👤 Profil Administrator")
-    with st.container(border=True):
-        st.write("### Ima Safitri Sianipar")
-        st.write("**Username:** admin")
-        st.write("**Nip:** 199511232025042004")
-        st.write("**Jabatan:** Penata Kelola Sistem dan Teknologi Informasi")
-        st.write("**Instansi:** Dinas Pendidikan Provinsi Sumatera Utara")
-    if st.button("⬅️ Kembali ke Dashboard"):
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">👤 Profil Administrator</p>', unsafe_allow_html=True)
+    
+    col_admin1, col_admin2 = st.columns([1, 1.5])
+    
+    with col_admin1:
+        # Menampilkan Foto Administrator
+        # Pastikan file foto kamu (misal: foto_ima.png) ada di folder yang sama
+        if os.path.exists("foto_ima.png"):
+            st.image("foto_ima.png", caption="Administrator SI-PANDAI", use_container_width=True)
+        else:
+            # Jika foto belum ada, munculkan icon user besar
+            st.markdown("""
+                <div style="background-color: #f0f7ff; border-radius: 15px; padding: 40px; text-align: center; border: 2px dashed #0d47a1;">
+                    <span style="font-size: 100px;">👤</span>
+                    <p style="color: #0d47a1; font-weight: bold; margin-top: 10px;">Foto Admin</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+    with col_admin2:
+        # Data Diri (Balon Hijau)
+        with st.expander("🆔 Informasi Biodata", expanded=True):
+            st.markdown(f"""
+            **Nama Lengkap:** Ima Safitri Sianipar, S.Kom
+            
+            **NIP:** 199511232025042004
+            
+            **Jabatan:** Penata Kelola Sistem dan Teknologi Informasi
+            """)
+            
+        # Data Instansi (Balon Hijau)
+        with st.expander("🏢 Unit Kerja"):
+            st.markdown("""
+            **Instansi:** Dinas Pendidikan Provinsi Sumatera Utara
+            
+            **Bidang:** Pembinaan Pendidikan Khusus (PK)
+            
+            **Username Sistem:** `admin`
+            """)
+
+        # Catatan Peran (Balon Hijau)
+        with st.expander("🛠️ Hak Akses Sistem"):
+            st.markdown("""
+            Administrator memiliki hak penuh untuk:
+            * Mengelola basis data master SI-PANDAI.
+            * Melakukan pembaharuan data titik koordinat ATS.
+            * Memantau performa dashboard secara berkala.
+            """)
+
+    st.divider()
+    if st.button("⬅️ Kembali ke Dashboard Utama", key="btn_back_admin_final"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
