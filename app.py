@@ -418,11 +418,12 @@ elif st.session_state.page_view == "detail":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-# --- D. HALAMAN PROFIL ADMINISTRATOR (UKURAN SERASI DENGAN KABID) ---
+# --- D. HALAMAN PROFIL ADMINISTRATOR (FIXED) ---
 elif st.session_state.page_view == "admin_profile":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">👤 Profil Administrator</p>', unsafe_allow_html=True)
     
-    col_admin1, col_admin2 = st.columns([0, 8.2])
+    # Rasio diperbaiki: 0.8 untuk foto agar rapat, 2 untuk teks
+    col_admin1, col_admin2 = st.columns([0.8, 2])
     
     with col_admin1:
         # Menampilkan Foto Administrator (Ukuran 250px agar sama dengan foto Kabid)
