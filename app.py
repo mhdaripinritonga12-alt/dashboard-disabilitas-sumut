@@ -422,7 +422,7 @@ elif st.session_state.page_view == "detail":
 elif st.session_state.page_view == "admin_profile":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">👤 Profil Administrator</p>', unsafe_allow_html=True)
     
-    col_admin1, col_admin2 = st.columns([1, 1.5])
+    col_admin1, col_admin2 = st.columns([0, 8.2])
     
     with col_admin1:
         # Menampilkan Foto Administrator (Ukuran 250px agar sama dengan foto Kabid)
