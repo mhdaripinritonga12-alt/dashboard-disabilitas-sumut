@@ -25,8 +25,6 @@ def proses_logout():
     st.session_state.selected_kab = "Semua"
     st.session_state.login = False
     st.session_state.page_view = "dashboard"
-    # Tambahkan rerun agar aplikasi langsung mereset halaman
-    st.rerun()
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
@@ -80,20 +78,20 @@ st.markdown("""
         width: 100% !important;
         display: block;
     }
-/* --- STYLE AREA TABEL (PEMBERIAN BORDER HIJAU) --- */
-/* Karena tabel dataframe menggunakan canvas, kita beri bingkai agar bertema hijau */
-div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
-    border: 2px solid #4caf50 !important;
-    border-radius: 10px !important;
-    padding: 10px !important;
-    background-color: #f1f8e9 !important; /* Latar belakang hijau sangat tipis */
-}
- /* --- 4. SIDEBAR & FIX TEXT HITAM --- */
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
-   [data-testid="stSidebar"] * { color: white !important; }
+
+    div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
+        border: 2px solid #4caf50 !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+        background-color: #f1f8e9 !important;
+    }
+/* CSS Memaksa bentuk ujung batang membulat (Balon) */
+    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path {
+        rx: 18px !important;
+        ry: 18px !important;
+    }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
 
-/* SELEKTOR KHUSUS TEKS HITAM DI KOTAK PUTIH SIDEBAR */
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
     div[data-baseweb="popover"] li {
@@ -127,8 +125,7 @@ div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[d
     .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
     .tile-value { font-size: 22px; font-weight: 800; }
 
-    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
+    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
     .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
     .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; }
@@ -210,6 +207,8 @@ def ubah_halaman():
         pilihan = st.session_state.nav_radio
         if "Dashboard Utama" in pilihan: 
             st.session_state.page_view = "dashboard"
+             # Paksa filter kembali ke "Semua" saat menu Dashboard diklik
+            st.session_state.selected_kab = "Semua" 
         elif "Pendidikan Khusus" in pilihan: 
             st.session_state.page_view = "tentang_pk"
         elif "Tentang Dashboard" in pilihan: 
