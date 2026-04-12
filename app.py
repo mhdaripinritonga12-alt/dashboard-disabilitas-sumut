@@ -333,14 +333,14 @@ if st.session_state.page_view == "dashboard":
                 p_insight, p_tindakan, warna_box = f"💡 Di Wilayah {kab_pilih} jumlah Anak Tidak Sekolah (ATS) Disabilitas sebanyak {v_a:,} jiwa dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
             st.markdown(f"""
                 <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 8px 12px;">
-                    <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 12px;">
+                    <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 14px;">
                         💡 Insight & Rekomendasi: {kab_pilih}
                     </div>
-                    <p class="insight-text" style="margin: 0; line-height: 1.3; font-size: 11px;">
+                    <p class="insight-text" style="margin: 0; line-height: 1.3; font-size: 12px;">
                         {p_insight}
                     </p>
-                    <div style="margin-top: 5px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 11px; font-weight: 700; color: {warna_box};">
-                        Tindakan: <span style="font-weight: 400; color: #333;">{p_tindakan}</span>
+                    <div style="margin-top: 5px; padding-top: 4px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 12px; font-weight: 700; color: {warna_box};">
+                        Tindakan: <span style="font-weight: 700; color: #333;">{p_tindakan}</span>
                     </div>
                 </div>
             """, unsafe_allow_html=True)
