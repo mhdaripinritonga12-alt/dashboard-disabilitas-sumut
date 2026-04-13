@@ -164,7 +164,7 @@ def load_all_data():
 data_wilayah, data_sekolah = load_all_data()
 
 # =========================
-# Bagian 3: LOGIN (UPGRADED VERSION)
+# Bagian 3: LOGIN (CLEAN VERSION)
 # =========================
 if not st.session_state.login:
     # Background full screen dengan gradasi biru-putih
@@ -173,26 +173,28 @@ if not st.session_state.login:
         [data-testid="stAppViewContainer"] {
             background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #bbdefb 100%);
         }
+        /* Menghilangkan border/kotak pada login card agar lebih menyatu */
         .login-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
+            background: rgba(255, 255, 255, 0.4); /* Transparansi lebih tinggi */
+            padding: 20px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(13, 71, 161, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(10px);
+            /* Box shadow dihilangkan atau dibuat sangat tipis */
+            box-shadow: none; 
+            border: none;
         }
         </style>
     """, unsafe_allow_html=True)
 
     st.markdown("<div style='margin-top: 5vh;'></div>", unsafe_allow_html=True)
     
-    # Baris Logo Instansi di Atas
-    _, col_logo, _ = st.columns([2, 0.8, 2])
+    # Baris Logo Instansi di Atas (UKURAN DIPERKECIL)
+    # Menggunakan rasio kolom agar logo Pemprov di tengah dan kecil
+    _, col_logo, _ = st.columns([2.5, 0.4, 2.5]) 
     with col_logo:
         if os.path.exists("logo_sumut.png"): 
             st.image("logo_sumut.png", use_container_width=True)
 
-    # Card Login Utama
+    # Area Login Utama
     _, col_card, _ = st.columns([1.2, 2, 1.2])
     with col_card:
         st.markdown('<div class="login-card">', unsafe_allow_html=True)
@@ -200,6 +202,7 @@ if not st.session_state.login:
         c_l, c_r = st.columns([1.2, 1.5])
         with c_l:
             if os.path.exists("logo_sipandai.png"): 
+                # Menampilkan logo SI-PANDAI tanpa kotak pembungkus tambahan
                 st.image("logo_sipandai.png", use_container_width=True)
             else:
                 st.markdown("<h1 style='text-align:center;'>📊</h1>", unsafe_allow_html=True)
@@ -221,7 +224,7 @@ if not st.session_state.login:
         
         st.markdown('</div>', unsafe_allow_html=True)
         
-    # Footer Kecil di bawah Card
+    # Footer
     st.markdown("""
         <p style='text-align:center; color:#90a4ae; font-size:11px; margin-top:20px;'>
             © 2026 Dinas Pendidikan Provinsi Sumatera Utara<br>
