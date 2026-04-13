@@ -216,7 +216,7 @@ if not st.session_state.login:
             
             st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
             if st.button("🔓 MASUK KE DASHBOARD", use_container_width=True):
-                if u == "admin" and p == "admin": 
+                if u == "admin" and p == "admin123": 
                     st.session_state.login = True
                     st.rerun()
                 else: 
