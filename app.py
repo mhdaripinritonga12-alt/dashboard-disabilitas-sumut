@@ -638,51 +638,37 @@ elif st.session_state.page_view == "tentang_dashboard":
             st.rerun()
 
 # ==================================
-# Bagian Akhir: BANNER KOLABORASI & FOOTER
+# Bagian Akhir: FOOTER MINIMALIS
 # ==================================
 st.divider()
 
-# 1. BANNER LOGO KOLABORASI
-# Pastikan kamu sudah punya file gambar "banner_kolaborasi.png" yang berisi gabungan logo tersebut
-if os.path.exists("banner_kolaborasi.png"):
-    st.image("banner_kolaborasi.png", use_container_width=True)
-else:
-    # Jika gambarnya belum digabung, kita bisa susun pakai kolom
-    col_log1, col_log2, col_log3, col_log4, col_log5 = st.columns(5)
-    with col_log1: 
-        if os.path.exists("logo_sumut.png"): st.image("logo_sumut.png", width=80)
-    with col_log2:
-        st.markdown("<p style='text-align:center; font-weight:bold; color:gray; margin-top:20px;'>SUMUT BERKAH</p>", unsafe_allow_html=True)
-    with col_log3:
-        st.markdown("<p style='text-align:center; font-weight:bold; color:gray; margin-top:20px;'>BPSDM PROVSU</p>", unsafe_allow_html=True)
-    with col_log4:
-        st.markdown("<p style='text-align:center; font-weight:bold; color:gray; margin-top:20px;'>DISDIK SUMUT</p>", unsafe_allow_html=True)
-    with col_log5:
-        st.markdown("<p style='text-align:center; font-weight:bold; color:gray; margin-top:20px;'>BerAKHLAK</p>", unsafe_allow_html=True)
+# 1. LOGO KOLABORASI DI TENGAH
+col_c1, col_c2, col_c3 = st.columns([1, 2, 1]) # Membuat kolom tengah lebih besar
+with col_c2:
+    if os.path.exists("banner_kolaborasi.png"):
+        st.image("banner_kolaborasi.png", use_container_width=True)
+    else:
+        # Placeholder jika gambar belum ada
+        st.markdown("<p style='text-align:center; color:gray; font-size:12px;'>[ Logo Kolaborasi Sumut Berkah ]</p>", unsafe_allow_html=True)
 
-st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
 
-# 2. FOOTER KONTAK DISDIK (Sesuai permintaan sebelumnya)
-col_f1, col_f2, col_f3, col_f4 = st.columns([1.2, 1, 1, 1.5])
-
-with col_f1:
-    st.markdown("**🏢 DISDIK SUMUT**")
-    st.markdown('<p style="font-size: 13px; color: #666;">Dinas Pendidikan<br>Provinsi Sumatera Utara</p>', unsafe_allow_html=True)
-
-with col_f2:
-    st.markdown("**📸 MEDIA SOSIAL**")
-    st.markdown('<p style="font-size: 13px; color: #666;">Instagram: <a href="https://www.instagram.com/disdiksumut" target="_blank" style="text-decoration:none; color:#e1306c;">@disdiksumut</a></p>', unsafe_allow_html=True)
-
-with col_f3:
-    st.markdown("**📞 KONTAK KAMI**")
-    st.markdown('<p style="font-size: 13px; color: #666;">Telepon: (061) 4537123<br>Email: disdik@sumutprov.go.id</p>', unsafe_allow_html=True)
-
-with col_f4:
-    st.markdown("**📍 ALAMAT DINAS**")
-    st.markdown('<p style="font-size: 13px; color: #666;">Jl. Tgk. Cik Ditiro No.1 D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152</p>', unsafe_allow_html=True)
-
+# 2. ALAMAT DAN EMAIL (CENTERED)
 st.markdown("""
-    <hr style="margin: 10px 0; opacity: 0.1;">
+    <div style="text-align: center; font-family: 'Inter', sans-serif;">
+        <p style="margin: 0; font-weight: 800; color: #0d47a1; font-size: 14px;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</p>
+        <p style="margin: 5px 0; color: #666; font-size: 13px; line-height: 1.4;">
+            Jl. Tgk. Cik Ditiro No.1 D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+        </p>
+        <p style="margin: 0; color: #0d47a1; font-size: 13px; font-weight: 600;">
+            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+
+# 3. WATERMARK AKHIR
+st.markdown("""
+    <hr style="margin: 20px 0 10px 0; opacity: 0.1;">
     <div style="text-align: center; color: #9e9e9e; font-size: 11px; padding-bottom: 20px;">
         © 2026 SI-PANDAI SUMUT | Digitalisasi Pemetaan ATS Disabilitas | Inovator: Ima Safitri Sianipar, S.Kom
     </div>
