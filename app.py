@@ -164,40 +164,33 @@ def load_all_data():
 data_wilayah, data_sekolah = load_all_data()
 
 # =========================
-# Bagian 3: LOGIN (CLEAN & ENTER VERSION)
+# Bagian 3: LOGIN (ENTER TO LOGIN VERSION)
 # =========================
 if not st.session_state.login:
-    # Background full screen dengan gradasi biru-putih
     st.markdown("""
         <style>
         [data-testid="stAppViewContainer"] {
             background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #bbdefb 100%);
         }
-        /* Menghilangkan border/kotak pada login card agar lebih menyatu */
         .login-card {
-            background: rgba(255, 255, 255, 0.4); 
+            background: rgba(255, 255, 255, 0.4);
             padding: 20px;
             border-radius: 20px;
             box-shadow: none; 
             border: none;
-        }
-        /* Menghilangkan garis pembatas default st.form */
-        div[data-testid="stForm"] {
-            border: none !important;
-            padding: 0 !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
     st.markdown("<div style='margin-top: 5vh;'></div>", unsafe_allow_html=True)
     
-    # Baris Logo Instansi di Atas (UKURAN DIPERKECIL)
+    # Logo Pemprov Kecil
     _, col_logo, _ = st.columns([2.5, 0.4, 2.5]) 
     with col_logo:
         if os.path.exists("logo_sumut.png"): 
             st.image("logo_sumut.png", use_container_width=True)
 
-    # Area Login Utama
+    # Area Login dengan Form agar bisa Enter
     _, col_card, _ = st.columns([1.2, 2, 1.2])
     with col_card:
         st.markdown('<div class="login-card">', unsafe_allow_html=True)
@@ -210,26 +203,26 @@ if not st.session_state.login:
                 st.markdown("<h1 style='text-align:center;'>📊</h1>", unsafe_allow_html=True)
         
         with c_r:
-            st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>LOGIN USER</h2>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#555; font-size:15px; margin-bottom:20px;'>Untuk Akses Dashboard SI-PANDAI</p>", unsafe_allow_html=True)
+            st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>SI-PANDAI</h2>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#555; font-size:13px; margin-bottom:20px;'>Sistem Informasi Pemetaan ATS Disabilitas Sumatera Utara</p>", unsafe_allow_html=True)
             
-            # Membungkus input ke dalam form agar tombol Enter berfungsi
+            # --- MULAI FORM LOGIN ---
             with st.form("login_form", clear_on_submit=False):
-                u = st.text_input("Username", placeholder="Masukkan Username", label_visibility="visible")
-                p = st.text_input("Password", type="password", placeholder="Masukkan Password", label_visibility="visible")
+                u = st.text_input("Username", placeholder="Masukkan Username")
+                p = st.text_input("Password", type="password", placeholder="Masukkan Password")
                 
                 st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
                 
-                # Tombol submit form
-                submit = st.form_submit_button("🔓 MASUK KE DASHBOARD", use_container_width=True)
+                # Tombol Submit Form
+                submit_button = st.form_submit_button("🔓 MASUK KE DASHBOARD", use_container_width=True)
                 
-                if submit:
-                    # Pastikan password sesuai dengan keinginanmu: admin123
-                    if u == "admin" and p == "admin123": 
+                if submit_button:
+                    if u == "admin" and p == "admin": 
                         st.session_state.login = True
                         st.rerun()
                     else: 
                         st.error("Username atau Password salah!")
+            # --- SELESAI FORM LOGIN ---
         
         st.markdown('</div>', unsafe_allow_html=True)
         
