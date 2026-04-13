@@ -638,40 +638,51 @@ elif st.session_state.page_view == "tentang_dashboard":
             st.rerun()
 
 # ==================================
-# Bagian Akhir: FOOTER MINIMALIS
+# Bagian Akhir: FOOTER DENGAN TULISAN INSTANSI DI ATAS ALAMAT
 # ==================================
 st.divider()
 
 # 1. LOGO KOLABORASI DI TENGAH
-col_c1, col_c2, col_c3 = st.columns([1, 2, 1]) # Membuat kolom tengah lebih besar
+col_c1, col_c2, col_c3 = st.columns([1, 2, 1])
 with col_c2:
     if os.path.exists("banner_kolaborasi.png"):
         st.image("banner_kolaborasi.png", use_container_width=True)
 
 st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
 
-# 2. IKON SOSIAL MEDIA AKTIF (Instagram, Web, YouTube)
-# Ganti Link di bawah sesuai dengan link resmi Disdik Sumut
+# 2. IKON SOSIAL MEDIA AKTIF
 link_instagram = "https://www.instagram.com/disdiksumut"
 link_web = "https://disdik.sumutprov.go.id"
-link_youtube = "https://www.youtube.com/@disdiksumut"
+link_youtube = "https://www.youtube.com/@Disdikprovsumut"
 
-# Menggunakan HTML untuk membuat ikon yang bisa diklik
 st.markdown(f"""
-    <div style="text-align: center; margin-bottom: 20px;">
+    <div style="text-align: center; margin-bottom: 15px;">
         <a href="{link_instagram}" target="_blank" style="margin: 0 15px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" height="30" style="object-fit: contain;">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="25" height="25">
         </a>
         <a href="{link_web}" target="_blank" style="margin: 0 15px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="30" height="30" style="object-fit: contain;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="25" height="25">
         </a>
         <a href="{link_youtube}" target="_blank" style="margin: 0 15px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="30" height="30" style="object-fit: contain;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="25" height="25">
         </a>
     </div>
 """, unsafe_allow_html=True)
 
-# 3. WATERMARK AKHIR
+# 3. NAMA INSTANSI, ALAMAT, DAN EMAIL (TERPUSAT)
+st.markdown("""
+    <div style="text-align: center; font-family: 'Inter', sans-serif;">
+        <h4 style="margin: 0; color: #0d47a1; font-weight: 800;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</h4>
+        <p style="margin: 8px 0; color: #666; font-size: 13px; line-height: 1.4;">
+            Jl. Tgk. Cik Ditiro No.1 D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+        </p>
+        <p style="margin: 0; color: #0d47a1; font-size: 13px; font-weight: 600;">
+            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+
+# 4. WATERMARK COPYRIGHT
 st.markdown("""
     <hr style="margin: 20px 0 10px 0; opacity: 0.1;">
     <div style="text-align: center; color: #9e9e9e; font-size: 11px; padding-bottom: 20px;">
