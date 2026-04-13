@@ -164,29 +164,71 @@ def load_all_data():
 data_wilayah, data_sekolah = load_all_data()
 
 # =========================
-# Bagian 3: LOGIN
+# Bagian 3: LOGIN (UPGRADED VERSION)
 # =========================
 if not st.session_state.login:
-    _, col_logo, _ = st.columns([2, 0.6, 2])
-    with col_logo:
-        if os.path.exists("logo_sumut.png"): st.image("logo_sumut.png", width=100)
-    _, col_card, _ = st.columns([1.5, 2, 1.5])
-    with col_card:
-        with st.container(border=True):
-            col_l, col_r = st.columns([1, 1.5])
-            with col_l:
-                if os.path.exists("logo_sipandai.png"): st.image("logo_sipandai.png", use_container_width=True)
-            with col_r:
-                st.markdown("<h3 style='color:#0d47a1; margin-bottom:0;'>LOGIN USER</h3>", unsafe_allow_html=True)
-                u = st.text_input("Username", placeholder="Username", label_visibility="collapsed")
-                p = st.text_input("Password", type="password", placeholder="Password", label_visibility="collapsed")
-                if st.button("MASUK KE DASHBOARD"):
-                    if u == "admin" and p == "admin": 
-                        st.session_state.login = True
-                        st.rerun()
-                    else: st.error("Login Gagal")
-    st.stop()
+    # Background full screen dengan gradasi biru-putih
+    st.markdown("""
+        <style>
+        [data-testid="stAppViewContainer"] {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #bbdefb 100%);
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(13, 71, 161, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
+    st.markdown("<div style='margin-top: 5vh;'></div>", unsafe_allow_html=True)
+    
+    # Baris Logo Instansi di Atas
+    _, col_logo, _ = st.columns([2, 0.8, 2])
+    with col_logo:
+        if os.path.exists("logo_sumut.png"): 
+            st.image("logo_sumut.png", use_container_width=True)
+
+    # Card Login Utama
+    _, col_card, _ = st.columns([1.2, 2, 1.2])
+    with col_card:
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+        
+        c_l, c_r = st.columns([1.2, 1.5])
+        with c_l:
+            if os.path.exists("logo_sipandai.png"): 
+                st.image("logo_sipandai.png", use_container_width=True)
+            else:
+                st.markdown("<h1 style='text-align:center;'>📊</h1>", unsafe_allow_html=True)
+        
+        with c_r:
+            st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>SI-PANDAI</h2>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#555; font-size:13px; margin-bottom:20px;'>Sistem Informasi Pemetaan ATS Disabilitas Sumatera Utara</p>", unsafe_allow_html=True)
+            
+            u = st.text_input("Username", placeholder="Masukkan Username", label_visibility="visible")
+            p = st.text_input("Password", type="password", placeholder="Masukkan Password", label_visibility="visible")
+            
+            st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
+            if st.button("🔓 MASUK KE DASHBOARD", use_container_width=True):
+                if u == "admin" and p == "admin": 
+                    st.session_state.login = True
+                    st.rerun()
+                else: 
+                    st.error("Username atau Password salah!")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    # Footer Kecil di bawah Card
+    st.markdown("""
+        <p style='text-align:center; color:#90a4ae; font-size:11px; margin-top:20px;'>
+            © 2026 Dinas Pendidikan Provinsi Sumatera Utara<br>
+            Bidang Pembinaan Pendidikan Khusus
+        </p>
+    """, unsafe_allow_html=True)
+    st.stop()
 # ==================================
 # Bagian 4: SIDEBAR & NAVIGASI
 # ==================================
