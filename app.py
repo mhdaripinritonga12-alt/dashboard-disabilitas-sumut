@@ -164,7 +164,7 @@ def load_all_data():
 data_wilayah, data_sekolah = load_all_data()
 
 # =========================
-# Bagian 3: LOGIN (CLEAN VERSION)
+# Bagian 3: LOGIN (CLEAN & ENTER VERSION)
 # =========================
 if not st.session_state.login:
     # Background full screen dengan gradasi biru-putih
@@ -175,12 +175,16 @@ if not st.session_state.login:
         }
         /* Menghilangkan border/kotak pada login card agar lebih menyatu */
         .login-card {
-            background: rgba(255, 255, 255, 0.4); /* Transparansi lebih tinggi */
+            background: rgba(255, 255, 255, 0.4); 
             padding: 20px;
             border-radius: 20px;
-            /* Box shadow dihilangkan atau dibuat sangat tipis */
             box-shadow: none; 
             border: none;
+        }
+        /* Menghilangkan garis pembatas default st.form */
+        div[data-testid="stForm"] {
+            border: none !important;
+            padding: 0 !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -188,7 +192,6 @@ if not st.session_state.login:
     st.markdown("<div style='margin-top: 5vh;'></div>", unsafe_allow_html=True)
     
     # Baris Logo Instansi di Atas (UKURAN DIPERKECIL)
-    # Menggunakan rasio kolom agar logo Pemprov di tengah dan kecil
     _, col_logo, _ = st.columns([2.5, 0.4, 2.5]) 
     with col_logo:
         if os.path.exists("logo_sumut.png"): 
@@ -202,25 +205,31 @@ if not st.session_state.login:
         c_l, c_r = st.columns([1.2, 1.5])
         with c_l:
             if os.path.exists("logo_sipandai.png"): 
-                # Menampilkan logo SI-PANDAI tanpa kotak pembungkus tambahan
                 st.image("logo_sipandai.png", use_container_width=True)
             else:
                 st.markdown("<h1 style='text-align:center;'>📊</h1>", unsafe_allow_html=True)
         
         with c_r:
             st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>LOGIN USER</h2>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#555; font-size:15px; margin-bottom:20px;'>Untuk Akses Dasboard SI-PANDAI</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#555; font-size:15px; margin-bottom:20px;'>Untuk Akses Dashboard SI-PANDAI</p>", unsafe_allow_html=True)
             
-            u = st.text_input("Username", placeholder="Masukkan Username", label_visibility="visible")
-            p = st.text_input("Password", type="password", placeholder="Masukkan Password", label_visibility="visible")
-            
-            st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
-            if st.button("🔓 MASUK KE DASHBOARD", use_container_width=True):
-                if u == "admin" and p == "admin123": 
-                    st.session_state.login = True
-                    st.rerun()
-                else: 
-                    st.error("Username atau Password salah!")
+            # Membungkus input ke dalam form agar tombol Enter berfungsi
+            with st.form("login_form", clear_on_submit=False):
+                u = st.text_input("Username", placeholder="Masukkan Username", label_visibility="visible")
+                p = st.text_input("Password", type="password", placeholder="Masukkan Password", label_visibility="visible")
+                
+                st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
+                
+                # Tombol submit form
+                submit = st.form_submit_button("🔓 MASUK KE DASHBOARD", use_container_width=True)
+                
+                if submit:
+                    # Pastikan password sesuai dengan keinginanmu: admin123
+                    if u == "admin" and p == "admin123": 
+                        st.session_state.login = True
+                        st.rerun()
+                    else: 
+                        st.error("Username atau Password salah!")
         
         st.markdown('</div>', unsafe_allow_html=True)
         
