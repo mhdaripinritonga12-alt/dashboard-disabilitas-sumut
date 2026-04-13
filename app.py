@@ -643,7 +643,7 @@ elif st.session_state.page_view == "tentang_dashboard":
 st.divider()
 
 # 1. LOGO KOLABORASI DI TENGAH (UKURAN DIPERKECIL LAGI)
-col_c1, col_c2, col_c3 = st.columns([2.4, 1, 1.9]) # Kolom tengah dibuat lebih ramping
+col_c1, col_c2, col_c3 = st.columns([2.1, 1, 1.9]) # Kolom tengah dibuat lebih ramping
 with col_c2:
     if os.path.exists("banner_kolaborasi.png"):
         # Ukuran dikunci ke 180 agar lebih elegan
