@@ -643,13 +643,15 @@ elif st.session_state.page_view == "tentang_dashboard":
 st.divider()
 
 # 1. LOGO KOLABORASI DI TENGAH
-col_c1, col_c2, col_c3 = st.columns([1, 2, 1])
+col_c1, col_c2, col_c3 = st.columns([1.5, 1, 1.5]) # Kolom tengah dipersempit agar logo tidak melebar
 with col_c2:
     if os.path.exists("banner_kolaborasi.png"):
-        st.image("banner_kolaborasi.png", use_container_width=True)
+        # Kita kunci lebarnya di 200 atau 250 saja supaya kecil
+        st.image("banner_kolaborasi.png", width=250) 
+    else:
+        st.markdown("<p style='text-align:center; color:gray; font-size:12px;'>[ Logo Kolaborasi ]</p>", unsafe_allow_html=True)
 
-st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
-
+st.markdown("<div style='margin-bottom: 15px;'></div>", unsafe_allow_html=True)
 # 2. NAMA INSTANSI, ALAMAT, DAN EMAIL (TERPUSAT)
 st.markdown("""
     <div style="text-align: center; font-family: 'Inter', sans-serif;">
