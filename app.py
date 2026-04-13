@@ -481,11 +481,12 @@ elif st.session_state.page_view == "tentang_pk":
     col_teks, col_foto = st.columns([1.5, 1])
     
     with col_teks:
-        with st.expander("📖 Definisi & Ruang Lingkup", expanded=True):
+        with st.expander("📖 Tugas Pokok & Fungsi Organisasi", expanded=True):
             st.markdown("""
             **Pendidikan Khusus** adalah pendidikan bagi peserta didik yang memiliki tingkat kesulitan dalam mengikuti proses pembelajaran karena kelainan fisik, emosional, mental, sosial, dan/atau memiliki potensi kecerdasan dan bakat istimewa.
             
-            **Sasaran:** Peserta didik disabilitas (Tunanetra, Tunarungu, Tunagrahita, Tunadaksa, Tunalaras, Autis) di Sumatera Utara.
+            **Berdasarkan UU No. 23 Tahun 2014 Tugas dan fungsi Bidang Pembinaan Pendidikan Khusus sebagai berikut:** 
+           Penyusunan Kebijakan Teknis, Melaksanakan inventarisasi data anak berkebutuhan khusus usia sekolah, Pembinaan Kelembagaan dan Sarpras, Fasilitasi Pendidikan Inklusif, Monitoring dan Evaluasi pelaksanaan pendidikan khusus.
             """)
             
         with st.expander("⚖️ Dasar Hukum"):
@@ -528,9 +529,9 @@ elif st.session_state.page_view == "tentang_dashboard":
             st.markdown("""
             **SI-PANDAI SUMUT** (*Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas*) merupakan sebuah platform dashboard interaktif yang dirancang untuk mendigitalisasi data Anak Tidak Sekolah (ATS) khusus disabilitas. 
             
-            Sistem ini mengintegrasikan data spasial (titik koordinat) dengan data atribut sekolah untuk memberikan gambaran komprehensif mengenai kondisi pendidikan khusus di Provinsi Sumatera Utara.
-            """)
-            
+           Manfaat Sistem ini khususnya bagi masyarakat diharapkan Mendorong terciptanya layanan pendidikan yang lebih tepat sasaran bagi penyandang disabilitas. 
+           Membantu instansi dalam memetakan kebutuhan prioritas program pendidikan. Menjadi langkah awal untuk pengembangan integrasi data di masa mendatang. 
+      
         # Tujuan Dashboard (Balon Hijau)
         with st.expander("🎯 Tujuan Dashboard"):
             st.markdown("""
