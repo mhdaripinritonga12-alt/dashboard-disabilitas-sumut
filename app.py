@@ -218,7 +218,7 @@ def ubah_halaman():
         elif "Tentang Dashboard" in pilihan: 
             st.session_state.page_view = "tentang_dashboard"
 
-st.sidebar.header("⊞ Menu Utama")
+st.sidebar.header("🧭 Navigasi Sistem")
 st.sidebar.radio(
     "Navigasi:", 
     ["🚀 Dashboard Utama", "🎓 Pendidikan Khusus", "ℹ️ Tentang Dashboard"],
