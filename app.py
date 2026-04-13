@@ -658,7 +658,7 @@ st.markdown("""
     <div style="text-align: center; font-family: 'Inter', sans-serif;">
         <p style="margin: 0; font-weight: 800; color: #0d47a1; font-size: 14px;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</p>
         <p style="margin: 5px 0; color: #666; font-size: 13px; line-height: 1.4;">
-            Jl. Tgk. Cik Ditiro No.1 D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+            Jl Teuku Cik Ditiro No.1-D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
         </p>
         <p style="margin: 0; color: #0d47a1; font-size: 13px; font-weight: 600;">
             Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
