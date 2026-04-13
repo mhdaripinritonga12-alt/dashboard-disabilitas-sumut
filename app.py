@@ -529,9 +529,9 @@ elif st.session_state.page_view == "tentang_dashboard":
             st.markdown("""
             **SI-PANDAI SUMUT** (*Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas*) merupakan sebuah platform dashboard interaktif yang dirancang untuk mendigitalisasi data Anak Tidak Sekolah (ATS) khusus disabilitas. 
             
-           Manfaat Sistem ini khususnya bagi masyarakat diharapkan Mendorong terciptanya layanan pendidikan yang lebih tepat sasaran bagi penyandang disabilitas. 
-           Membantu instansi dalam memetakan kebutuhan prioritas program pendidikan. Menjadi langkah awal untuk pengembangan integrasi data di masa mendatang. 
-      
+            Sistem ini mengintegrasikan data spasial (titik koordinat) dengan data atribut sekolah untuk memberikan gambaran komprehensif mengenai kondisi pendidikan khusus di Provinsi Sumatera Utara.
+            """)
+            
         # Tujuan Dashboard (Balon Hijau)
         with st.expander("🎯 Tujuan Dashboard"):
             st.markdown("""
@@ -561,7 +561,7 @@ elif st.session_state.page_view == "tentang_dashboard":
         st.markdown("##### 🎬 Video Panduan Penggunaan")
         # Ganti link di bawah dengan link video youtube kamu
         st.video("https://www.youtube.com/watch?v=example123")
-        with col_info2:
+    with col_info2:
         # Peran Dashboard
         st.markdown("##### 💡 Peran Dashboard")
         st.success("""
