@@ -647,22 +647,27 @@ col_c1, col_c2, col_c3 = st.columns([1, 2, 1]) # Membuat kolom tengah lebih besa
 with col_c2:
     if os.path.exists("banner_kolaborasi.png"):
         st.image("banner_kolaborasi.png", use_container_width=True)
-    else:
-        # Placeholder jika gambar belum ada
-        st.markdown("<p style='text-align:center; color:gray; font-size:12px;'>[ Logo Kolaborasi Sumut Berkah ]</p>", unsafe_allow_html=True)
 
 st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
 
-# 2. ALAMAT DAN EMAIL (CENTERED)
-st.markdown("""
-    <div style="text-align: center; font-family: 'Inter', sans-serif;">
-        <p style="margin: 0; font-weight: 800; color: #0d47a1; font-size: 14px;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</p>
-        <p style="margin: 5px 0; color: #666; font-size: 13px; line-height: 1.4;">
-            Jl Teuku Cik Ditiro No.1-D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
-        </p>
-        <p style="margin: 0; color: #0d47a1; font-size: 13px; font-weight: 600;">
-            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
-        </p>
+# 2. IKON SOSIAL MEDIA AKTIF (Instagram, Web, YouTube)
+# Ganti Link di bawah sesuai dengan link resmi Disdik Sumut
+link_instagram = "https://www.instagram.com/disdiksumut"
+link_web = "https://disdik.sumutprov.go.id"
+link_youtube = "https://www.youtube.com/@disdiksumut"
+
+# Menggunakan HTML untuk membuat ikon yang bisa diklik
+st.markdown(f"""
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="{link_instagram}" target="_blank" style="margin: 0 15px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" height="30" style="object-fit: contain;">
+        </a>
+        <a href="{link_web}" target="_blank" style="margin: 0 15px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="30" height="30" style="object-fit: contain;">
+        </a>
+        <a href="{link_youtube}" target="_blank" style="margin: 0 15px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="30" height="30" style="object-fit: contain;">
+        </a>
     </div>
 """, unsafe_allow_html=True)
 
