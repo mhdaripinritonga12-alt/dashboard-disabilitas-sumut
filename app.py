@@ -222,7 +222,7 @@ if not st.session_state.login:
         
         with c_r:
             st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>LOGIN USER</h2>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#555; font-size:15px; margin-bottom:20px;'>Untuk Akses Dashboard SI-PANDAI</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#555; font-size:18px; margin-bottom:20px;'>Untuk Akses Dashboard SI-PANDAI</p>", unsafe_allow_html=True)
             
             with st.form("login_form", clear_on_submit=False):
                 u = st.text_input("Username", placeholder="Masukkan Username")
