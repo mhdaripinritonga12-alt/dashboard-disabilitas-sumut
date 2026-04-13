@@ -656,7 +656,7 @@ st.markdown("""
         .footer-container {
             text-align: center;
             font-family: 'Inter', sans-serif;
-            margin-top: -40px; /* Menarik teks ke atas mendekati logo */
+            margin-top: -25px; /* Menarik teks ke atas mendekati logo */
         }
     </style>
     <div class="footer-container">
