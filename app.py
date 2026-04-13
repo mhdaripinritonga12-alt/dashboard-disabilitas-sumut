@@ -650,7 +650,19 @@ with col_c2:
 
 st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
 
-# 2. IKON SOSIAL MEDIA AKTIF
+# 2. NAMA INSTANSI, ALAMAT, DAN EMAIL (TERPUSAT)
+st.markdown("""
+    <div style="text-align: center; font-family: 'Inter', sans-serif;">
+        <h4 style="margin: 0; color: #0d47a1; font-weight: 500;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</h4>
+        <p style="margin: 8px 0; color: #666; font-size: 13px; line-height: 1.4;">
+            Jl. Teuku Cik Ditiro No.1-D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+        </p>
+        <p style="margin: 0; color: #0d47a1; font-size: 13px; font-weight: 600;">
+            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+# 3. IKON SOSIAL MEDIA AKTIF
 link_instagram = "https://www.instagram.com/disdiksumut"
 link_web = "https://disdik.sumutprov.go.id"
 link_youtube = "https://www.youtube.com/@Disdikprovsumut"
@@ -669,18 +681,6 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# 3. NAMA INSTANSI, ALAMAT, DAN EMAIL (TERPUSAT)
-st.markdown("""
-    <div style="text-align: center; font-family: 'Inter', sans-serif;">
-        <h4 style="margin: 0; color: #0d47a1; font-weight: 800;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</h4>
-        <p style="margin: 8px 0; color: #666; font-size: 13px; line-height: 1.4;">
-            Jl. Tgk. Cik Ditiro No.1 D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
-        </p>
-        <p style="margin: 0; color: #0d47a1; font-size: 13px; font-weight: 600;">
-            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
-        </p>
-    </div>
-""", unsafe_allow_html=True)
 
 # 4. WATERMARK COPYRIGHT
 st.markdown("""
