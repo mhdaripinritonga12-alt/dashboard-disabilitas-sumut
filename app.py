@@ -637,3 +637,54 @@ elif st.session_state.page_view == "tentang_dashboard":
             st.session_state.page_view = "dashboard"
             st.rerun()
 
+# ==================================
+# Bagian Akhir: FOOTER KONTAK DISDIK
+# ==================================
+st.divider()
+
+# Layout Footer 4 Kolom
+col_f1, col_f2, col_f3, col_f4 = st.columns([1.2, 1, 1, 1.5])
+
+with col_f1:
+    st.markdown("**🏢 DISDIK SUMUT**")
+    st.markdown("""
+        <p style="font-size: 13px; color: #666;">
+        Dinas Pendidikan<br>
+        Provinsi Sumatera Utara
+        </p>
+    """, unsafe_allow_html=True)
+
+with col_f2:
+    st.markdown("**📸 MEDIA SOSIAL**")
+    st.markdown("""
+        <p style="font-size: 13px; color: #666;">
+        Instagram: <a href="https://www.instagram.com/disdiksumut" target="_blank" style="text-decoration:none; color:#e1306c;">@disdiksumut</a>
+        </p>
+    """, unsafe_allow_html=True)
+
+with col_f3:
+    st.markdown("**📞 KONTAK KAMI**")
+    st.markdown("""
+        <p style="font-size: 13px; color: #666;">
+        Telepon: (061) 4537123<br>
+        Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration:none; color:#0d47a1;">disdik@sumutprov.go.id</a>
+        </p>
+    """, unsafe_allow_html=True)
+
+with col_f4:
+    st.markdown("**📍 ALAMAT DINAS**")
+    st.markdown("""
+        <p style="font-size: 13px; color: #666;">
+        Jl. Tgk. Cik Ditiro No.1 D, Madras Hulu, <br>
+        Kec. Medan Polonia, Kota Medan, <br>
+        Sumatera Utara 20152
+        </p>
+    """, unsafe_allow_html=True)
+
+# Garis bawah tipis
+st.markdown("""
+    <hr style="margin: 10px 0; opacity: 0.1;">
+    <div style="text-align: center; color: #9e9e9e; font-size: 11px; padding-bottom: 20px;">
+        © 2026 SI-PANDAI SUMUT | Digitalisasi Pemetaan ATS Disabilitas | Inovator: Ima Safitri Sianipar, S.Kom
+    </div>
+""", unsafe_allow_html=True)
