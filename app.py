@@ -638,31 +638,29 @@ elif st.session_state.page_view == "tentang_dashboard":
             st.rerun()
 
 # ==================================
-# Bagian Akhir: FOOTER DENGAN LOGO PRESISI DI TENGAH
+# Bagian Akhir: FOOTER DENGAN LOGO LEBIH KECIL
 # ==================================
 st.divider()
 
-# 1. LOGO KOLABORASI (MENGGUNAKAN 3 KOLOM SIMETRIS)
-# Rasio [1, 1, 1] dengan kolom tengah sebagai tempat logo agar presisi di tengah
-col_c1, col_c2, col_c3 = st.columns([1, 1, 1]) 
+# 1. LOGO KOLABORASI DI TENGAH (UKURAN DIPERKECIL LAGI)
+col_c1, col_c2, col_c3 = st.columns([1.8, 1, 1.8]) # Kolom tengah dibuat lebih ramping
 with col_c2:
     if os.path.exists("banner_kolaborasi.png"):
-        # Menggunakan use_container_width agar mengikuti lebar kolom tengah yang sudah sempit
-        st.image("banner_kolaborasi.png", use_container_width=True) 
+        # Ukuran dikunci ke 180 agar lebih elegan
+        st.image("banner_kolaborasi.png", width=150) 
     else:
         st.markdown("<p style='text-align:center; color:gray; font-size:10px;'>[ Logo Kolaborasi ]</p>", unsafe_allow_html=True)
 
-# Memberikan sedikit ruang nafas
 st.markdown("<div style='margin-bottom: 10px;'></div>", unsafe_allow_html=True)
 
 # 2. NAMA INSTANSI, ALAMAT, DAN EMAIL (TERPUSAT)
 st.markdown("""
     <div style="text-align: center; font-family: 'Inter', sans-serif;">
-        <h4 style="margin: 0; color: #0d47a1; font-weight: 800; font-size: 15px;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</h4>
-        <p style="margin: 5px 0; color: #666; font-size: 11px; line-height: 1.4;">
+        <h4 style="margin: 0; color: #0d47a1; font-weight: 800; font-size: 16px;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</h4>
+        <p style="margin: 5px 0; color: #666; font-size: 12px; line-height: 1.4;">
             Jl. Teuku Cik Ditiro No.1-D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
         </p>
-        <p style="margin: 0; color: #0d47a1; font-size: 11px; font-weight: 600;">
+        <p style="margin: 0; color: #0d47a1; font-size: 12px; font-weight: 600;">
             Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
         </p>
     </div>
@@ -677,14 +675,14 @@ link_youtube = "https://www.youtube.com/@Disdikprovsumut"
 
 st.markdown(f"""
     <div style="text-align: center; margin-bottom: 10px;">
-        <a href="{link_instagram}" target="_blank" style="margin: 0 10px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="20" height="20">
+        <a href="{link_instagram}" target="_blank" style="margin: 0 12px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="22" height="22">
         </a>
-        <a href="{link_web}" target="_blank" style="margin: 0 10px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="20" height="20">
+        <a href="{link_web}" target="_blank" style="margin: 0 12px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="22" height="22">
         </a>
-        <a href="{link_youtube}" target="_blank" style="margin: 0 10px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="20" height="20">
+        <a href="{link_youtube}" target="_blank" style="margin: 0 12px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="22" height="22">
         </a>
     </div>
 """, unsafe_allow_html=True)
@@ -693,6 +691,6 @@ st.markdown(f"""
 st.markdown("""
     <hr style="margin: 15px 0 10px 0; opacity: 0.1;">
     <div style="text-align: center; color: #9e9e9e; font-size: 10px; padding-bottom: 20px;">
-        © 2026 SI-PANDAI SUMUT | Inovator: Ima Safitri Sianipar, S.Kom
+        © 2026 SI-PANDAI SUMUT | Digitalisasi Pemetaan ATS Disabilitas | Inovator: Ima Safitri Sianipar, S.Kom
     </div>
 """, unsafe_allow_html=True)
