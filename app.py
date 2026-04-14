@@ -233,7 +233,7 @@ if not st.session_state.login:
                 submit = st.form_submit_button("🔓 MASUK KE DASHBOARD")
                 
                 if submit:
-                    if u == "admin" and p == "admin123": 
+                    if u == "admin" and p == "bidangkhusus": 
                         st.session_state.login = True
                         st.rerun()
                     else: 
