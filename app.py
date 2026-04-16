@@ -173,7 +173,7 @@ with st.sidebar:
             </div>
         ''', unsafe_allow_html=True)
     
-    if st.button("👤 Role: Admin", key="role_admin_btn"):
+  
        
         st.rerun()
     st.divider()
