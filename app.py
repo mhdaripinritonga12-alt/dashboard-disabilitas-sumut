@@ -390,61 +390,6 @@ elif st.session_state.page_view == "detail":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-# --- D. HALAMAN PROFIL ADMINISTRATOR (FIXED) ---
-elif st.session_state.page_view == "admin_profile":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">👤 Profil Administrator</p>', unsafe_allow_html=True)
-    
-    # Rasio diperbaiki: 0.8 untuk foto agar rapat, 2 untuk teks
-    col_admin1, col_admin2 = st.columns([0.8, 2])
-    
-    with col_admin1:
-        # Menampilkan Foto Administrator (Ukuran 250px agar sama dengan foto Kabid)
-        if os.path.exists("foto_ima.png"):
-            st.image("foto_ima.png", caption="Administrator SI-PANDAI", width=250)
-        else:
-            # Placeholder jika file tidak ditemukan
-            st.markdown("""
-                <div style="background-color: #f0f7ff; border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed #0d47a1; width: 250px;">
-                    <span style="font-size: 80px;">👤</span>
-                    <p style="color: #0d47a1; font-weight: bold; margin-top: 10px;">Foto Admin</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-    with col_admin2:
-        # Data Diri (Balon Hijau)
-        with st.expander("🆔 Informasi Biodata", expanded=True):
-            st.markdown(f"""
-            **Nama Lengkap:** Ima Safitri Sianipar, S.Kom
-            
-            **NIP:** 199511232025042004
-            
-            **Jabatan:** Penata Kelola Sistem dan Teknologi Informasi
-            """)
-            
-        # Data Instansi (Balon Hijau)
-        with st.expander("🏢 Unit Kerja"):
-            st.markdown("""
-            **Instansi:** Dinas Pendidikan Provinsi Sumatera Utara
-            
-            **Bidang:** Pembinaan Pendidikan Khusus (PK)
-            
-            **Username Sistem:** `admin`
-            """)
-
-        # Catatan Peran (Balon Hijau)
-        with st.expander("🛠️ Hak Akses Sistem"):
-            st.markdown("""
-            Administrator memiliki hak penuh untuk:
-            * Mengelola basis data master SI-PANDAI.
-            * Melakukan pembaharuan data titik koordinat ATS.
-            * Memantau performa dashboard secara berkala.
-            """)
-
-    st.divider()
-    if st.button("⬅️ Kembali ke Dashboard Utama", key="btn_back_admin_final"):
-        st.session_state.page_view = "dashboard"
-        st.rerun()
-
 # --- B. HALAMAN PENDIDIKAN KHUSUS ---
 elif st.session_state.page_view == "tentang_pk":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Profil Bidang Pembinaan Pendidikan Khusus</p>', unsafe_allow_html=True)
