@@ -243,12 +243,7 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sch_wil.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
-                            st.markdown("<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
-                        elif getattr(row, 'rusak_berat', 0) > 0:
-                            st.markdown("<div class='rec-box rehab'>🛠️ PRIORITAS REHAB</div>", unsafe_allow_html=True)
-                        else: st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
-
+                       
                         if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
                             st.session_state.selected_school_data = row._asdict()
                             st.session_state.page_view = "detail"
