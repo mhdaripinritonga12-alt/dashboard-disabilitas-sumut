@@ -172,8 +172,7 @@ with st.sidebar:
                 <span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
             </div>
         ''', unsafe_allow_html=True)
-      st.rerun()
-
+          st.rerun()
       st.divider()
 
 def ubah_halaman():
