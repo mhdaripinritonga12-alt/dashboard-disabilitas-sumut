@@ -345,7 +345,7 @@ if st.session_state.page_view == "dashboard":
     # Lokasi baru: Tepat sebelum expander Tabel
     st.markdown(f"""
         <p style="font-size: 11px; color: #666; font-style: italic; margin-bottom: -10px; margin-left: 5px;">
-            ℹ️ <b>Rekomendasi Data:</b> Sumber data berasal dari Bidang Pembinaan Pendidikan Khusus, LPPD & TIKP 2025. 
+            ℹ️ <b>Rekomendasi Data:</b> Sumber data berasal dari Bidang Pembinaan Pendidikan Khusus & TIKP 2025. 
             Gunakan tabel di bawah untuk validasi detail per kecamatan.
         </p>
     """, unsafe_allow_html=True)
