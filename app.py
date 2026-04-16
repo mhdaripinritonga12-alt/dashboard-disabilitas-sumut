@@ -232,7 +232,7 @@ if st.session_state.page_view == "dashboard":
     with m1: draw_tile_svg("Penduduk Disabilitas", f"{int(df_f.iloc[:,1].sum()):,}" if not df_f.empty else "0", svg_people, "tile-orange")
     with m2: draw_tile_svg("Siswa Belajar", f"{int(df_f.iloc[:,2].sum()):,}" if not df_f.empty else "0", svg_cap, "tile-blue-light")
     with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Angka Partisipasi", v_aps, svg_chart, "tile-green-light")
+    with m4: draw_tile_svg("Persentase", v_aps, svg_chart, "tile-green-light")
 
     if kab_pilih != "Semua":
         st.divider()
@@ -484,7 +484,7 @@ elif st.session_state.page_view == "tentang_dashboard":
 
         ### 🚀 Fitur Utama
         * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
-        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
+        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan Persentase.
         * **School Analytics:** Detail kondisi sekolah (Rombel vs Ruang Kelas) untuk analisis kebutuhan infrastruktur.
         * **Top 5 Analysis:** Ranking wilayah dengan prioritas penanganan tertinggi.
 
