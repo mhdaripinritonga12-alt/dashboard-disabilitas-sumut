@@ -172,7 +172,7 @@ with st.sidebar:
                 <span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
             </div>
         ''', unsafe_allow_html=True)
-       if st.button("👤 Role: Admin", key="role_admin_btn"):
+    if st.button("👤 Role: Admin", key="role_admin_btn"):
         st.session_state.page_view = "admin_profile"
         st.rerun()
     st.divider()
