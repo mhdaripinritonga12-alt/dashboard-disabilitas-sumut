@@ -170,10 +170,11 @@ with st.sidebar:
             </div>
         ''', unsafe_allow_html=True)
     
-    if st.button("👤 Role: Admin", key="role_admin_btn"):
-        st.session_state.page_view = "admin_profile"
-        st.rerun()
-    st.divider()
+    st.sidebar.markdown("""
+    <div style="background-color: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; text-align: center; border: 1px solid white;">
+        <span style="color: white; font-weight: 700;">👤 Role: Admin</span>
+    </div>
+""", unsafe_allow_html=True)
 
 def ubah_halaman():
     # Tambahkan pengecekan ini agar tidak error saat logout
