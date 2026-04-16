@@ -21,10 +21,6 @@ if "page_view" not in st.session_state: st.session_state.page_view = "dashboard"
 if "selected_kab" not in st.session_state: st.session_state.selected_kab = "Semua"
 if "selected_school_data" not in st.session_state: st.session_state.selected_school_data = None
 
-def proses_logout():
-    st.session_state.selected_kab = "Semua"
-    st.session_state.login = False
-    st.session_state.page_view = "dashboard"
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
