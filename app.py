@@ -172,10 +172,7 @@ with st.sidebar:
                 <span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
             </div>
         ''', unsafe_allow_html=True)
-          st.rerun()
-      st.divider()
-
-def ubah_halaman():
+          
     # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
         pilihan = st.session_state.nav_radio
