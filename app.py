@@ -21,6 +21,10 @@ if "page_view" not in st.session_state: st.session_state.page_view = "dashboard"
 if "selected_kab" not in st.session_state: st.session_state.selected_kab = "Semua"
 if "selected_school_data" not in st.session_state: st.session_state.selected_school_data = None
 
+def proses_logout():
+    st.session_state.selected_kab = "Semua"
+    st.session_state.login = False
+    st.session_state.page_view = "dashboard"
 
 def get_base64_image(image_path):
     if os.path.exists(image_path):
@@ -159,7 +163,92 @@ def load_all_data():
 
 data_wilayah, data_sekolah = load_all_data()
 
+# =========================
+# Bagian 3: LOGIN (FINAL GRADIENT & ENTER)
+# =========================
+if not st.session_state.login:
+    # CSS untuk Background dan Tombol Gradasi di dalam Form
+    st.markdown("""
+        <style>
+        [data-testid="stAppViewContainer"] {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #bbdefb 100%);
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.4); 
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: none; 
+            border: none;
+        }
+        /* Menghilangkan garis kotak form */
+        div[data-testid="stForm"] {
+            border: none !important;
+            padding: 0 !important;
+        }
+        /* MENGEMBALIKAN GRADASI BIRU PADA TOMBOL FORM */
+        div[data-testid="stFormSubmitButton"] > button {
+            background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
+            color: white !important;
+            border-radius: 10px !important;
+            font-weight: 700 !important;
+            height: 48px;
+            border: none !important;
+            width: 100%;
+        }
+        div[data-testid="stFormSubmitButton"] > button:hover {
+            box-shadow: 0 4px 15px rgba(30, 136, 229, 0.4) !important;
+            border: none !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
+    st.markdown("<div style='margin-top: 5vh;'></div>", unsafe_allow_html=True)
+    
+    # Logo Pemprov Kecil di Tengah
+    _, col_logo, _ = st.columns([2.5, 0.4, 2.5]) 
+    with col_logo:
+        if os.path.exists("logo_sumut.png"): 
+            st.image("logo_sumut.png", use_container_width=True)
+
+    # Area Login
+    _, col_card, _ = st.columns([1.2, 2, 1.2])
+    with col_card:
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+        
+        c_l, c_r = st.columns([1.2, 1.5])
+        with c_l:
+            if os.path.exists("logo_sipandai.png"): 
+                st.image("logo_sipandai.png", use_container_width=True)
+        
+        with c_r:
+            st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>LOGIN USER</h2>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#555; font-size:18px; margin-bottom:20px;'>Untuk Akses Dashboard SI-PANDAI</p>", unsafe_allow_html=True)
+            
+            with st.form("login_form", clear_on_submit=False):
+                u = st.text_input("Username", placeholder="Masukkan Username")
+                p = st.text_input("Password", type="password", placeholder="Masukkan Password")
+                
+                st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
+                
+                submit = st.form_submit_button("🔓 MASUK KE DASHBOARD")
+                
+                if submit:
+                    if u == "admin" and p == "admin123": 
+                        st.session_state.login = True
+                        st.rerun()
+                    else: 
+                        st.error("Username atau Password salah!")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    # Footer
+    st.markdown("""
+        <p style='text-align:center; color:#90a4ae; font-size:11px; margin-top:20px;'>
+            © 2026 Dinas Pendidikan Provinsi Sumatera Utara<br>
+            Bidang Pembinaan Pendidikan Khusus
+        </p>
+    """, unsafe_allow_html=True)
+    st.stop()
 # ==================================
 # Bagian 4: SIDEBAR & NAVIGASI
 # ==================================
@@ -172,11 +261,13 @@ with st.sidebar:
                 <span style="font-size:20px;font-weight:800;color:white;">SI-PANDAI SUMUT</span>
             </div>
         ''', unsafe_allow_html=True)
+    
     if st.button("👤 Role: Admin", key="role_admin_btn"):
         st.session_state.page_view = "admin_profile"
         st.rerun()
     st.divider()
-   
+
+def ubah_halaman():
     # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
         pilihan = st.session_state.nav_radio
@@ -204,6 +295,7 @@ opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_w
 kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
 
 st.sidebar.divider()
+st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
 # ==================================
 # Bagian 5: HEADER
@@ -385,6 +477,61 @@ elif st.session_state.page_view == "detail":
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
     st.divider()
     if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+
+# --- D. HALAMAN PROFIL ADMINISTRATOR (FIXED) ---
+elif st.session_state.page_view == "admin_profile":
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">👤 Profil Administrator</p>', unsafe_allow_html=True)
+    
+    # Rasio diperbaiki: 0.8 untuk foto agar rapat, 2 untuk teks
+    col_admin1, col_admin2 = st.columns([0.8, 2])
+    
+    with col_admin1:
+        # Menampilkan Foto Administrator (Ukuran 250px agar sama dengan foto Kabid)
+        if os.path.exists("foto_ima.png"):
+            st.image("foto_ima.png", caption="Administrator SI-PANDAI", width=250)
+        else:
+            # Placeholder jika file tidak ditemukan
+            st.markdown("""
+                <div style="background-color: #f0f7ff; border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed #0d47a1; width: 250px;">
+                    <span style="font-size: 80px;">👤</span>
+                    <p style="color: #0d47a1; font-weight: bold; margin-top: 10px;">Foto Admin</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+    with col_admin2:
+        # Data Diri (Balon Hijau)
+        with st.expander("🆔 Informasi Biodata", expanded=True):
+            st.markdown(f"""
+            **Nama Lengkap:** Ima Safitri Sianipar, S.Kom
+            
+            **NIP:** 199511232025042004
+            
+            **Jabatan:** Penata Kelola Sistem dan Teknologi Informasi
+            """)
+            
+        # Data Instansi (Balon Hijau)
+        with st.expander("🏢 Unit Kerja"):
+            st.markdown("""
+            **Instansi:** Dinas Pendidikan Provinsi Sumatera Utara
+            
+            **Bidang:** Pembinaan Pendidikan Khusus (PK)
+            
+            **Username Sistem:** `admin`
+            """)
+
+        # Catatan Peran (Balon Hijau)
+        with st.expander("🛠️ Hak Akses Sistem"):
+            st.markdown("""
+            Administrator memiliki hak penuh untuk:
+            * Mengelola basis data master SI-PANDAI.
+            * Melakukan pembaharuan data titik koordinat ATS.
+            * Memantau performa dashboard secara berkala.
+            """)
+
+    st.divider()
+    if st.button("⬅️ Kembali ke Dashboard Utama", key="btn_back_admin_final"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
