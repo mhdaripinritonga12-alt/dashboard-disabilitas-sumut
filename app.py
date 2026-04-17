@@ -290,6 +290,40 @@ elif st.session_state.page_view == "tentang_dashboard":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
+# ==================================
+# Bagian Akhir: FOOTER (SUPER RAPAT)
+# ==================================
+st.divider()
+
+# 1. LOGO KOLABORASI
+col_c1, col_c2, col_c3 = st.columns([2.2, 1, 1.9])
+with col_c2:
+    if os.path.exists("banner_kolaborasi.png"):
+        st.image("banner_kolaborasi.png", width=150) 
+    else:
+        st.markdown("<p style='text-align:center; color:gray; font-size:10px;'>[ Logo Kolaborasi ]</p>", unsafe_allow_html=True)
+
+# CSS PAKSA RAPAT (Margin Negatif)
+st.markdown("""
+    <style>
+        .footer-container {
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            margin-top: -25px; /* Menarik teks ke atas mendekati logo */
+        }
+    </style>
+    <div class="footer-container">
+        <h4 style="margin: 0; color: #0d47a1; font-weight: 800; font-size: 16px; padding-bottom: 2px;">
+            DINAS PENDIDIKAN PROVINSI SUMATERA UTARA
+        </h4>
+        <p style="margin: 0; color: #666; font-size: 11px; line-height: 1.2;">
+            Jl. Teuku Cik Ditiro No.1-D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+        </p>
+        <p style="margin: 0; color: #0d47a1; font-size: 11px; font-weight: 600;">
+            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 # 3. IKON SOSIAL MEDIA (Juga dibuat rapat)
 link_instagram = "https://www.instagram.com/disdiksumut"
