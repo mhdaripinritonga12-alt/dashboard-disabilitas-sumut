@@ -219,50 +219,42 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# --- A. HALAMAN DASHBOARD ---
-# ==================================
-# Bagian 5: HEADER & DASHBOARD
-# ==================================
-st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
-st.markdown("""
-    <div class="header-balloon-card">
-        <h2 style='color: #0d47a1; font-weight:800; margin: 0;'>DASHBOARD SI-PANDAI SUMUT</h2>
-        <p style='color: #1565c0; font-size: 14px; font-weight: 600; margin: 0;'>
-            Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas Sumatera Utara
-        </p>
-    </div>
-""", unsafe_allow_html=True)
-
 if st.session_state.page_view == "dashboard":
+    # Filter Data
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": 
         df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # --- PERBAIKAN LOGIKA SESUAI PERMINTAAN ---
+    # --- PERBAIKAN ANGKA (Sinkron dengan CSV) ---
     try:
-        # Penjumlahan dari kolom CSV (Indeks 1: Populasi, Indeks 2: Siswa Belajar)
-        v_pop_total = int(pd.to_numeric(df_f.iloc[:,1], errors='coerce').sum())
-        v_sis_total = int(pd.to_numeric(df_f.iloc[:,2], errors='coerce').sum())
+        # Penjumlahan Kolom 1 (Estimasi) dan Kolom 2 (Siswa Belajar)
+        pop_val = int(pd.to_numeric(df_f.iloc[:,1], errors='coerce').sum())
+        sis_val = int(pd.to_numeric(df_f.iloc[:,2], errors='coerce').sum())
         
-        # ATS = Pengurangan (Populasi - Siswa Belajar)
-        v_ats_total = v_pop_total - v_sis_total
-        # Jika hasil pengurangan negatif, kita tampilkan 0 atau tetap sesuai raw (sesuai permintaan user)
-        # Namun biasanya ATS tidak bisa minus, maka kita beri pengaman:
-        v_ats_display = max(0, v_ats_total) 
+        # ATS = Estimasi - Siswa Belajar
+        ats_val = pop_val - sis_val
         
         # Persentase Partisipasi
-        v_persen = (v_sis_total / v_pop_total * 100) if v_pop_total > 0 else 0
-    except:
-        v_pop_total, v_sis_total, v_ats_display, v_persen = 0, 0, 0, 0
+        persen_val = (sis_val / pop_val * 100) if pop_val > 0 else 0
 
-    # Tampilkan Matriks
+        # Formatting Teks
+        txt_pop = f"{pop_val:,}"
+        txt_sis = f"{sis_val:,}"
+        txt_ats = f"{max(0, ats_val):,}" # max 0 agar tidak muncul minus jika data tidak sinkron
+        txt_persen = f"{persen_val:.2f}%"
+    except:
+        txt_pop, txt_sis, txt_ats, txt_persen = "0", "0", "0", "0.00%"
+
+    # Matriks Display
+    st.markdown('<p style="font-size:24px; font-weight:800; color:#0d47a1; margin-bottom:15px;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
-    with m1: draw_tile_svg("Estimasi Populasi", f"{v_pop_total:,}", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", f"{v_sis_total:,}", svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_ats_display:,}", svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Persentase", f"{v_persen:.2f}%", svg_chart, "tile-green-light")
+    with m1: draw_tile_svg("Estimasi Populasi", txt_pop, svg_people, "tile-orange")
+    with m2: draw_tile_svg("Siswa Belajar", txt_sis, svg_cap, "tile-blue-light")
+    with m3: draw_tile_svg("Anak Tidak Sekolah", txt_ats, svg_warning, "tile-red-dark")
+    with m4: draw_tile_svg("Persentase", txt_persen, svg_chart, "tile-green-light")
 
     st.divider()
+    #Peta
     cv1, cv2 = st.columns([1.6, 1.1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
