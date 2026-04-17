@@ -220,59 +220,47 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- A. HALAMAN DASHBOARD ---
+# ==================================
+# Bagian 5: HEADER & DASHBOARD
+# ==================================
+st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
+st.markdown("""
+    <div class="header-balloon-card">
+        <h2 style='color: #0d47a1; font-weight:800; margin: 0;'>DASHBOARD SI-PANDAI SUMUT</h2>
+        <p style='color: #1565c0; font-size: 14px; font-weight: 600; margin: 0;'>
+            Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas Sumatera Utara
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+
 if st.session_state.page_view == "dashboard":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
-    
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": 
         df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # --- PERBAIKAN ERROR VALUEERROR ---
-    # Gunakan pd.to_numeric untuk memastikan data adalah angka sebelum di-sum
+    # --- PERBAIKAN LOGIKA SESUAI PERMINTAAN ---
     try:
-        col_1_sum = pd.to_numeric(df_f.iloc[:,1], errors='coerce').sum()
-        col_2_sum = pd.to_numeric(df_f.iloc[:,2], errors='coerce').sum()
-        col_3_sum = pd.to_numeric(df_f.iloc[:,3], errors='coerce').sum()
+        # Penjumlahan dari kolom CSV (Indeks 1: Populasi, Indeks 2: Siswa Belajar)
+        v_pop_total = int(pd.to_numeric(df_f.iloc[:,1], errors='coerce').sum())
+        v_sis_total = int(pd.to_numeric(df_f.iloc[:,2], errors='coerce').sum())
         
-        v_a = int(col_3_sum) if not df_f.empty else 0
+        # ATS = Pengurangan (Populasi - Siswa Belajar)
+        v_ats_total = v_pop_total - v_sis_total
+        # Jika hasil pengurangan negatif, kita tampilkan 0 atau tetap sesuai raw (sesuai permintaan user)
+        # Namun biasanya ATS tidak bisa minus, maka kita beri pengaman:
+        v_ats_display = max(0, v_ats_total) 
         
-        # Cek pembagian dengan nol
-        if col_1_sum > 0:
-            v_aps_num = (col_2_sum / col_1_sum) * 100
-        else:
-            v_aps_num = 0
-            
-        v_aps = f"{v_aps_num:.2f}%"
-        v_populasi = f"{int(col_1_sum):,}"
-        v_belajar = f"{int(col_2_sum):,}"
-    except Exception as e:
-        v_a = 0
-        v_aps = "0.00%"
-        v_populasi = "0"
-        v_belajar = "0"
+        # Persentase Partisipasi
+        v_persen = (v_sis_total / v_pop_total * 100) if v_pop_total > 0 else 0
+    except:
+        v_pop_total, v_sis_total, v_ats_display, v_persen = 0, 0, 0, 0
 
-    # Matriks Display
+    # Tampilkan Matriks
     m1, m2, m3, m4 = st.columns(4)
-    with m1: draw_tile_svg("Estimasi Populasi", v_populasi, svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", v_belajar, svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Persentase", v_aps, svg_chart, "tile-green-light")
-
-    if kab_pilih != "Semua":
-        st.divider()
-        st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
-        sch_wil = data_sekolah[data_sekolah[col_kab] == kab_pilih] if not data_sekolah.empty else pd.DataFrame()
-        if not sch_wil.empty:
-            cols = st.columns(3)
-            for i, row in enumerate(sch_wil.itertuples()):
-                with cols[i % 3]:
-                    with st.container(border=True):
-                       
-                        if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
-                            st.session_state.selected_school_data = row._asdict()
-                            st.session_state.page_view = "detail"
-                            st.rerun()
-                        st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
+    with m1: draw_tile_svg("Estimasi Populasi", f"{v_pop_total:,}", svg_people, "tile-orange")
+    with m2: draw_tile_svg("Siswa Belajar", f"{v_sis_total:,}", svg_cap, "tile-blue-light")
+    with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_ats_display:,}", svg_warning, "tile-red-dark")
+    with m4: draw_tile_svg("Persentase", f"{v_persen:.2f}%", svg_chart, "tile-green-light")
 
     st.divider()
     cv1, cv2 = st.columns([1.6, 1.1])
