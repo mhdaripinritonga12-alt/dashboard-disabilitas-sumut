@@ -149,8 +149,8 @@ svg_chart = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3
 @st.cache_data
 def load_all_data():
     try:
-        df_ats = pd.read_csv("master_data_si_pandai.csv")
-        df_sch = pd.read_csv("master_data_sekolah1.csv")
+        df_ats = pd.read_csv("master_data_si_pandaiFix.csv")
+        df_sch = pd.read_csv("master_data_sekolahFix.csv")
         for df in [df_ats, df_sch]:
             df.columns = df.columns.str.strip().str.lower()
         return df_ats, df_sch
