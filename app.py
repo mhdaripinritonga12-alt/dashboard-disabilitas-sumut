@@ -290,8 +290,30 @@ elif st.session_state.page_view == "tentang_dashboard":
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-# ==================================
-# Bagian Akhir: FOOTER
-# ==================================
-st.divider()
-st.markdown('<div style="text-align:center; color:#0d47a1; font-weight:800;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</div>', unsafe_allow_html=True)
+
+# 3. IKON SOSIAL MEDIA (Juga dibuat rapat)
+link_instagram = "https://www.instagram.com/disdiksumut"
+link_web = "https://disdik.sumutprov.go.id"
+link_youtube = "https://www.youtube.com/@Disdikprovsumut"
+
+st.markdown(f"""
+    <div style="text-align: center; margin-top: 5px; margin-bottom: 5px;">
+        <a href="{link_instagram}" target="_blank" style="margin: 0 10px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="20" height="20">
+        </a>
+        <a href="{link_web}" target="_blank" style="margin: 0 10px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="20" height="20">
+        </a>
+        <a href="{link_youtube}" target="_blank" style="margin: 0 10px; text-decoration: none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="20" height="20">
+        </a>
+    </div>
+""", unsafe_allow_html=True)
+
+# 4. WATERMARK COPYRIGHT
+st.markdown("""
+    <hr style="margin: 5px 0 5px 0; opacity: 0.1;">
+    <div style="text-align: center; color: #9e9e9e; font-size: 10px; padding-bottom: 20px;">
+        © 2026 SI-PANDAI SUMUT | Digitalisasi Pemetaan ATS Disabilitas | Bidang Pembinaan Pendidikan Khusus
+    </div>
+""", unsafe_allow_html=True)
