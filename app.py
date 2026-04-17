@@ -179,8 +179,7 @@ def ubah_halaman():
             st.session_state.page_view = "dashboard"
              # Paksa filter kembali ke "Semua" saat menu Dashboard diklik
             st.session_state.selected_kab = "Semua" 
-        elif "Pendidikan Khusus" in pilihan: 
-            st.session_state.page_view = "tentang_pk"
+        
         elif "Tentang Dashboard" in pilihan: 
             st.session_state.page_view = "tentang_dashboard"
 
