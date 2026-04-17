@@ -80,18 +80,11 @@ st.markdown("""
         padding: 10px !important;
         background-color: #f1f8e9 !important;
     }
-/* CSS Memaksa bentuk ujung batang membulat (Balon) */
     div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path {
         rx: 18px !important;
         ry: 18px !important;
     }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
-
-    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
-    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
-    div[data-baseweb="popover"] li {
-        color: black !important;
-    }
 
     .gradient-line-inner {
         height: 2px;
@@ -100,18 +93,12 @@ st.markdown("""
         width: 50%;
         opacity: 0.3;
     }
-.img-pimpinan {
-        border-radius: 50%;
-        border: 3px solid #0d47a1;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
     div[data-testid="stExpander"] details summary {
         background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
         color: white !important;
         border-radius: 10px !important;
         padding: 10px 15px !important;
     }
-
     div[data-testid="stExpander"] details summary span p { color: white !important; font-weight: 800 !important; }
     div.stDownloadButton > button { background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important; color: white !important; border-radius: 10px !important; width: 100% !important; }
 
@@ -128,10 +115,6 @@ st.markdown("""
     .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
     .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
     .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; }
-    .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
-    .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
-    .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
-    .aman { background-color: #dcfce7 !important; color: #15803d !important; border-left: 5px solid #22c55e !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -157,6 +140,7 @@ def load_all_data():
     except: return pd.DataFrame(), pd.DataFrame()
 
 data_wilayah, data_sekolah = load_all_data()
+
 # ==================================
 # Bagian 4: SIDEBAR & NAVIGASI
 # ==================================
@@ -170,16 +154,12 @@ with st.sidebar:
             </div>
         ''', unsafe_allow_html=True)
     
-    
 def ubah_halaman():
-    # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
         pilihan = st.session_state.nav_radio
         if "Dashboard Utama" in pilihan: 
             st.session_state.page_view = "dashboard"
-             # Paksa filter kembali ke "Semua" saat menu Dashboard diklik
             st.session_state.selected_kab = "Semua" 
-        
         elif "Tentang Dashboard" in pilihan: 
             st.session_state.page_view = "tentang_dashboard"
 
@@ -193,11 +173,9 @@ st.sidebar.radio(
 
 st.sidebar.divider()
 st.sidebar.header("🔎 Filter Wilayah")
-col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
+col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[1]
 opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
 kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
-
-st.sidebar.divider()
 
 # ==================================
 # Bagian 5: HEADER
@@ -208,7 +186,7 @@ st.markdown("""
         <h2 style='color: #0d47a1; font-weight:800; margin: 0; font-size: 2rem;'>DASHBOARD SI-PANDAI SUMUT</h2>
         <div class="gradient-line-inner"></div>
         <p style='color: #1565c0; font-size: 15px; font-weight: 700; margin: 0;'>
-            Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas Bidang Pembinaan Pendidikan Khusus Dinas Pendidikan Provinsi Sumatera Utara (Prototype Dashboard Versi Aktualisasi Latsar)
+            Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas Bidang Pembinaan Pendidikan Khusus Dinas Pendidikan Provinsi Sumatera Utara
         </p>
     </div>
 """, unsafe_allow_html=True)
@@ -217,19 +195,23 @@ st.markdown("""
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     
-    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
-    
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # Matriks
+    # Matriks (Fix Penamaan Kolom)
     m1, m2, m3, m4 = st.columns(4)
-    v_a = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
-    v_aps_num = (int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100) if not df_f.empty and int(df_f.iloc[:,1].sum()) > 0 else 0
+    c_pop = 'estimasi populasi usia sekolah'
+    c_sis = 'jumlah_siswa'
+    c_ats = 'ats_disabilitas'
+    
+    v_p = int(df_f[c_pop].sum()) if not df_f.empty else 0
+    v_s = int(df_f[c_sis].sum()) if not df_f.empty else 0
+    v_a = int(df_f[c_ats].sum()) if not df_f.empty else 0
+    v_aps_num = (v_s / v_p * 100) if v_p > 0 else 0
     v_aps = f"{v_aps_num:.2f}%"
 
-    with m1: draw_tile_svg("Estimasi Populasi Sasaran Usia Sekolah", f"{int(df_f.iloc[:,1].sum()):,}" if not df_f.empty else "0", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", f"{int(df_f.iloc[:,2].sum()):,}" if not df_f.empty else "0", svg_cap, "tile-blue-light")
+    with m1: draw_tile_svg("Estimasi Populasi Sasaran", f"{v_p:,}", svg_people, "tile-orange")
+    with m2: draw_tile_svg("Siswa Belajar", f"{v_s:,}", svg_cap, "tile-blue-light")
     with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
     with m4: draw_tile_svg("Persentase", v_aps, svg_chart, "tile-green-light")
 
@@ -242,7 +224,6 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sch_wil.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                       
                         if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
                             st.session_state.selected_school_data = row._asdict()
                             st.session_state.page_view = "detail"
@@ -254,100 +235,26 @@ if st.session_state.page_view == "dashboard":
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
-            ats_col_name = df_f.columns[3]
             fig_map = px.scatter_mapbox(
-                df_f, lat="lat", lon="lon", size=ats_col_name, color=ats_col_name,
+                df_f, lat="lat", lon="lon", size=c_ats, color=c_ats,
                 color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
-                hover_data={ats_col_name: True, "lat": False, "lon": False},
                 zoom=9, height=450
             )
-            fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
+            fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0})
             st.plotly_chart(fig_map, use_container_width=True)
-            
-            st.markdown("""
-                <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span></div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span></div>
-                </div>
-                <div style="margin-bottom: 20px;"></div>
-            """, unsafe_allow_html=True)
 
     with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
         if not df_f.empty:
-            ats_col = df_f.columns[3]
-            df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            max_val = df_top5[ats_col].max() if not df_top5.empty else 100
-
-            fig = px.bar(
-                df_top5, 
-                x=ats_col, 
-                y=col_kab, 
-                orientation='h', 
-                color=ats_col,
-                # Gradasi Biru Cerah ke Biru Royal (Sesuai contoh Balon)
-                color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], 
-                text=ats_col
-            )
-            
-            fig.update_traces(
-                textposition='outside',
-                textfont=dict(color='black', size=13, family="Inter", weight="bold"),
-                marker=dict(line=dict(width=0)),
-                width=0.85 # Membuat batang gemuk/padat
-            )
-
-            fig.update_layout(
-                height=350, 
-                margin=dict(l=10, r=130, t=20, b=10),
-                bargap=0, # Menghilangkan jarak antar slot bar
-                showlegend=False, 
-                plot_bgcolor='rgba(0,0,0,0)', 
-                paper_bgcolor='rgba(0,0,0,0)',
-                coloraxis_showscale=False
-            )
-
-            # Sumbu X & Y (Teks Nama Wilayah Warna Hitam)
-            fig.update_xaxes(range=[0, max_val * 1.4], showticklabels=False, showgrid=False)
-            fig.update_yaxes(
-                tickfont=dict(color='black', size=12, family="Inter", weight="bold"),
-                categoryorder='total ascending'
-            )
-            
+            df_top5 = df_f.sort_values(by=c_ats, ascending=False).head(5)
+            fig = px.bar(df_top5, x=c_ats, y=col_kab, orientation='h', color=c_ats,
+                         color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], text=c_ats)
+            fig.update_layout(height=350, showlegend=False, coloraxis_showscale=False)
             st.plotly_chart(fig, use_container_width=True)
 
-            # Insight Box
-            jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
-            if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
-                p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
-            elif v_a == 0:
-                p_insight, p_tindakan, warna_box = f"✅ Di wilayah {kab_pilih} saat ini bersih dari ATS.", "Pertahankan status ini dengan penguatan sistem deteksi dini.", "#4caf50"
-            elif v_a > 100:
-                p_insight, p_tindakan, warna_box = f"🚨 Jumlah ATS di {kab_pilih} sangat tinggi ({v_a:,} jiwa).", "Segera lakukan validasi lapangan dan prioritaskan bantuan.", "#ef4444"
-            else:
-                p_insight, p_tindakan, warna_box = f"💡 Di Wilayah {kab_pilih} jumlah Anak Tidak Sekolah (ATS) Disabilitas sebanyak {v_a:,} jiwa dengan partisipasi {v_aps}.", "Optimalkan sekolah terdekat.", "#0d47a1"
-            
-            st.markdown(f"""
-                <div class="insight-box" style="border-left: 6px solid {warna_box}; padding: 8px 12px;">
-                    <div class="insight-title" style="color:{warna_box}; margin-bottom: 2px; font-size: 14px;">
-                        💡 Insight & Rekomendasi: {kab_pilih}
-                    </div>
-                    <p class="insight-text" style="margin: 1; line-height: 1.3; font-size: 13px;">{p_insight}</p>
-                    <div style="margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 13px; font-weight: 700; color: {warna_box};">
-                        Tindakan: <span style="font-weight: 700; color: #333;">{p_tindakan}</span>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-            st.divider()
-    
-    # Lokasi baru: Tepat sebelum expander Tabel
-    st.markdown(f"""
-        <p style="font-size: 11px; color: #666; font-style: italic; margin-bottom: -10px; margin-left: 5px;">
-            ℹ️ <b>Rekomendasi Data:</b> Sumber data berasal dari Bidang Pembinaan Pendidikan Khusus & TIKP 2025. 
-            Gunakan tabel di bawah untuk validasi detail per kecamatan.
-        </p>
-    """, unsafe_allow_html=True)
+            # Insight
+            p_insight = f"🚨 Jumlah ATS di {kab_pilih} tercatat {v_a:,} jiwa." if v_a > 100 else f"💡 Wilayah {kab_pilih} relatif stabil."
+            st.markdown(f'<div class="insight-box"><div class="insight-title">Insight: {kab_pilih}</div><p class="insight-text">{p_insight}</p></div>', unsafe_allow_html=True)
 
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
@@ -356,213 +263,35 @@ if st.session_state.page_view == "dashboard":
 
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
-    st.markdown(f"<h3 style='color:#0d47a1; margin-bottom:0;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:gray;'>Wilayah: {sch['kab_kota']} | NPSN: {sch['npsn']}</p>", unsafe_allow_html=True)
-    query = f"{sch['nama_sekolah'].replace(' ', '+')}+{sch['kab_kota'].replace(' ', '+')}"
-    map_url = f"https://www.google.com/maps?q={query}&output=embed"
-    components.html(f'<iframe width="100%" height="400" src="{map_url}" style="border-radius:15px; border:1px solid #ddd;"></iframe>', height=420)
+    st.markdown(f"<h3 style='color:#0d47a1;'>🏫 {sch['nama_sekolah'].upper()}</h3>", unsafe_allow_html=True)
     st.divider()
     c1, c2 = st.columns(2)
     with c1:
         with st.container(border=True):
             st.subheader("📌 Profil Umum")
-            st.write(f"**Status:** {sch.get('status', 'Negeri')}")
+            st.write(f"**Status:** {sch.get('status', '-')}")
             st.write(f"**Alamat:** {sch.get('alamat', '-')}")
-            st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')} Orang")
-            st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
+            st.write(f"**Siswa:** {sch.get('jumlah_siswa', '0')}")
     with c2:
         with st.container(border=True):
-            st.subheader("🏗️ Sarana Prasarana")
+            st.subheader("🏗️ Sarpras")
             st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
-            st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
-
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
-    st.divider()
-    if st.button("⬅️ Kembali ke Dashboard"):
+    
+    if st.button("⬅️ Kembali"):
         st.session_state.page_view = "dashboard"
         st.rerun()
 
-
-# --- C. HALAMAN TENTANG DASHBOARD ---
 elif st.session_state.page_view == "tentang_dashboard":
-    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Informasi Sistem SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
-    
-    col_info1, col_info2 = st.columns([1.5, 1])
-    
-    with col_info1:
-        # Deskripsi Sistem (Balon Hijau)
-        with st.expander("🖥️ Deskripsi Sistem", expanded=True):
-            st.markdown("""
-            **SI-PANDAI SUMUT** (*Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas*) merupakan sebuah platform dashboard interaktif yang dirancang untuk mendigitalisasi data Anak Tidak Sekolah (ATS) khusus disabilitas. 
-            
-            Sistem ini mengintegrasikan data spasial (titik koordinat) dengan data atribut sekolah untuk memberikan gambaran komprehensif mengenai kondisi pendidikan khusus di Provinsi Sumatera Utara.
-            """)
-            
-        # Tujuan Dashboard (Balon Hijau)
-        with st.expander("🎯 Tujuan Dashboard"):
-            st.markdown("""
-            1. **Optimalisasi Pemetaan:** Mengidentifikasi sebaran titik lokasi Anak Tidak Sekolah (ATS) disabilitas secara akurat.
-            2. **Instrumen Kebijakan:** Menyediakan basis data yang valid bagi pimpinan dalam menentukan arah kebijakan pendidikan inklusif.
-            3. **Efisiensi Perencanaan:** Membantu Bidang Pendidikan Khusus dalam merencanakan pemenuhan sarana prasarana sekolah (RKB/Rehabilitasi) agar tepat sasaran.
-            """)
-
-        # Fitur Utama (Balon Hijau)
-        with st.expander("🚀 Fitur Utama"):
-            st.markdown("""
-            * **Peta Sebaran Interaktif:** Visualisasi titik lokasi ATS disabilitas berbasis koordinat *latitude* dan *longitude*.
-            * **Matriks Real-Time:** Ringkasan otomatis estimasi populasi usia sekolah, jumlah persentase, dan jumlah ATS.
-            * **Analitik Satuan Pendidikan:** Informasi detail kondisi sarana prasarana sekolah untuk pendukung bantuan infrastruktur.
-            * **Top 5 Ranking:** Identifikasi wilayah dengan tingkat ATS tertinggi untuk prioritas penanganan.
-            """)
-        # Petunjuk Penggunaan (Balon Hijau Baru)
-        with st.expander("📖 Petunjuk Penggunaan Dashboard"):
-            st.markdown("""
-            1. **Filter Wilayah:** Gunakan dropdown di sidebar kiri untuk memfilter data berdasarkan Kabupaten/Kota.
-            2. **Eksplorasi Peta:** Klik atau arahkan kursor pada titik di peta untuk melihat detail koordinat dan jumlah ATS.
-            3. **Analisis Grafik:** Pantau grafik batang untuk melihat 5 wilayah dengan prioritas penanganan tertinggi.
-            4. **Detail Sekolah:** Pada filter wilayah tertentu, klik tombol nama sekolah untuk melihat sarana prasarana sekolah tersebut.
-            5. **Download Data:** Gunakan fitur 'Lihat & Download Data Tabel' di bagian bawah dashboard untuk mengunduh laporan format CSV.
-            """)
-# VIDEO YOUTUBE DI SINI
-        st.markdown("##### 🎬 Video Panduan Penggunaan")
-        # Ganti link di bawah dengan link video youtube kamu
-        st.video("https://www.youtube.com/watch?v=example123")
-    with col_info2:
-        # Peran Dashboard
-        st.markdown("##### 💡 Peran Dashboard")
-        st.success("""
-        Sesuai dengan **Rancangan Aktualisasi**, dashboard ini berperan sebagai **Instrumen Pengambilan Kebijakan (Policy Tool)**. 
-        
-        Dashboard ini mengubah data manual yang tersebar menjadi informasi visual yang mudah dipahami, sehingga pimpinan dapat merespon kendala pendidikan khusus di pelosok daerah dengan lebih cepat dan transparan.
-        """)
-        
-        st.divider()
-        # Bingkai Segi Empat untuk Barcode Video
-        st.markdown("##### 📹 Barcode Tutorial Video")
-        with st.container(border=True):
-            # Cek apakah file barcode ada
-            if os.path.exists("barcode_video.png"):
-                st.image("barcode_video.png", caption="Scan Barcode untuk Tutorial Video", width=200)
-            else:
-                # Tampilan kotak jika file belum diupload
-                st.markdown("""
-                    <div style="border: 2px solid #2e7d32; border-radius: 10px; padding: 20px; text-align: center; background-color: #f1f8e9;">
-                        <span style="font-size: 50px;">📲</span>
-                        <p style="color: #2e7d32; font-weight: 800; margin-top: 10px;">Tempat Barcode Video</p>
-                        <p style="font-size: 11px; color: #666;">(Upload file barcode_video.png)</p>
-                    </div>
-                """, unsafe_allow_html=True)
-        
-        st.divider()
-        # Informasi Inovator
-        st.markdown("##### 👤 Inovator Sistem")
-        st.markdown(f"""
-        <div style="background-color: #f8f9fa; border-left: 5px solid #2e7d32; padding: 15px; border-radius: 8px;">
-            <p style='margin:0;'><b>Nama:</b> Ima Safitri Sianipar, S.Kom</p>
-            <p style='margin:0;'><b>Instansi:</b> Dinas Pendidikan Provinsi Sumatera Utara</p>
-            <p style='margin:0;'><b>Jabatan:</b> Penata Kelola Sistem dan Teknologi Informasi</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.divider()
-    if st.button("⬅️ Kembali ke Dashboard Utama", key="btn_back_dashboard_final"):
+    st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Informasi SI-PANDAI SUMUT</p>', unsafe_allow_html=True)
+    with st.expander("🖥️ Deskripsi Sistem", expanded=True):
+        st.write("SI-PANDAI SUMUT adalah platform pemetaan digital untuk Anak Tidak Sekolah (ATS) disabilitas di Sumatera Utara.")
+    if st.button("⬅️ Kembali Utama"):
         st.session_state.page_view = "dashboard"
         st.rerun()
-elif st.session_state.page_view == "tentang_dashboard":
-    st.markdown('### ℹ️ Tentang SI-PANDAI')
-    st.write("Sistem Informasi Analitik Pendidikan Khusus Sumatera Utara.")
-    with st.container(border=True):
-        st.markdown("""
-        ### 🖥️ Deskripsi Sistem
-        **SI-PANDAI SUMUT** (Sistem Informasi Pemetaan Anak Tidak Sekolah Disabilitas) adalah platform analitik digital yang dirancang untuk mengintegrasikan data anak tidak sekolah dengan kebutuhan sarana prasarana pendidikan khusus di Provinsi Sumatera Utara.
-
-        ### 🎯 Tujuan Dashboard
-        1. **Memetakan Sebaran ATS:** Mengidentifikasi koordinat tepat di mana anak-anak disabilitas yang belum sekolah berada.
-        2. **Optimalisasi Kebijakan:** Memberikan rekomendasi data yang akurat bagi pengambil kebijakan di Dinas Pendidikan.
-        3. **Efisiensi Anggaran:** Memastikan bantuan RKB (Ruang Kelas Baru) atau rehabilitasi sekolah tepat sasaran.
-
-        ### 🚀 Fitur Utama
-        * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
-        * **Real-time Metrics:** Matriks otomatis untuk Estimasi Populasi Sasaran Usia Sekolah, jumlah siswa, dan Persentase.
-        * **School Analytics:** Detail kondisi sekolah (Rombel vs Ruang Kelas) untuk analisis kebutuhan infrastruktur.
-        * **Top 5 Analysis:** Ranking wilayah dengan prioritas penanganan tertinggi.
-
-        ### 💡 Manfaat
-        * Mempermudah monitoring data pendidikan khusus secara transparan.
-        * Mempercepat respon terhadap temuan anak tidak sekolah di pelosok daerah.
-        * Sinkronisasi data sarpras sekolah dengan kebutuhan riil di lapangan.
-
-        ### 📖 Cara Menggunakan Dashboard
-        1.  **Filter Wilayah:** Gunakan menu drop-down di sidebar kiri untuk memilih Kabupaten/Kota.
-        2.  **Pantau Matriks:** Lihat perubahan angka pada tile berwarna untuk mendapatkan ringkasan data.
-        3.  **Eksplorasi Peta:** Arahkan kursor ke titik peta untuk melihat detail wilayah.
-        4.  **Detail Sekolah:** Klik pada kartu nama sekolah untuk melihat detail profil dan kondisi sarpras bangunan.
-        """)
-        
-        st.divider()
-        if st.button("⬅️ Kembali ke Dashboard"):
-            st.session_state.page_view = "dashboard"
-            st.rerun()
 
 # ==================================
-# Bagian Akhir: FOOTER (SUPER RAPAT)
+# Bagian Akhir: FOOTER
 # ==================================
 st.divider()
-
-# 1. LOGO KOLABORASI
-col_c1, col_c2, col_c3 = st.columns([2.2, 1, 1.9])
-with col_c2:
-    if os.path.exists("banner_kolaborasi.png"):
-        st.image("banner_kolaborasi.png", width=150) 
-    else:
-        st.markdown("<p style='text-align:center; color:gray; font-size:10px;'>[ Logo Kolaborasi ]</p>", unsafe_allow_html=True)
-
-# CSS PAKSA RAPAT (Margin Negatif)
-st.markdown("""
-    <style>
-        .footer-container {
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-            margin-top: -25px; /* Menarik teks ke atas mendekati logo */
-        }
-    </style>
-    <div class="footer-container">
-        <h4 style="margin: 0; color: #0d47a1; font-weight: 800; font-size: 16px; padding-bottom: 2px;">
-            DINAS PENDIDIKAN PROVINSI SUMATERA UTARA
-        </h4>
-        <p style="margin: 0; color: #666; font-size: 11px; line-height: 1.2;">
-            Jl. Teuku Cik Ditiro No.1-D, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
-        </p>
-        <p style="margin: 0; color: #0d47a1; font-size: 11px; font-weight: 600;">
-            Email: <a href="mailto:disdik@sumutprov.go.id" style="text-decoration: none; color: #0d47a1;">disdik@sumutprov.go.id</a>
-        </p>
-    </div>
-""", unsafe_allow_html=True)
-
-# 3. IKON SOSIAL MEDIA (Juga dibuat rapat)
-link_instagram = "https://www.instagram.com/disdiksumut"
-link_web = "https://disdik.sumutprov.go.id"
-link_youtube = "https://www.youtube.com/@Disdikprovsumut"
-
-st.markdown(f"""
-    <div style="text-align: center; margin-top: 5px; margin-bottom: 5px;">
-        <a href="{link_instagram}" target="_blank" style="margin: 0 10px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="20" height="20">
-        </a>
-        <a href="{link_web}" target="_blank" style="margin: 0 10px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" width="20" height="20">
-        </a>
-        <a href="{link_youtube}" target="_blank" style="margin: 0 10px; text-decoration: none;">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="20" height="20">
-        </a>
-    </div>
-""", unsafe_allow_html=True)
-
-# 4. WATERMARK COPYRIGHT
-st.markdown("""
-    <hr style="margin: 5px 0 5px 0; opacity: 0.1;">
-    <div style="text-align: center; color: #9e9e9e; font-size: 10px; padding-bottom: 20px;">
-        © 2026 SI-PANDAI SUMUT | Digitalisasi Pemetaan ATS Disabilitas | Bidang Pembinaan Pendidikan Khusus
-    </div>
-""", unsafe_allow_html=True)
+st.markdown('<div style="text-align:center; color:#0d47a1; font-weight:800;">DINAS PENDIDIKAN PROVINSI SUMATERA UTARA</div>', unsafe_allow_html=True)
