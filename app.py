@@ -36,17 +36,23 @@ st.markdown("""
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
     .block-container {
-        padding-top: 0rem !important;
+        padding-top: 2rem !important; /* Memberi ruang agar tidak tertutup gradient */
         padding-left: 1rem !important;
         padding-right: 1rem !important;
     }
-    [data-testid="stHeader"] { display: none !important; }
 
+    /* Memperbaiki Gradient Bar agar tidak menutupi Sidebar */
     .top-gradient-bar {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 10px;
         background: linear-gradient(90deg, #ff8a00, #e52e71, #9c27b0, #1e88e5, #4caf50, #ffeb3b);
-        z-index: 999999;
+        z-index: 99; /* Z-index diturunkan agar Sidebar tetap di depan */
+    }
+
+    /* Header tetap ditampilkan agar sidebar bisa diakses di layar kecil */
+    [data-testid="stHeader"] { 
+        background-color: rgba(255,255,255,0) !important;
+        z-index: 100;
     }
 
     div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div { color: black !important; }
@@ -217,19 +223,38 @@ st.markdown("""
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     
-    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
-    
     df_f = data_wilayah.copy()
-    if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
+    if kab_pilih != "Semua": 
+        df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # Matriks
+    # --- PERBAIKAN ERROR VALUEERROR ---
+    # Gunakan pd.to_numeric untuk memastikan data adalah angka sebelum di-sum
+    try:
+        col_1_sum = pd.to_numeric(df_f.iloc[:,1], errors='coerce').sum()
+        col_2_sum = pd.to_numeric(df_f.iloc[:,2], errors='coerce').sum()
+        col_3_sum = pd.to_numeric(df_f.iloc[:,3], errors='coerce').sum()
+        
+        v_a = int(col_3_sum) if not df_f.empty else 0
+        
+        # Cek pembagian dengan nol
+        if col_1_sum > 0:
+            v_aps_num = (col_2_sum / col_1_sum) * 100
+        else:
+            v_aps_num = 0
+            
+        v_aps = f"{v_aps_num:.2f}%"
+        v_populasi = f"{int(col_1_sum):,}"
+        v_belajar = f"{int(col_2_sum):,}"
+    except Exception as e:
+        v_a = 0
+        v_aps = "0.00%"
+        v_populasi = "0"
+        v_belajar = "0"
+
+    # Matriks Display
     m1, m2, m3, m4 = st.columns(4)
-    v_a = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
-    v_aps_num = (int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100) if not df_f.empty and int(df_f.iloc[:,1].sum()) > 0 else 0
-    v_aps = f"{v_aps_num:.2f}%"
-
-    with m1: draw_tile_svg("Estimasi Populasi Sasaran Usia Sekolah", f"{int(df_f.iloc[:,1].sum()):,}" if not df_f.empty else "0", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", f"{int(df_f.iloc[:,2].sum()):,}" if not df_f.empty else "0", svg_cap, "tile-blue-light")
+    with m1: draw_tile_svg("Estimasi Populasi", v_populasi, svg_people, "tile-orange")
+    with m2: draw_tile_svg("Siswa Belajar", v_belajar, svg_cap, "tile-blue-light")
     with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
     with m4: draw_tile_svg("Persentase", v_aps, svg_chart, "tile-green-light")
 
