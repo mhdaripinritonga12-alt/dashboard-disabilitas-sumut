@@ -411,7 +411,7 @@ elif st.session_state.page_view == "tentang_dashboard":
         with st.expander("🚀 Fitur Utama"):
             st.markdown("""
             * **Peta Sebaran Interaktif:** Visualisasi titik lokasi ATS disabilitas berbasis koordinat *latitude* dan *longitude*.
-            * **Matriks Real-Time:** Ringkasan otomatis jumlah penduduk disabilitas, partisipasi sekolah, dan jumlah ATS.
+            * **Matriks Real-Time:** Ringkasan otomatis estimasi populasi usia sekolah, jumlah persentase, dan jumlah ATS.
             * **Analitik Satuan Pendidikan:** Informasi detail kondisi sarana prasarana sekolah untuk pendukung bantuan infrastruktur.
             * **Top 5 Ranking:** Identifikasi wilayah dengan tingkat ATS tertinggi untuk prioritas penanganan.
             """)
@@ -484,7 +484,7 @@ elif st.session_state.page_view == "tentang_dashboard":
 
         ### 🚀 Fitur Utama
         * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
-        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan Persentase.
+        * **Real-time Metrics:** Matriks otomatis untuk Estimasi Populasi Sasaran Usia Sekolah, jumlah siswa, dan Persentase.
         * **School Analytics:** Detail kondisi sekolah (Rombel vs Ruang Kelas) untuk analisis kebutuhan infrastruktur.
         * **Top 5 Analysis:** Ranking wilayah dengan prioritas penanganan tertinggi.
 
