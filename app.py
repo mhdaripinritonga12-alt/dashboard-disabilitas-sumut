@@ -133,10 +133,12 @@ with st.sidebar:
     st.sidebar.radio("Klik :", ["🚀 Dashboard Utama", "ℹ️ Tentang Dashboard"], key="nav_radio", on_change=ubah_halaman)
     st.sidebar.divider()
     
-    st.sidebar.header("🔎 Filter Wilayah")
-    col_kab = "kab_kota"
-    opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
-    kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
+   st.sidebar.divider()
+st.sidebar.header("🔎 Filter Wilayah")
+col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
+opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
+kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
+
 
 # ==================================
 # Bagian 4: HEADER
