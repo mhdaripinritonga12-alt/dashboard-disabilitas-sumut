@@ -93,31 +93,27 @@ st.markdown('<div class="top-gradient-bar"></div>', unsafe_allow_html=True)
 st.markdown('<div class="header-balloon-card"><h2 style="color:#0d47a1; margin:0;">DASHBOARD SI-PANDAI SUMUT</h2><p style="margin:0; font-weight:600; color:#1565c0;">Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas</p></div>', unsafe_allow_html=True)
 
 if st.session_state.page_view == "dashboard":
-    # Filter Data
+    # 1. Filter Data
     if kab_pilih == "Semua":
         df_f = data_wilayah
     else:
-        df_f = data_wilayah[data_wilayah[col_kab] == kab_pilih]
+        df_f = data_wilayah[data_wilayah['kab_kota'] == kab_pilih]
 
-   # 2. Perhitungan Berdasarkan Nama Kolom (Lebih Akurat)
+    # 2. Perhitungan Berdasarkan Nama Kolom CSV Anda
     if not df_f.empty:
-        try:
-            # GANTI Nama di dalam ['...'] jika berbeda dengan CSV Anda
-            # .sum() akan otomatis mengabaikan nilai NaN (kosong)
-            populasi = int(df_f['estimasi_populasi'].sum()) 
-            siswa_belajar = int(df_f['siswa_belajar'].sum())
-            ats = int(df_f['ats'].sum())
-            
-            # Hitung Persentase
-            v_aps_num = (siswa_belajar / populasi * 100) if populasi > 0 else 0
-        except KeyError as e:
-            st.error(f"Kolom tidak ditemukan: {e}. Periksa nama kolom di CSV Anda.")
-            populasi, siswa_belajar, ats, v_aps_num = 0, 0, 0, 0
+        # Mengambil data langsung dari kolom yang tepat
+        populasi = int(df_f['estimasi_populasi_sasaran_usia_sekolah'].sum())
+        siswa_belajar = int(df_f['jumlah_siswa_belajar'].sum())
+        ats = int(df_f['jumlah_anak_tidak_sekolah'].sum())
+        
+        # Hitung Persentase Partisipasi
+        v_aps_num = (siswa_belajar / populasi * 100) if populasi > 0 else 0
     else:
         populasi, siswa_belajar, ats, v_aps_num = 0, 0, 0, 0
 
-    # 3. Menampilkan Matriks
     v_aps_label = f"{v_aps_num:.2f}%"
+
+    # 3. Menampilkan Matriks (Visualisasi Kotak)
     m1, m2, m3, m4 = st.columns(4)
     
     with m1: 
