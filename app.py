@@ -223,8 +223,6 @@ st.markdown("""
 # --- A. HALAMAN DASHBOARD ---
 if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, LPPD & TIKP 2025</p></div>""", unsafe_allow_html=True)
-    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
     
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
@@ -348,10 +346,19 @@ if st.session_state.page_view == "dashboard":
             """, unsafe_allow_html=True)
             st.divider()
 
+   # Lokasi baru: Tepat sebelum expander Tabel
+    st.markdown(f"""
+        <p style="font-size: 11px; color: #666; font-style: italic; margin-bottom: -10px; margin-left: 5px;">
+            ℹ️ <b>Rekomendasi Data:</b> Sumber data berasal dari Bidang Pembinaan Pendidikan Khusus & TIKP 2025. 
+            
+        </p>
+    """, unsafe_allow_html=True)
+
     with st.expander("📋 Lihat & Download Data Tabel"):
         st.dataframe(df_f, use_container_width=True)
         csv = df_f.to_csv(index=False).encode('utf-8')
         st.download_button("Download CSV 📥", csv, file_name=f'data_ats_{kab_pilih}.csv', mime='text/csv')
+
 
 elif st.session_state.page_view == "detail":
     sch = st.session_state.selected_school_data   
