@@ -225,33 +225,16 @@ if st.session_state.page_view == "dashboard":
     if kab_pilih != "Semua": 
         df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # --- PERBAIKAN ANGKA (Sinkron dengan CSV) ---
-    try:
-        # Penjumlahan Kolom 1 (Estimasi) dan Kolom 2 (Siswa Belajar)
-        pop_val = int(pd.to_numeric(df_f.iloc[:,1], errors='coerce').sum())
-        sis_val = int(pd.to_numeric(df_f.iloc[:,2], errors='coerce').sum())
-        
-        # ATS = Estimasi - Siswa Belajar
-        ats_val = pop_val - sis_val
-        
-        # Persentase Partisipasi
-        persen_val = (sis_val / pop_val * 100) if pop_val > 0 else 0
-
-        # Formatting Teks
-        txt_pop = f"{pop_val:,}"
-        txt_sis = f"{sis_val:,}"
-        txt_ats = f"{max(0, ats_val):,}" # max 0 agar tidak muncul minus jika data tidak sinkron
-        txt_persen = f"{persen_val:.2f}%"
-    except:
-        txt_pop, txt_sis, txt_ats, txt_persen = "0", "0", "0", "0.00%"
-
-    # Matriks Display
-    st.markdown('<p style="font-size:24px; font-weight:800; color:#0d47a1; margin-bottom:15px;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
+     # Matriks
     m1, m2, m3, m4 = st.columns(4)
-    with m1: draw_tile_svg("Estimasi Populasi", txt_pop, svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", txt_sis, svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", txt_ats, svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Persentase", txt_persen, svg_chart, "tile-green-light")
+    v_a = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
+    v_aps_num = (int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100) if not df_f.empty and int(df_f.iloc[:,1].sum()) > 0 else 0
+    v_aps = f"{v_aps_num:.2f}%"
+
+    with m1: draw_tile_svg("Estimasi Populasi", f"{int(df_f.iloc[:,1].sum()):,}" if not df_f.empty else "0", svg_people, "tile-orange")
+    with m2: draw_tile_svg("Siswa Belajar", f"{int(df_f.iloc[:,2].sum()):,}" if not df_f.empty else "0", svg_cap, "tile-blue-light")
+    with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
+    with m4: draw_tile_svg("Persentase", v_aps, svg_chart, "tile-green-light")
 
     st.divider()
     #Peta
