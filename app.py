@@ -219,37 +219,36 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-if st.session_state.page_view == "dashboard":
-    # Filter Data
-    df_f = data_wilayah.copy()
-    if kab_pilih != "Semua": 
-        df_f = df_f[df_f[col_kab] == kab_pilih]
-
-   # --- PERBAIKAN DI SINI ---
-    # Pastikan dataframe tidak kosong sebelum melakukan operasi matematika
+# 2. Logika Perhitungan (Matriks 4 Kotak)
     if not df_f.empty:
-        # Menggunakan kolom index 1 (Populasi), 2 (Siswa Belajar), 3 (ATS)
+        # Jika 'Semua' dipilih, kita hitung total dari CSV
+        # Jika satu Kab/Kota dipilih, kita ambil baris tersebut
         populasi = int(df_f.iloc[:, 1].sum())
         siswa_belajar = int(df_f.iloc[:, 2].sum())
-        ats = int(df_f.iloc[:, 3].sum())
         
-        # Hitung persentase dengan proteksi pembagian nol
+        # ATS dihitung otomatis: Populasi - Siswa Belajar
+        ats = populasi - siswa_belajar
+        
+        # Persentase Partisipasi Sekolah (Siswa Belajar / Populasi)
         v_aps_num = (siswa_belajar / populasi * 100) if populasi > 0 else 0
     else:
-        populasi = 0
-        siswa_belajar = 0
-        ats = 0
-        v_aps_num = 0
+        # Nilai default jika data gagal dimuat
+        populasi, siswa_belajar, ats, v_aps_num = 0, 0, 0, 0
 
     v_aps = f"{v_aps_num:.2f}%"
 
-    # Matriks Tampilan
+    # 3. Menampilkan Matriks (Visualisasi Kotak)
     m1, m2, m3, m4 = st.columns(4)
-    with m1: draw_tile_svg("Estimasi Populasi", f"{populasi:,}", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", f"{siswa_belajar:,}", svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", f"{ats:,}", svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Persentase", v_aps, svg_chart, "tile-green-light")
-
+    
+    with m1: 
+        draw_tile_svg("Estimasi Populasi", f"{populasi:,}", svg_people, "tile-orange")
+    with m2: 
+        draw_tile_svg("Siswa Belajar", f"{siswa_belajar:,}", svg_cap, "tile-blue-light")
+    with m3: 
+        # Kotak Merah untuk ATS
+        draw_tile_svg("Anak Tidak Sekolah", f"{ats:,}", svg_warning, "tile-red-dark")
+    with m4: 
+        draw_tile_svg("Persentase Partisipasi", v_aps, svg_chart, "tile-green-light")
     st.divider()
     #Peta
     cv1, cv2 = st.columns([1.6, 1.1])
