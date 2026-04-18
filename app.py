@@ -176,9 +176,7 @@ with st.sidebar:
             </div>
         ''', unsafe_allow_html=True)
        
-        st.rerun()
-     st.divider()
-
+      
 def ubah_halaman():
     # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
