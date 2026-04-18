@@ -99,25 +99,35 @@ if st.session_state.page_view == "dashboard":
     else:
         df_f = data_wilayah[data_wilayah[col_kab] == kab_pilih]
 
-    # Perhitungan Aman (Mencegah ValueError Baris 231)
-    try:
-        if not df_f.empty:
-            populasi = int(df_f.iloc[:, 1].sum())
-            siswa_belajar = int(df_f.iloc[:, 2].sum())
-            ats = int(df_f.iloc[:, 3].sum()) # Sesuaikan index kolom ATS Anda
+   # 2. Perhitungan Berdasarkan Nama Kolom (Lebih Akurat)
+    if not df_f.empty:
+        try:
+            # GANTI Nama di dalam ['...'] jika berbeda dengan CSV Anda
+            # .sum() akan otomatis mengabaikan nilai NaN (kosong)
+            populasi = int(df_f['estimasi_populasi'].sum()) 
+            siswa_belajar = int(df_f['siswa_belajar'].sum())
+            ats = int(df_f['ats'].sum())
+            
+            # Hitung Persentase
             v_aps_num = (siswa_belajar / populasi * 100) if populasi > 0 else 0
-        else:
+        except KeyError as e:
+            st.error(f"Kolom tidak ditemukan: {e}. Periksa nama kolom di CSV Anda.")
             populasi, siswa_belajar, ats, v_aps_num = 0, 0, 0, 0
-    except:
+    else:
         populasi, siswa_belajar, ats, v_aps_num = 0, 0, 0, 0
 
-    # Tampilan Matriks
+    # 3. Menampilkan Matriks
+    v_aps_label = f"{v_aps_num:.2f}%"
     m1, m2, m3, m4 = st.columns(4)
-    with m1: draw_tile_svg("Populasi", f"{populasi:,}", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa", f"{siswa_belajar:,}", svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("ATS", f"{ats:,}", svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Partisipasi", f"{v_aps_num:.2f}%", svg_chart, "tile-green-light")
-
+    
+    with m1: 
+        draw_tile_svg("Estimasi Populasi", f"{populasi:,}", svg_people, "tile-orange")
+    with m2: 
+        draw_tile_svg("Siswa Belajar", f"{siswa_belajar:,}", svg_cap, "tile-blue-light")
+    with m3: 
+        draw_tile_svg("Anak Tidak Sekolah", f"{ats:,}", svg_warning, "tile-red-dark")
+    with m4: 
+        draw_tile_svg("Persentase Partisipasi", v_aps_label, svg_chart, "tile-green-light")
     st.divider()
 
     # Visualisasi
