@@ -262,10 +262,7 @@ with st.sidebar:
             </div>
         ''', unsafe_allow_html=True)
     
-    if st.button("👤 Role: Admin", key="role_admin_btn"):
-        st.session_state.page_view = "admin_profile"
-        st.rerun()
-    st.divider()
+     st.divider()
 
 def ubah_halaman():
     # Tambahkan pengecekan ini agar tidak error saat logout
