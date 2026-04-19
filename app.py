@@ -383,7 +383,6 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
-    st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
     st.divider()
     if st.button("⬅️ Kembali ke Dashboard"):
         st.session_state.page_view = "dashboard"
