@@ -375,14 +375,12 @@ elif st.session_state.page_view == "detail":
             st.write(f"**Status:** {sch.get('status', 'Negeri')}")
             st.write(f"**Alamat:** {sch.get('alamat', '-')}")
             st.write(f"**Jumlah Siswa:** {sch.get('jumlah_siswa', '0')} Orang")
-            st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
+            
     with c2:
         with st.container(border=True):
             st.subheader("🏗️ Sarana Prasarana")
             st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
-            st.write(f"**Ruang Kelas:** {sch.get('jumlah_ruang_kelas', '0')}")
-            st.write(f"**Rusak Sedang:** {sch.get('rusak_sedang', '0')} Ruang")
-            st.write(f"**Rusak Berat:** {sch.get('rusak_berat', '0')} Ruang")
+            st.write(f"**Akses Internet:** {sch.get('akses_internet', '-')}")
             st.write(f"**Daya Listrik:** {sch.get('daya_listrik', '-')}")
 
     st.markdown("""<div class="source-box-ui"><p style="font-size: 14px; color: #0d47a1; margin: 0;"><b>Rekomendasi:</b> Sekolah ini memerlukan perhatian pada digitalisasi & sarpras sesuai data Bidang PK.</p></div>""", unsafe_allow_html=True)
@@ -418,8 +416,8 @@ elif st.session_state.page_view == "tentang_dashboard":
         with st.expander("🚀 Fitur Utama"):
             st.markdown("""
             * **Peta Sebaran Interaktif:** Visualisasi titik lokasi ATS disabilitas berbasis koordinat *latitude* dan *longitude*.
-            * **Matriks Real-Time:** Ringkasan otomatis jumlah penduduk disabilitas, partisipasi sekolah, dan jumlah ATS.
-            * **Analitik Satuan Pendidikan:** Informasi detail kondisi sarana prasarana sekolah untuk pendukung bantuan infrastruktur.
+            * **Matriks Real-Time:** Ringkasan otomatis Estimasi Populasi Sasaran Usia Sekolah, Persentase, dan jumlah ATS.
+            * **Analitik Satuan Pendidikan:** Informasi detail sekolah untuk pendukung bantuan infrastruktur.
             * **Top 5 Ranking:** Identifikasi wilayah dengan tingkat ATS tertinggi untuk prioritas penanganan.
             """)
         # Petunjuk Penggunaan (Balon Hijau Baru)
@@ -429,7 +427,7 @@ elif st.session_state.page_view == "tentang_dashboard":
             2. **Eksplorasi Peta:** Klik atau arahkan kursor pada titik di peta untuk melihat detail koordinat dan jumlah ATS.
             3. **Analisis Grafik:** Pantau grafik batang untuk melihat 5 wilayah dengan prioritas penanganan tertinggi.
             4. **Detail Sekolah:** Pada filter wilayah tertentu, klik tombol nama sekolah untuk melihat sarana prasarana sekolah tersebut.
-            5. **Download Data:** Gunakan fitur 'Lihat & Download Data Tabel' di bagian bawah dashboard untuk mengunduh laporan format CSV.
+            5. **Download Data:** Gunakan fitur 'Lihat & Download Data Tabel' di bagian bawah dashboard untuk mengunduh laporan.
             """)
 # VIDEO YOUTUBE DI SINI
         st.markdown("##### 🎬 Video Panduan Penggunaan")
@@ -439,7 +437,7 @@ elif st.session_state.page_view == "tentang_dashboard":
         # Peran Dashboard
         st.markdown("##### 💡 Peran Dashboard")
         st.success("""
-        Sesuai dengan **Rancangan Aktualisasi**, dashboard ini berperan sebagai **Instrumen Pengambilan Kebijakan (Policy Tool)**. 
+        Sesuai dengan **Rancangan Aktualisasi**, dashboard ini diharapkan berperan sebagai **Instrumen Pengambilan Kebijakan (Policy Tool)**. 
         
         Dashboard ini mengubah data manual yang tersebar menjadi informasi visual yang mudah dipahami, sehingga pimpinan dapat merespon kendala pendidikan khusus di pelosok daerah dengan lebih cepat dan transparan.
         """)
@@ -491,8 +489,8 @@ elif st.session_state.page_view == "tentang_dashboard":
 
         ### 🚀 Fitur Utama
         * **Geospatial Mapping:** Peta interaktif sebaran ATS berbasis koordinat lat/lon.
-        * **Real-time Metrics:** Matriks otomatis untuk penduduk disabilitas, jumlah siswa, dan angka partisipasi.
-        * **School Analytics:** Detail kondisi sekolah (Rombel vs Ruang Kelas) untuk analisis kebutuhan infrastruktur.
+        * **Real-time Metrics:** Matriks otomatis untuk estimasi populasi sasaran usia sekolah, jumlah siswa, dan persentase.
+        * **School Analytics:** Detail sekolah.
         * **Top 5 Analysis:** Ranking wilayah dengan prioritas penanganan tertinggi.
 
         ### 💡 Manfaat
