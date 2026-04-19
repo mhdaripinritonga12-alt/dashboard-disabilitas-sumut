@@ -431,7 +431,7 @@ elif st.session_state.page_view == "tentang_dashboard":
 # VIDEO YOUTUBE DI SINI
         st.markdown("##### 🎬 Video Panduan Penggunaan")
         # Ganti link di bawah dengan link video youtube kamu
-        st.video("https://www.youtube.com/watch?v=example123")
+        st.video("https://bit.ly/4mELaOf")
     with col_info2:
         # Peran Dashboard
         st.markdown("##### 💡 Peran Dashboard")
