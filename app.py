@@ -12,10 +12,10 @@ st.set_page_config(
     page_title="SI-PANDAI SUMUT",
     layout="wide",
     page_icon="🎓",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded" # Memastikan terbuka saat pertama load
 )
 
-# Inisialisasi State agar navigasi lancar
+# Inisialisasi State
 if "page_view" not in st.session_state: st.session_state.page_view = "dashboard"
 if "selected_kab" not in st.session_state: st.session_state.selected_kab = "Semua"
 if "selected_school_data" not in st.session_state: st.session_state.selected_school_data = None
@@ -27,57 +27,87 @@ def get_base64_image(image_path):
     return None
 
 # ==================================
-# Bagian 1: CSS CUSTOM (SIDEBAR PERMANEN & UI MODERN)
+# Bagian 1: CSS CUSTOM (LOCK SIDEBAR & GRID)
 # ==================================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
     html, body, [data-testid="stWidgetLabel"] { font-family: 'Inter', sans-serif !important; }
 
-    /* PAKSA SIDEBAR TETAP MUNCUL */
-    button[kind="headerNoPadding"] { display: none !important; }
-    [data-testid="stSidebarNav"] { display: none !important; }
-
-    .block-container { padding-top: 1rem !important; padding-left: 2rem !important; padding-right: 2rem !important; }
+    /* --- MEMAKSA SIDEBAR TETAP MUNCUL (LOCK SIDEBAR) --- */
+    /* Menghilangkan tombol 'X' (Collapse) di sidebar */
+    [data-testid="sidebar-close-button"] { display: none !important; }
+    /* Menghilangkan tombol '>' (Expand) jika sidebar tertutup paksa */
+    [data-testid="collapsedControl"] { display: none !important; }
+    /* Menghilangkan padding header agar sidebar terlihat lebih menyatu */
     [data-testid="stHeader"] { display: none !important; }
-
-    /* SIDEBAR STYLING */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #f8f9fa 0%, #e3f2fd 100%) !important;
-        border-right: 1px solid #e0e0e0 !important;
-        min-width: 300px !important;
-    }
     
+    /* Mengatur lebar sidebar agar proporsional */
+    section[data-testid="stSidebar"] {
+        min-width: 320px !important;
+        max-width: 320px !important;
+        background-color: #ffffff !important;
+        border-right: 1px solid #e0e0e0 !important;
+    }
+
+    .block-container {
+        padding-top: 2rem !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+
     /* HEADER STYLING */
     .header-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
-        padding: 30px; border-radius: 15px; border-bottom: 5px solid #0d47a1;
-        text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px;
+        background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+        padding: 30px;
+        border-radius: 15px;
+        border-bottom: 5px solid #0d47a1;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 35px;
     }
 
-    /* METRIC TILES */
+    /* GRID METRIK PROPORSIONAL */
+    .metric-grid-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
     .metric-tile {
-        padding: 20px; border-radius: 12px; color: white;
-        display: flex; align-items: center; gap: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-height: 100px;
+        flex: 1;
+        padding: 22px;
+        border-radius: 12px;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        min-height: 110px;
     }
-    .tile-blue { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
-    .tile-red { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
-    .tile-green { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
-    .tile-value { font-size: 24px; font-weight: 800; line-height: 1; }
-    .tile-label { font-size: 11px; font-weight: 700; text-transform: uppercase; opacity: 0.9; }
+    .tile-blue { background: linear-gradient(135deg, #0288d1 0%, #03a9f4 100%); }
+    .tile-red { background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%); }
+    .tile-green { background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%); }
+    
+    .tile-value { font-size: 26px; font-weight: 800; line-height: 1; }
+    .tile-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
 
-    /* INSIGHT BOX */
-    .insight-box { 
-        background-color: #ffffff !important; border-radius: 12px; 
-        padding: 15px; border-left: 6px solid #0d47a1; 
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-top: 15px;
+    /* CSS untuk tombol sekolah agar lebih profesional */
+    div.stButton > button {
+        border-radius: 8px !important;
+        border: 1px solid #e0e0e0 !important;
+        transition: all 0.3s ease;
+    }
+    div.stButton > button:hover {
+        border-color: #0d47a1 !important;
+        color: #0d47a1 !important;
+        background-color: #f0f7ff !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==================================
-# Bagian 2: LOAD DATA (FITUR UTAMA)
+# Bagian 2: LOAD DATA
 # ==================================
 @st.cache_data
 def load_all_data():
@@ -93,62 +123,73 @@ def load_all_data():
 data_wilayah, data_sekolah = load_all_data()
 
 # ==================================
-# Bagian 3: SIDEBAR (NAVIGASI & FILTER)
+# Bagian 3: SIDEBAR (PERMANEN & PROFESIONAL)
 # ==================================
 with st.sidebar:
+    # Logo
     logo_b64 = get_base64_image("logo_sumut.png")
     if logo_b64:
-        st.markdown(f'<div style="text-align:center;"><img src="data:image/png;base64,{logo_b64}" width="80"></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="text-align:center;"><img src="data:image/png;base64,{logo_b64}" width="90"></div>', unsafe_allow_html=True)
     
-    st.markdown("<h2 style='text-align:center; color:#0d47a1;'>SI-PANDAI</h2>", unsafe_allow_html=True)
+    st.markdown("""
+        <div style="text-align:center; margin-top:15px; margin-bottom:10px;">
+            <h2 style="color:#0d47a1; font-weight:800; margin-bottom:0;">SI-PANDAI</h2>
+            <p style="font-size:12px; color:#666; font-weight:600; letter-spacing:1px;">DINAS PENDIDIKAN SUMUT</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("---")
     
-    # Navigasi Utama
-    nav_choice = st.radio("🧭 MENU UTAMA", ["🚀 Dashboard Utama", "ℹ️ Tentang Dashboard"])
+    # Navigasi Menu
+    st.markdown("##### 🧭 Navigasi Sistem")
+    nav_choice = st.radio("Pilih Halaman:", ["🚀 Dashboard Utama", "ℹ️ Tentang Dashboard"], label_visibility="collapsed")
     st.session_state.page_view = "dashboard" if "Dashboard" in nav_choice else "tentang_dashboard"
     
     st.markdown("---")
-    st.markdown("### 🔎 FILTER WILAYAH")
-    col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else (data_wilayah.columns[0] if not data_wilayah.empty else "")
+    
+    # Filter Wilayah
+    st.markdown("##### 🔎 Filter Wilayah")
+    col_kab = "kab_kota" if not data_wilayah.empty and "kab_kota" in data_wilayah.columns else (data_wilayah.columns[0] if not data_wilayah.empty else "")
     
     if not data_wilayah.empty:
         opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist())
-        kab_pilih = st.selectbox("Pilih Kabupaten/Kota", opsi, key="selected_kab")
+        kab_pilih = st.selectbox("Kabupaten / Kota", opsi, key="selected_kab", label_visibility="collapsed")
     else:
         kab_pilih = "Semua"
 
-    st.markdown("<br><br>" * 3, unsafe_allow_html=True)
-    st.caption("Inovator: Ima Safitri Sianipar, S.Kom")
+    st.markdown("<br>" * 5, unsafe_allow_html=True)
+    st.divider()
+    st.markdown(f"""
+        <div style="background-color:#f8f9fa; padding:10px; border-radius:8px; border-left:4px solid #0d47a1;">
+            <p style="font-size:11px; margin:0; color:#444;"><b>Inovator:</b><br>Ima Safitri Sianipar, S.Kom</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # ==================================
-# Bagian 4: MAIN HEADER
+# Bagian 4: HEADER & LOGIKA HALAMAN
 # ==================================
 st.markdown(f"""
     <div class="header-card">
-        <h1 style='color: #0d47a1; margin: 0; font-size: 2.2rem; font-weight: 800;'>DASHBOARD SI-PANDAI SUMUT</h1>
-        <p style='color: #1565c0; font-size: 1rem; font-weight: 600; margin-top: 5px;'>
+        <h1 style='color: #0d47a1; margin: 0; font-size: 2.4rem; font-weight: 800;'>DASHBOARD SI-PANDAI SUMUT</h1>
+        <p style='color: #1565c0; font-size: 1.1rem; font-weight: 600; margin-top: 8px;'>
             Sistem Informasi Pemetaan Anak Tidak Sekolah (ATS) Disabilitas
         </p>
     </div>
 """, unsafe_allow_html=True)
 
-# ==================================
-# Bagian 5: LOGIKA HALAMAN
-# ==================================
-
-# --- A. HALAMAN DASHBOARD ---
 if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # GRID 3 METRIK PROPORSIONAL
-    st.markdown('<h4 style="color:#0d47a1; font-weight:700;">📊 Matriks Capaian Sektoral</h4>', unsafe_allow_html=True)
+    # --- GRID 3 METRIK PROPORSIONAL ---
+    st.markdown('<h4 style="color:#333; font-weight:700; margin-bottom:15px;">Matriks Capaian Sektoral</h4>', unsafe_allow_html=True)
     m1, m2, m3 = st.columns(3)
     
+    # Perhitungan Data
     v_belajar = int(df_f.iloc[:,2].sum()) if not df_f.empty else 0
     v_ats = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
     v_total = int(df_f.iloc[:,1].sum()) if not df_f.empty else 0
-    v_perc = f"{(v_belajar / v_total * 100):.2f}%" if v_total > 0 else "0%"
+    v_perc = f"{(v_belajar / v_total * 100):.2f}%" if v_total > 0 else "0.00%"
 
     with m1:
         st.markdown(f'<div class="metric-tile tile-blue"><div><div class="tile-label">Siswa Belajar</div><div class="tile-value">{v_belajar:,}</div></div></div>', unsafe_allow_html=True)
@@ -157,11 +198,11 @@ if st.session_state.page_view == "dashboard":
     with m3:
         st.markdown(f'<div class="metric-tile tile-green"><div><div class="tile-label">Persentase</div><div class="tile-value">{v_perc}</div></div></div>', unsafe_allow_html=True)
 
-    # VISUALISASI UTAMA
+    # --- VISUALISASI DATA ---
     st.divider()
-    cv1, cv2 = st.columns([1.6, 1.1])
+    c_map, c_chart = st.columns([1.6, 1.1])
     
-    with cv1:
+    with c_map:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty and "lat" in df_f.columns:
             ats_col_name = df_f.columns[3]
@@ -173,17 +214,17 @@ if st.session_state.page_view == "dashboard":
             fig_map.update_layout(mapbox_style="carto-positron", margin={"r":0,"t":0,"l":0,"b":0})
             st.plotly_chart(fig_map, use_container_width=True)
 
-    with cv2:
-        st.subheader("📊 Peringkat ATS Tertinggi")
+    with c_chart:
+        st.subheader("📊 5 Tertinggi ATS")
         if not df_f.empty:
             ats_col = df_f.columns[3]
             df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
             fig_bar = px.bar(df_top5, x=ats_col, y=col_kab, orientation='h', color=ats_col,
                              color_continuous_scale="Blues", text=ats_col)
-            fig_bar.update_layout(height=350, margin=dict(l=0, r=0, t=20, b=0), showlegend=False, coloraxis_showscale=False)
+            fig_bar.update_layout(height=380, margin=dict(l=0, r=0, t=10, b=0), showlegend=False, coloraxis_showscale=False)
             st.plotly_chart(fig_bar, use_container_width=True)
 
-    # FITUR SEKOLAH (MUNCUL JIKA KABUPATEN DIPILIH)
+    # --- FITUR SEKOLAH ---
     if kab_pilih != "Semua":
         st.divider()
         st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
@@ -193,50 +234,39 @@ if st.session_state.page_view == "dashboard":
             for i, row in enumerate(sch_wil.itertuples()):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"sch_{i}"):
+                        if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"sch_{i}", use_container_width=True):
                             st.session_state.selected_school_data = row._asdict()
                             st.session_state.page_view = "detail"
                             st.rerun()
                         st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
 
-    # TABEL DATA
-    with st.expander("📋 Lihat & Download Data Tabel"):
+    st.markdown("<br>", unsafe_allow_html=True)
+    with st.expander("📋 Tabel Data Lengkap"):
         st.dataframe(df_f, use_container_width=True)
 
-# --- B. HALAMAN DETAIL SEKOLAH ---
 elif st.session_state.page_view == "detail":
+    # Halaman detail sekolah tetap ada dengan fungsi kembali
     sch = st.session_state.selected_school_data
     if sch:
-        st.button("⬅️ Kembali", on_click=lambda: setattr(st.session_state, 'page_view', 'dashboard'))
+        if st.button("⬅️ Kembali ke Dashboard"):
+            st.session_state.page_view = "dashboard"
+            st.rerun()
         st.header(f"🏫 {sch['nama_sekolah'].upper()}")
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            with st.container(border=True):
-                st.subheader("📌 Profil Umum")
-                st.write(f"**NPSN:** {sch.get('npsn', '-')}")
-                st.write(f"**Alamat:** {sch.get('alamat', '-')}")
-        with c2:
-            with st.container(border=True):
-                st.subheader("🏗️ Sarana Prasarana")
-                st.write(f"**Rombel:** {sch.get('jumlah_rombel', '0')}")
-                st.write(f"**Siswa:** {sch.get('jumlah_siswa', '0')}")
+        st.write(f"Informasi detail sekolah wilayah {sch['kab_kota']}...")
 
-# --- C. HALAMAN TENTANG ---
 elif st.session_state.page_view == "tentang_dashboard":
-    st.header("ℹ️ Informasi Sistem SI-PANDAI")
-    st.markdown("""
-    **SI-PANDAI SUMUT** adalah platform digital untuk memetakan Anak Tidak Sekolah (ATS) Disabilitas.
-    Sistem ini dirancang untuk mendukung pengambilan kebijakan berbasis data di Dinas Pendidikan Sumatera Utara.
-    """)
+    if st.button("⬅️ Kembali ke Dashboard"):
+        st.session_state.page_view = "dashboard"
+        st.rerun()
+    st.header("ℹ️ Tentang SI-PANDAI")
     st.video("https://youtu.be/Wa4C8Ci3Iys?si=vbJRAa-G2dr2kYw8")
 
 # ==================================
-# Bagian Akhir: FOOTER
+# Bagian 5: FOOTER
 # ==================================
 st.markdown("<br><hr>", unsafe_allow_html=True)
 st.markdown("""
-    <div style="text-align: center; color: #666; font-size: 12px;">
-        © 2026 DINAS PENDIDIKAN PROVINSI SUMATERA UTARA | Bidang Pembinaan Pendidikan Khusus
+    <div style="text-align: center; color: #888; font-size: 11px; padding-bottom: 20px;">
+        © 2026 DINAS PENDIDIKAN PROVINSI SUMATERA UTARA | Digitalisasi Pendidikan Khusus
     </div>
 """, unsafe_allow_html=True)
