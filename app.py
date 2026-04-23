@@ -183,8 +183,18 @@ st.sidebar.radio(
 st.sidebar.markdown('<div style="height:40px;"></div>', unsafe_allow_html=True)
 st.sidebar.markdown('<p style="font-size:10px; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.15em; margin-bottom:15px;">Wilayah Kerja</p>', unsafe_allow_html=True)
 
-col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
-opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
+# Handle sidebar options safely to prevent TypeError when data is empty or contains NaN
+col_kab = "kab_kota" # Default fallback
+if not data_wilayah.empty:
+    if "kab_kota" not in data_wilayah.columns and len(data_wilayah.columns) > 0:
+        col_kab = data_wilayah.columns[0]
+    
+    # Filter out NaN values and ensure they are strings before sorting
+    raw_opsi = data_wilayah[col_kab].dropna().unique().tolist()
+    opsi = ["Semua"] + sorted([str(x) for x in raw_opsi])
+else:
+    opsi = ["Semua"]
+
 kab_pilih = st.sidebar.selectbox("Pilih Kabupaten/Kota", opsi, key="selected_kab", label_visibility="collapsed")
 
 st.sidebar.markdown('<div style="flex-grow:1;"></div>', unsafe_allow_html=True)
@@ -218,11 +228,16 @@ if st.session_state.page_view == "dashboard":
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
     # LOGIKA ATS: Ambil langsung dari kolom 'ats' sesuai instruksi
-    ats_col = "ats" if "ats" in df_f.columns else df_f.columns[3]
-    belajar_col = "belajar" if "belajar" in df_f.columns else df_f.columns[2]
+    ats_col = "ats"
+    belajar_col = "belajar"
+    if not df_f.empty:
+        if "ats" not in df_f.columns and len(df_f.columns) > 3:
+            ats_col = df_f.columns[3]
+        if "belajar" not in df_f.columns and len(df_f.columns) > 2:
+            belajar_col = df_f.columns[2]
     
-    total_ats = int(df_f[ats_col].sum()) if not df_f.empty else 0
-    total_belajar = int(df_f[belajar_col].sum()) if not df_f.empty else 0
+    total_ats = int(df_f[ats_col].sum()) if not df_f.empty and ats_col in df_f.columns else 0
+    total_belajar = int(df_f[belajar_col].sum()) if not df_f.empty and belajar_col in df_f.columns else 0
     
     rasio = (total_belajar / (total_belajar + total_ats) * 100) if (total_belajar + total_ats) > 0 else 0
 
