@@ -59,69 +59,100 @@ st.markdown("""
         z-index: 999999;
     }
 
-    /* SIDEBAR STYLING - OFF WHITE PROFESSIONAL */
-    [data-testid="stSidebar"] { 
-        background-color: #fcfcfd !important; 
-        border-right: 1px solid #f1f5f9 !important;
-    }
-    [data-testid="stSidebar"] * { color: #334155 !important; }
-    
-    /* Style for Sidebar Radio */
-    div[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
-        background-color: transparent !important;
-        border-radius: 8px !important;
-        padding: 8px 12px !important;
-        transition: all 0.2s;
-    }
-    div[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
-        background-color: #f1f5f9 !important;
-    }
-    div[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-selected="true"] {
-        background-color: #e2e8f0 !important;
-        border-left: 4px solid #1e88e5 !important;
-    }
-
-    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div { color: #1e293b !important; font-weight: 600 !important; }
+   
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div { color: black !important; }
     div[data-baseweb="popover"] li, div[data-baseweb="popover"] span { color: black !important; }
 
-    /* Buttons */
     div.stButton > button:not([key^="btn_"]) {
-        background: #1e88e5 !important;
-        color: white !important; border-radius: 8px !important; 
-        font-weight: 700 !important; height: 44px; border: none !important; width: 100%;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
+        color: white !important; border-radius: 10px !important; 
+        font-weight: 700 !important; height: 48px; border: none !important; width: 100%;
     }
 
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e88e5 0%, #0d47a1 100%) !important; }
+    [data-testid="stSidebar"] * { color: white !important; }
+
     .header-balloon-card {
-        background: #ffffff !important;
-        border-radius: 0px 0px 0px 0px;
-        padding: 40px 0px;
-        border-bottom: 1px solid #f1f5f9;
-        text-align: left;
-        margin-top: 0px;
-        margin-bottom: 40px;
+        background: linear-gradient(90deg, #f0f7ff 0%, #d1e9ff 100%) !important;
+        border-radius: 0px 0px 15px 15px;
+        padding: 5px 0px;
+        border-bottom: 2px solid rgba(13, 71, 161, 0.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        text-align: center;
+        margin-top: 2px;
+        margin-bottom: 20px;
         width: 100% !important;
         display: block;
     }
 
-    .metric-tile { padding: 30px; border-radius: 24px; color: #1e293b; border: 1px solid #f1f5f9; background: white; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
-    .tile-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.1em; margin-bottom: 8px; }
-    .tile-value { font-size: 28px; font-weight: 700; color: #0f172a; }
-    
-    .insight-box { background-color: #f8fafc !important; border-radius: 16px; border: 1px solid #f1f5f9; padding: 20px; margin-top: 20px; }
-    .insight-title { color: #1e293b; font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.05em; }
-    .insight-text { color: #475569 !important; font-size: 14px; line-height: 1.6; }
+    div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stDataFrame"]) {
+        border: 2px solid #4caf50 !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+        background-color: #f1f8e9 !important;
+    }
+/* CSS Memaksa bentuk ujung batang membulat (Balon) */
+    div[data-testid="stPlotlyChart"] svg g.plots g.barlayer g.tracepath path {
+        rx: 18px !important;
+        ry: 18px !important;
+    }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] * { color: #31333f !important; }
+
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
+    div[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
+    div[data-baseweb="popover"] li {
+        color: black !important;
+    }
+
+    .gradient-line-inner {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #0d47a1, transparent);
+        margin: 3px auto;
+        width: 50%;
+        opacity: 0.3;
+    }
+.img-pimpinan {
+        border-radius: 50%;
+        border: 3px solid #0d47a1;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    div[data-testid="stExpander"] details summary {
+        background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 10px 15px !important;
+    }
+
+    div[data-testid="stExpander"] details summary span p { color: white !important; font-weight: 800 !important; }
+    div.stDownloadButton > button { background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important; color: white !important; border-radius: 10px !important; width: 100% !important; }
+
+    .metric-tile { padding: 20px; border-radius: 12px; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+    .tile-orange { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
+    .tile-blue-light { background: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); }
+    .tile-red-dark { background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%); }
+    .tile-green-light { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); }
+    .tile-icon-svg { width: 42px; height: 42px; fill: white !important; }
+    .tile-label { font-size: 14px; font-weight: 800; text-transform: uppercase; }
+    .tile-value { font-size: 22px; font-weight: 800; }
+
+    .insight-box { background-color: #e3f2fd !important; border-radius: 8px; border-left: 4px solid #0d47a1; padding: 10px 12px; margin-top: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .insight-title { color: #0d47a1; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; }
+    .insight-text { color: #333 !important; font-size: 13px; line-height: 1.5; }
+    .source-box-ui { background-color: #fff3e0 !important; padding: 8px 12px; border-radius: 8px; border-left: 5px solid #ff9800; }
+    .rec-box { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
+    .mendesak { background-color: #fee2e2 !important; color: #b91c1c !important; border-left: 5px solid #ef4444 !important; }
+    .rehab { background-color: #fef3c7 !important; color: #b45309 !important; border-left: 5px solid #f59e0b !important; }
+    .aman { background-color: #dcfce7 !important; color: #15803d !important; border-left: 5px solid #22c55e !important; }
 </style>
 """, unsafe_allow_html=True)
 
-def draw_metric_card(label, value, icon_color="#1e88e5"):
-    st.markdown(f'''
-        <div class="metric-tile">
-            <div class="tile-label">{label}</div>
-            <div class="tile-value">{value}</div>
-            <div style="height: 4px; width: 40px; background: {icon_color}; margin-top: 15px; border-radius: 2px;"></div>
-        </div>
-    ''', unsafe_allow_html=True)
+def draw_tile_svg(label, value, svg_icon, style_class):
+    st.markdown(f'<div class="metric-tile {style_class}"><div class="tile-icon-svg">{svg_icon}</div><div><div class="tile-label">{label}</div><div class="tile-value">{value}</div></div></div>', unsafe_allow_html=True)
+
+svg_people = '<svg viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
+svg_cap = '<svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3 7.5-3a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/><path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .254.539l1.5.75A.5.5 0 0 0 5.25 12h5.5a.5.5 0 0 0 .476-.346l.5-1.7a.5.5 0 0 0-.656-.327L10 10.25l-.117-.043-4 .876L4.176 9.032Z"/></svg>'
+svg_warning = '<svg viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>'
+svg_chart = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>'
 
 # ==================================
 # Bagian 2: LOAD DATA
