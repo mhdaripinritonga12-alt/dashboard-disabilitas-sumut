@@ -192,7 +192,7 @@ def ubah_halaman():
 
 st.sidebar.header("🧭 Navigasi Sistem")
 st.sidebar.radio(
-    "Klik :", 
+    
     ["🚀 Dashboard Utama", "ℹ️ Tentang Dashboard"],
     key="nav_radio",
     on_change=ubah_halaman
