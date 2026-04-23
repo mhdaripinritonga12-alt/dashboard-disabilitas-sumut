@@ -252,14 +252,22 @@ if st.session_state.page_view == "dashboard":
     with cv1:
         st.markdown('<p style="font-size:12px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:20px;">Sebaran Spasial Wilayah</p>', unsafe_allow_html=True)
         if not df_f.empty:
-            fig_map = px.scatter_mapbox(
-                df_f, lat="lat", lon="lon", size=ats_col, color=ats_col,
-                color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
-                hover_data={ats_col: True, "lat": False, "lon": False},
-                zoom=7.5, height=500
-            )
-            fig_map.update_layout(mapbox_style="carto-positron", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
-            st.plotly_chart(fig_map, use_container_width=True)
+            # Sanitize data for map: remove rows with missing coordinates or invalid ATS data
+            df_map = df_f.dropna(subset=['lat', 'lon', ats_col]).copy()
+            
+            if not df_map.empty:
+                # Ensure size values are positive for Plotly (add a tiny epsilon if zero)
+                # This prevents 'size' related ValueErrors
+                fig_map = px.scatter_mapbox(
+                    df_map, lat="lat", lon="lon", size=ats_col, color=ats_col,
+                    color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
+                    hover_data={ats_col: True, "lat": False, "lon": False},
+                    zoom=7.5, height=500
+                )
+                fig_map.update_layout(mapbox_style="carto-positron", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
+                st.plotly_chart(fig_map, use_container_width=True)
+            else:
+                st.info("⚠️ Data koordinat tidak tersedia untuk visualisasi peta.")
 
     with cv2:
         st.markdown('<p style="font-size:12px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:20px;">Ranking ATS Tertinggi</p>', unsafe_allow_html=True)
