@@ -163,92 +163,6 @@ def load_all_data():
 
 data_wilayah, data_sekolah = load_all_data()
 
-# =========================
-# Bagian 3: LOGIN (FINAL GRADIENT & ENTER)
-# =========================
-if not st.session_state.login:
-    # CSS untuk Background dan Tombol Gradasi di dalam Form
-    st.markdown("""
-        <style>
-        [data-testid="stAppViewContainer"] {
-            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #bbdefb 100%);
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.4); 
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: none; 
-            border: none;
-        }
-        /* Menghilangkan garis kotak form */
-        div[data-testid="stForm"] {
-            border: none !important;
-            padding: 0 !important;
-        }
-        /* MENGEMBALIKAN GRADASI BIRU PADA TOMBOL FORM */
-        div[data-testid="stFormSubmitButton"] > button {
-            background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%) !important;
-            color: white !important;
-            border-radius: 10px !important;
-            font-weight: 700 !important;
-            height: 48px;
-            border: none !important;
-            width: 100%;
-        }
-        div[data-testid="stFormSubmitButton"] > button:hover {
-            box-shadow: 0 4px 15px rgba(30, 136, 229, 0.4) !important;
-            border: none !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<div style='margin-top: 5vh;'></div>", unsafe_allow_html=True)
-    
-    # Logo Pemprov Kecil di Tengah
-    _, col_logo, _ = st.columns([2.5, 0.4, 2.5]) 
-    with col_logo:
-        if os.path.exists("logo_sumut.png"): 
-            st.image("logo_sumut.png", use_container_width=True)
-
-    # Area Login
-    _, col_card, _ = st.columns([1.2, 2, 1.2])
-    with col_card:
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
-        
-        c_l, c_r = st.columns([1.2, 1.5])
-        with c_l:
-            if os.path.exists("logo_sipandai.png"): 
-                st.image("logo_sipandai.png", use_container_width=True)
-        
-        with c_r:
-            st.markdown("<h2 style='color:#0d47a1; margin-top:0; font-weight:800; font-size:1.8rem;'>LOGIN USER</h2>", unsafe_allow_html=True)
-            st.markdown("<p style='color:#555; font-size:18px; margin-bottom:20px;'>Untuk Akses Dashboard SI-PANDAI</p>", unsafe_allow_html=True)
-            
-            with st.form("login_form", clear_on_submit=False):
-                u = st.text_input("Username", placeholder="Masukkan Username")
-                p = st.text_input("Password", type="password", placeholder="Masukkan Password")
-                
-                st.markdown("<div style='margin-top:15px;'></div>", unsafe_allow_html=True)
-                
-                submit = st.form_submit_button("🔓 MASUK KE DASHBOARD")
-                
-                if submit:
-                    if u == "admin" and p == "admin123": 
-                        st.session_state.login = True
-                        st.rerun()
-                    else: 
-                        st.error("Username atau Password salah!")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    # Footer
-    st.markdown("""
-        <p style='text-align:center; color:#90a4ae; font-size:11px; margin-top:20px;'>
-            © 2026 Dinas Pendidikan Provinsi Sumatera Utara<br>
-            Bidang Pembinaan Pendidikan Khusus
-        </p>
-    """, unsafe_allow_html=True)
-    st.stop()
 # ==================================
 # Bagian 4: SIDEBAR & NAVIGASI
 # ==================================
@@ -376,16 +290,13 @@ if st.session_state.page_view == "dashboard":
 
     st.divider()
     cv1, cv2 = st.columns([1.6, 1.1])
-    with cv1:
-        st.subheader("🗺️ Peta Sebaran ATS")
+    with cv1:st.subheader("🗺️ Peta Sebaran ATS")
     
     if not df_f.empty:
-        # 1. PERBAIKAN DATA (Diletakkan di luar fungsi peta)
-        # Menghapus titik ribuan agar terbaca sebagai angka bulat
+        # 1. PERBAIKAN DATA
         df_f['ats'] = pd.to_numeric(df_f['ats'].astype(str).str.replace('.', ''), errors='coerce').fillna(0).astype(int)
         
-        # 2. DEFINISI NAMA KOLOM (Sesuaikan dengan file GitHub Anda)
-        # Di GitHub Anda kolomnya bernama 'lat', 'lon', dan 'kab_kota'
+        # 2. DEFINISI NAMA KOLOM
         col_lat = "lat"
         col_lon = "lon"
         col_nama_wilayah = "kab_kota"
@@ -411,14 +322,16 @@ if st.session_state.page_view == "dashboard":
         )
         
         st.plotly_chart(fig_map, use_container_width=True)
-            st.markdown("""
-                <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span></div>
-                    <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span></div>
-                </div>
-                <div style="margin-bottom: 20px;"></div>
-            """, unsafe_allow_html=True)
+
+    # --- BAGIAN SETELAH PETA (PASTIKAN SEJAJAR DENGAN 'if' DI ATAS) ---
+    st.markdown("""
+        <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
+            <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
+            <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span></div>
+            <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span></div>
+        </div>
+        <div style="margin-bottom: 20px;"></div>
+    """, unsafe_allow_html=True)
 
     with cv2:
         st.subheader("📊 5 Peringkat ATS Tertinggi")
