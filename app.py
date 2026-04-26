@@ -233,35 +233,29 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- A. HALAMAN DASHBOARD ---
-elif st.session_state.page_view == "dashboard":
+if st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     st.markdown("""<div class="source-box-ui"><p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, LPPD & TIKP 2025</p></div>""", unsafe_allow_html=True)
     st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
     
-    # --- LOGIKA FILTER TETAP DIPERTAHANKAN ---
+    # 1. Ambil Data & Bersihkan (Penting: Lakukan sebelum filter)
     df_f = data_wilayah.copy()
-    
-    # Pastikan data ATS dibersihkan dulu sebelum difilter/dihitung
     if not df_f.empty:
         df_f['ats'] = pd.to_numeric(df_f['ats'].astype(str).str.replace('.', ''), errors='coerce').fillna(0).astype(int)
 
-    # Menentukan nama kolom kabupaten secara dinamis
+    # 2. Logika Filter (Pastikan variabel col_kab & kab_pilih sudah ada)
     col_kab = "kab_kota" if "kab_kota" in df_f.columns else df_f.columns[0]
-    
-    # Eksekusi Filter Sidebar
     if kab_pilih != "Semua": 
         df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # --- HITUNG VARIABEL UNTUK MATRIKS & INSIGHT ---
-    # v_a harus didefinisikan di sini agar tidak NameError
+    # 3. Definisikan Variabel Matriks (Agar tidak NameError v_a)
     v_a = int(df_f['ats'].sum()) if not df_f.empty else 0
     v_belajar = int(df_f['jumlah_siswa'].sum()) if not df_f.empty else 0
-    
     total_anak = v_belajar + v_a
     v_aps_num = (v_belajar / total_anak * 100) if total_anak > 0 else 0
     v_aps = f"{v_aps_num:.2f}%"
 
-    # Matriks 3 Kotak
+    # 4. Tampilkan Matriks 3 Kotak
     m1, m2, m3 = st.columns(3)
     with m1: draw_tile_svg("Anak Tidak Sekolah (ATS)", f"{v_a:,}", svg_warning, "tile-red-dark")
     with m2: draw_tile_svg("Siswa Belajar", f"{v_belajar:,}", svg_cap, "tile-blue-light")
@@ -269,19 +263,15 @@ elif st.session_state.page_view == "dashboard":
 
     st.divider()
 
-    # --- PETA DAN GRAFIK (UKURAN LEBIH RAPI) ---
+    # 5. Peta & Grafik (Gunakan height 350 agar tidak kepanjangan)
     cv1, cv2 = st.columns([1.6, 1.1])
     with cv1:
         st.subheader("🗺️ Peta Sebaran ATS")
         if not df_f.empty:
             fig_map = px.scatter_mapbox(
-                df_f, 
-                lat="lat", lon="lon", 
-                size="ats", color="ats",
-                color_continuous_scale="RdYlGn_r", 
-                hover_name=col_kab, 
-                zoom=7,           
-                height=350         # Ukuran diperpendek agar proporsional
+                df_f, lat="lat", lon="lon", size="ats", color="ats",
+                color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
+                zoom=7, height=350
             )
             fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
             st.plotly_chart(fig_map, use_container_width=True)
@@ -289,19 +279,10 @@ elif st.session_state.page_view == "dashboard":
     with cv2:
         st.subheader("📊 5 Peringkat ATS")
         if not df_f.empty:
-            # Jika filter "Semua", tampilkan top 5. Jika satu wilayah, tampilkan wilayah itu saja.
             df_bar = df_f.sort_values(by="ats", ascending=False).head(5)
-            fig_bar = px.bar(
-                df_bar, x="ats", y=col_kab, 
-                orientation='h', 
-                text="ats",
-                color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']],
-                color="ats",
-                height=350
-            )
+            fig_bar = px.bar(df_bar, x="ats", y=col_kab, orientation='h', text="ats", color="ats", height=350)
             fig_bar.update_layout(showlegend=False, coloraxis_showscale=False, margin=dict(l=10, r=10, t=20, b=10))
-            st.plotly_chart(fig_bar, use_container_width=True)
-            # Insight Box
+            st.plotly_chart(fig_bar, use_container_width=True)            # Insight Box
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
                 p_insight, p_tindakan, warna_box = f" ⚠️ MASALAH UTAMA: Masih tingginya jumlah Anak Tidak Sekolah (ATS) Disabilitas di wilayah {kab_pilih} sebanyak {v_a:,} jiwa, namun BELUM ADA SLB.", "Mendesak untuk pembukaan Unit Sekolah Baru.", "#b71c1c"
