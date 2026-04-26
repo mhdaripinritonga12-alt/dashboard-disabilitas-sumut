@@ -327,16 +327,31 @@ if st.session_state.page_view == "dashboard":
     df_f = data_wilayah.copy()
     if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
 
-    # Matriks
-    m1, m2, m3, m4 = st.columns(4)
-    v_a = int(df_f.iloc[:,3].sum()) if not df_f.empty else 0
-    v_aps_num = (int(df_f.iloc[:,2].sum()) / int(df_f.iloc[:,1].sum()) * 100) if not df_f.empty and int(df_f.iloc[:,1].sum()) > 0 else 0
+   # Matriks (Hanya 3 Kotak sesuai Database GitHub)
+    m1, m2, m3 = st.columns(3)
+    
+    # Ambil kolom ATS dan Jumlah Siswa dari database
+    col_ats = 'ats'
+    col_siswa = 'jumlah_siswa'
+
+    # Perhitungan Data
+    v_ats = int(df_f[col_ats].sum()) if not df_f.empty else 0
+    v_belajar = int(df_f[col_siswa].sum()) if not df_f.empty else 0
+    
+    # Hitung Persentase Partisipasi
+    total_anak = v_belajar + v_ats
+    v_aps_num = (v_belajar / total_anak * 100) if total_anak > 0 else 0
     v_aps = f"{v_aps_num:.2f}%"
 
-    with m1: draw_tile_svg("Penduduk Disabilitas", f"{int(df_f.iloc[:,1].sum()):,}" if not df_f.empty else "0", svg_people, "tile-orange")
-    with m2: draw_tile_svg("Siswa Belajar", f"{int(df_f.iloc[:,2].sum()):,}" if not df_f.empty else "0", svg_cap, "tile-blue-light")
-    with m3: draw_tile_svg("Anak Tidak Sekolah", f"{v_a:,}", svg_warning, "tile-red-dark")
-    with m4: draw_tile_svg("Angka Partisipasi", v_aps, svg_chart, "tile-green-light")
+    # Tampilan 3 Tile Matriks
+    with m1: 
+        draw_tile_svg("Anak Tidak Sekolah (ATS)", f"{v_ats:,}", svg_warning, "tile-red-dark")
+        
+    with m2: 
+        draw_tile_svg("Siswa Belajar", f"{v_belajar:,}", svg_cap, "tile-blue-light")
+        
+    with m3: 
+        draw_tile_svg("Persentase Partisipasi", v_aps, svg_chart, "tile-green-light")
 
     if kab_pilih != "Semua":
         st.divider()
