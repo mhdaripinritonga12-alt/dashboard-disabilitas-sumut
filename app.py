@@ -233,150 +233,74 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- A. HALAMAN DASHBOARD ---
-if st.session_state.page_view == "dashboard":
+f st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     st.markdown("""<div class="source-box-ui"><p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, LPPD & TIKP 2025</p></div>""", unsafe_allow_html=True)
     st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
     
+    # --- LOGIKA FILTER TETAP DIPERTAHANKAN ---
     df_f = data_wilayah.copy()
-    if kab_pilih != "Semua": df_f = df_f[df_f[col_kab] == kab_pilih]
-
-   # Matriks (Hanya 3 Kotak sesuai Database GitHub)
-    m1, m2, m3 = st.columns(3)
     
-    # Ambil kolom ATS dan Jumlah Siswa dari database
-    col_ats = 'ats'
-    col_siswa = 'jumlah_siswa'
+    # Pastikan data ATS dibersihkan dulu sebelum difilter/dihitung
+    if not df_f.empty:
+        df_f['ats'] = pd.to_numeric(df_f['ats'].astype(str).str.replace('.', ''), errors='coerce').fillna(0).astype(int)
 
-    # Perhitungan Data
-    v_ats = int(df_f[col_ats].sum()) if not df_f.empty else 0
-    v_belajar = int(df_f[col_siswa].sum()) if not df_f.empty else 0
+    # Menentukan nama kolom kabupaten secara dinamis
+    col_kab = "kab_kota" if "kab_kota" in df_f.columns else df_f.columns[0]
     
-    # Hitung Persentase Partisipasi
-    total_anak = v_belajar + v_ats
+    # Eksekusi Filter Sidebar
+    if kab_pilih != "Semua": 
+        df_f = df_f[df_f[col_kab] == kab_pilih]
+
+    # --- HITUNG VARIABEL UNTUK MATRIKS & INSIGHT ---
+    # v_a harus didefinisikan di sini agar tidak NameError
+    v_a = int(df_f['ats'].sum()) if not df_f.empty else 0
+    v_belajar = int(df_f['jumlah_siswa'].sum()) if not df_f.empty else 0
+    
+    total_anak = v_belajar + v_a
     v_aps_num = (v_belajar / total_anak * 100) if total_anak > 0 else 0
     v_aps = f"{v_aps_num:.2f}%"
 
-    # Tampilan 3 Tile Matriks
-    with m1: 
-        draw_tile_svg("Anak Tidak Sekolah (ATS)", f"{v_ats:,}", svg_warning, "tile-red-dark")
-        
-    with m2: 
-        draw_tile_svg("Siswa Belajar", f"{v_belajar:,}", svg_cap, "tile-blue-light")
-        
-    with m3: 
-        draw_tile_svg("Persentase Partisipasi", v_aps, svg_chart, "tile-green-light")
-
-    if kab_pilih != "Semua":
-        st.divider()
-        st.subheader(f"🏫 Satuan Pendidikan di {kab_pilih}")
-        sch_wil = data_sekolah[data_sekolah[col_kab] == kab_pilih] if not data_sekolah.empty else pd.DataFrame()
-        if not sch_wil.empty:
-            cols = st.columns(3)
-            for i, row in enumerate(sch_wil.itertuples()):
-                with cols[i % 3]:
-                    with st.container(border=True):
-                        if getattr(row, 'jumlah_rombel', 0) > getattr(row, 'jumlah_ruang_kelas', 0):
-                            st.markdown("<div class='rec-box mendesak'>⚠️ MENDESAK: Butuh RKB</div>", unsafe_allow_html=True)
-                        elif getattr(row, 'rusak_berat', 0) > 0:
-                            st.markdown("<div class='rec-box rehab'>🛠️ PRIORITAS REHAB</div>", unsafe_allow_html=True)
-                        else: st.markdown("<div class='rec-box aman'>✅ KONDISI STABIL</div>", unsafe_allow_html=True)
-
-                        if st.button(getattr(row, 'nama_sekolah', 'SEKOLAH').upper(), key=f"btn_{i}"):
-                            st.session_state.selected_school_data = row._asdict()
-                            st.session_state.page_view = "detail"
-                            st.rerun()
-                        st.caption(f"NPSN: {getattr(row, 'npsn', '-')}")
+    # Matriks 3 Kotak
+    m1, m2, m3 = st.columns(3)
+    with m1: draw_tile_svg("Anak Tidak Sekolah (ATS)", f"{v_a:,}", svg_warning, "tile-red-dark")
+    with m2: draw_tile_svg("Siswa Belajar", f"{v_belajar:,}", svg_cap, "tile-blue-light")
+    with m3: draw_tile_svg("Persentase Partisipasi", v_aps, svg_chart, "tile-green-light")
 
     st.divider()
+
+    # --- PETA DAN GRAFIK (UKURAN LEBIH RAPI) ---
     cv1, cv2 = st.columns([1.6, 1.1])
-    with cv1:st.subheader("🗺️ Peta Sebaran ATS")
-    
-    if not df_f.empty:
-        # 1. PERBAIKAN DATA
-        df_f['ats'] = pd.to_numeric(df_f['ats'].astype(str).str.replace('.', ''), errors='coerce').fillna(0).astype(int)
-        
-        # 2. DEFINISI NAMA KOLOM
-        col_lat = "lat"
-        col_lon = "lon"
-        col_nama_wilayah = "kab_kota"
-
-        # 3. PEMBUATAN PETA
-        fig_map = px.scatter_mapbox(
-            df_f, 
-            lat=col_lat, 
-            lon=col_lon, 
-            size="ats", 
-            color="ats",
-            color_continuous_scale="RdYlGn_r", 
-            hover_name=col_nama_wilayah, 
-            hover_data={"ats": True, col_lat: False, col_lon: False},
-            zoom=7, 
-            height=450
-        )
-        
-        fig_map.update_layout(
-            mapbox_style="open-street-map", 
-            margin={"r":0,"t":0,"l":0,"b":0}, 
-            coloraxis_showscale=False
-        )
-        
-        st.plotly_chart(fig_map, use_container_width=True)
-
-    # --- BAGIAN SETELAH PETA (PASTIKAN SEJAJAR DENGAN 'if' DI ATAS) ---
-    st.markdown("""
-        <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
-            <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
-            <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #ffffbf; border-radius: 50%; border: 1px solid #ccc;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">SEDANG</span></div>
-            <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #d7191c; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">TINGGI</span></div>
-        </div>
-        <div style="margin-bottom: 20px;"></div>
-    """, unsafe_allow_html=True)
+    with cv1:
+        st.subheader("🗺️ Peta Sebaran ATS")
+        if not df_f.empty:
+            fig_map = px.scatter_mapbox(
+                df_f, 
+                lat="lat", lon="lon", 
+                size="ats", color="ats",
+                color_continuous_scale="RdYlGn_r", 
+                hover_name=col_kab, 
+                zoom=7,           
+                height=350         # Ukuran diperpendek agar proporsional
+            )
+            fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
+            st.plotly_chart(fig_map, use_container_width=True)
 
     with cv2:
-        st.subheader("📊 5 Peringkat ATS Tertinggi")
+        st.subheader("📊 5 Peringkat ATS")
         if not df_f.empty:
-            ats_col = df_f.columns[3]
-            df_top5 = df_f.sort_values(by=ats_col, ascending=False).head(5)
-            max_val = df_top5[ats_col].max() if not df_top5.empty else 100
-
-            fig = px.bar(
-                df_top5, 
-                x=ats_col, 
-                y=col_kab, 
+            # Jika filter "Semua", tampilkan top 5. Jika satu wilayah, tampilkan wilayah itu saja.
+            df_bar = df_f.sort_values(by="ats", ascending=False).head(5)
+            fig_bar = px.bar(
+                df_bar, x="ats", y=col_kab, 
                 orientation='h', 
-                color=ats_col,
-                # Gradasi Biru Cerah ke Biru Royal (Sesuai contoh Balon)
-                color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']], 
-                text=ats_col
+                text="ats",
+                color_continuous_scale=[[0, '#00d2ff'], [1, '#3a7bd5']],
+                color="ats",
+                height=350
             )
-            
-            fig.update_traces(
-                textposition='outside',
-                textfont=dict(color='black', size=13, family="Inter", weight="bold"),
-                marker=dict(line=dict(width=0)),
-                width=0.85 # Membuat batang gemuk/padat
-            )
-
-            fig.update_layout(
-                height=350, 
-                margin=dict(l=10, r=130, t=20, b=10),
-                bargap=0, # Menghilangkan jarak antar slot bar
-                showlegend=False, 
-                plot_bgcolor='rgba(0,0,0,0)', 
-                paper_bgcolor='rgba(0,0,0,0)',
-                coloraxis_showscale=False
-            )
-
-            # Sumbu X & Y (Teks Nama Wilayah Warna Hitam)
-            fig.update_xaxes(range=[0, max_val * 1.4], showticklabels=False, showgrid=False)
-            fig.update_yaxes(
-                tickfont=dict(color='black', size=12, family="Inter", weight="bold"),
-                categoryorder='total ascending'
-            )
-            
-            st.plotly_chart(fig, use_container_width=True)
-
+            fig_bar.update_layout(showlegend=False, coloraxis_showscale=False, margin=dict(l=10, r=10, t=20, b=10))
+            st.plotly_chart(fig_bar, use_container_width=True)
             # Insight Box
             jml_sekolah = len(data_sekolah[data_sekolah[col_kab] == kab_pilih]) if kab_pilih != "Semua" else len(data_sekolah)
             if kab_pilih != "Semua" and v_a > 0 and jml_sekolah == 0:
