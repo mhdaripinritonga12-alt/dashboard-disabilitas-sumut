@@ -233,7 +233,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- A. HALAMAN DASHBOARD ---
-f st.session_state.page_view == "dashboard":
+elif st.session_state.page_view == "dashboard":
     st.markdown('<p style="font-size:26px; font-weight:800; color:#0d47a1;">Matriks Capaian Sektoral</p>', unsafe_allow_html=True)
     st.markdown("""<div class="source-box-ui"><p style="font-size: 12px; color: #e65100; margin: 0; font-weight: 700;"><b>ℹ️ Sumber Data:</b> Bidang Pembinaan Pendidikan Khusus, LPPD & TIKP 2025</p></div>""", unsafe_allow_html=True)
     st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
