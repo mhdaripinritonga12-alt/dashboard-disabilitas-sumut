@@ -268,12 +268,10 @@ with st.sidebar:
     st.divider()
 
 def ubah_halaman():
-    # Tambahkan pengecekan ini agar tidak error saat logout
     if "nav_radio" in st.session_state:
         pilihan = st.session_state.nav_radio
         if "Dashboard Utama" in pilihan: 
             st.session_state.page_view = "dashboard"
-             # Paksa filter kembali ke "Semua" saat menu Dashboard diklik
             st.session_state.selected_kab = "Semua" 
         elif "Pendidikan Khusus" in pilihan: 
             st.session_state.page_view = "tentang_pk"
@@ -290,10 +288,19 @@ st.sidebar.radio(
 
 st.sidebar.divider()
 st.sidebar.header("🔎 Filter Wilayah")
-col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
-opsi = ["Semua"] + sorted(data_wilayah[col_kab].unique().tolist()) if not data_wilayah.empty else ["Semua"]
-kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
 
+# --- PERBAIKAN LOGIKA DI SINI ---
+if not data_wilayah.empty:
+    # Cek apakah kolom 'kab_kota' ada, jika tidak pakai kolom pertama
+    col_kab = "kab_kota" if "kab_kota" in data_wilayah.columns else data_wilayah.columns[0]
+    # Ambil list unik, hapus nilai kosong (NaN), urutkan, lalu tambah "Semua"
+    list_wilayah = sorted(data_wilayah[col_kab].dropna().unique().tolist())
+    opsi = ["Semua"] + list_wilayah
+else:
+    opsi = ["Semua"]
+
+kab_pilih = st.sidebar.selectbox("Kabupaten / Kota", opsi, key="selected_kab")
+# ------------------
 st.sidebar.divider()
 st.sidebar.button("Logout ⏻", use_container_width=True, on_click=proses_logout)
 
