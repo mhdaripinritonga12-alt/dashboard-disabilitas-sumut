@@ -381,14 +381,28 @@ if st.session_state.page_view == "dashboard":
         if not df_f.empty:
             ats_col_name = df_f.columns[3]
             fig_map = px.scatter_mapbox(
-                df_f, lat="lat", lon="lon", size=ats_col_name, color=ats_col_name,
-                color_continuous_scale="RdYlGn_r", hover_name=col_kab, 
-                hover_data={ats_col_name: True, "lat": False, "lon": False},
-                zoom=9, height=450
-            )
-            fig_map.update_layout(mapbox_style="open-street-map", margin={"r":0,"t":0,"l":0,"b":0}, coloraxis_showscale=False)
-            st.plotly_chart(fig_map, use_container_width=True)
-            
+                df_f['ats'] = pd.to_numeric(df_f['ats'].astype(str).str.replace('.', ''), errors='coerce').fillna(0).astype(int)
+
+    # 2. Visualisasi Peta
+    st.markdown('<p style="font-size:20px; font-weight:700;">Peta Sebaran ATS per Wilayah</p>', unsafe_allow_html=True)
+    
+    fig = px.scatter_mapbox(
+        df_f, 
+        lat="latitude", 
+        lon="longitude", 
+        size="ats",           # Ukuran bubble berdasarkan ATS yang sudah jadi angka bulat
+        color="ats", 
+        hover_name="kabupaten", 
+        hover_data={"latitude": False, "longitude": False, "ats": True},
+        color_continuous_scale=px.colors.sequential.Reds, 
+        size_max=50, 
+        zoom=7, 
+        mapbox_style="carto-positron",
+        height=500
+    )
+    
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    st.plotly_chart(fig, use_container_width=True)
             st.markdown("""
                 <div style="display: flex; gap: 15px; margin-top: -50px; margin-left: 10px; position: relative; z-index: 999; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid #ddd;">
                     <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 12px; height: 12px; background-color: #1a9641; border-radius: 50%;"></div><span style="font-size: 11px; font-weight: 800; color: #333;">RENDAH</span></div>
